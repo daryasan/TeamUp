@@ -26,4 +26,5 @@ public class User {
     private String experience;
     private String description;
     private Roles role;
+    private String image;
 }
