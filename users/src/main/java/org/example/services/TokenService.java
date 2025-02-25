@@ -34,7 +34,7 @@ public class TokenService {
         return generateAccessToken(user, new Date(System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration()));
     }
 
-    String generateAccessToken(User user, Date expires){
+    private String generateAccessToken(User user, Date expires){
         Date issuedDate = new Date();
         return Jwts.builder()
                 .claim(ClaimsEnum.email.name(), user.getEmail())
@@ -79,7 +79,7 @@ public class TokenService {
     }
 
     public boolean isValid(String token, UserDetails userDetails) {
-        String email = null;
+        String email;
         try {
             email = getEmailFromToken(token);
             return Objects.equals(userDetails.getUsername(), email) && !isExpired(token);

@@ -11,6 +11,6 @@ import org.springframework.stereotype.Component;
 @Data
 @AllArgsConstructor
 public class JwtProperties {
-    private String key = "";
+    private String key;
     private Long accessTokenExpiration;
 }

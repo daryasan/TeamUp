@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Setter
 @Getter
@@ -19,5 +20,5 @@ public class Session {
     private long id;
     private long userId;
     private String token;
-    private LocalDateTime expires;
+    private Date expires;
 }
