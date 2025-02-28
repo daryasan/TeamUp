@@ -6,7 +6,7 @@ import org.example.dto.UserInfoDto;
 import org.example.exceptions.AuthException;
 import org.example.exceptions.DataException;
 import org.example.exceptions.UserException;
-import org.example.models.Roles;
+import org.example.models.RolesEnum;
 import org.example.models.User;
 import org.example.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class UserService {
     // throws 403 FORBIDDEN
     void saveUser(User user) throws UserException {
         Optional<User> exists = userRepository.findByEmail(user.getEmail());
-        if (exists.isPresent()){
+        if (exists.isPresent()) {
             throw new UserException("User is already present in DB!");
         }
         userRepository.save(user);
@@ -43,7 +43,7 @@ public class UserService {
         long id = tokenService.getUserIdFromToken(userInfoDto.getToken());
         Optional<User> exists = userRepository.findById(id);
 
-        if (exists.isEmpty()){
+        if (exists.isEmpty()) {
             throw new UserException("User doesn't exist!");
         }
 
@@ -67,7 +67,7 @@ public class UserService {
         long id = tokenService.getUserIdFromToken(userFullInfoDto.getToken());
         Optional<User> exists = userRepository.findById(id);
 
-        if (exists.isEmpty()){
+        if (exists.isEmpty()) {
             throw new UserException("User doesn't exist!");
         }
 
@@ -93,46 +93,55 @@ public class UserService {
 
     // fetches user by email to optional user -> doesn't throw
     // any exceptions
-    Optional<User> getUserByEmail(String email){
-        return userRepository.findByEmail(email);
+    public User getUserByEmail(String email) throws DataException, UserException {
+        if (!Utils.verifyEmail(email)) throw new DataException("Wrong email!");
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) throw new UserException("User does not exist!");
+        else return user.get();
     }
 
 
     // fetches user by nickname to optional user -> doesn't throw
     // any exceptions
-    Optional<User> getUserByNickname(String nickname){
-        return userRepository.findByNickname(nickname);
+    public User getUserByNickname(String nickname) throws UserException {
+        Optional<User> user = userRepository.findByNickname(nickname);
+        if (user.isEmpty()) throw new UserException("User does not exist!");
+        else return user.get();
     }
 
 
     // fetches user by token to optional user -> throws 401 UNAUTHORIZED
     // if wrong token
-    Optional<User> getUserByToken(String token) throws AuthException {
-        return userRepository.findById(
+    public User getUserByToken(String token) throws AuthException, UserException {
+        Optional<User> user = userRepository.findById(
                 tokenService.getUserIdFromToken(token)
         );
-
+        if (user.isEmpty()) throw new UserException("User does not exist!");
+        else return user.get();
     }
 
 
     // fetches user by id to optional user -> doesn't throw
     // any exceptions
-    public Optional<User> getUserById(Long id){
-        return userRepository.findById(id);
+    public User getUserById(Long id) throws UserException {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) throw new UserException("User does not exist!");
+        else return user.get();
     }
 
 
     // fetches a collection of all users
-    List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
 
     // fetches all users with specified role
-    List<User> getUsersByRole(Roles role){
+    public List<User> getUsersByRole(Long roleId) throws DataException {
+        RolesEnum role = Utils.convertRoleIdToRole(roleId);
         List<User> users = userRepository.findAll();
         List<User> usersByRole = new ArrayList<User>();
-        for (User u : users){
+        for (User u : users) {
             if (u.getRole() == role) usersByRole.add(u);
         }
         return usersByRole;

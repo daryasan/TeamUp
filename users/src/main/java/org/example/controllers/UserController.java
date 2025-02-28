@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -29,14 +30,35 @@ public class UserController {
     }
 
     @GetMapping("/id={id}")
-    public ResponseEntity<Optional<User>> getUserById(
+    public ResponseEntity<User> getUserById(
             @PathVariable long id
-    ) {
+    ) throws UserException {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @GetMapping("/email={email}")
+    public ResponseEntity<User> getUserByEmail(
+            @PathVariable String email
+    ) throws DataException, UserException {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
 
-    @PatchMapping("/edit/")
+    @GetMapping("/nickname={nickname}")
+    public ResponseEntity<User> getUserByNickname(
+            @PathVariable String nickname
+    ) throws UserException {
+        return ResponseEntity.ok(userService.getUserByNickname(nickname));
+    }
+
+    @GetMapping("/token={token}")
+    public ResponseEntity<User> getUserByToken(
+            @PathVariable String token
+    ) throws AuthException, UserException {
+        return ResponseEntity.ok(userService.getUserByToken(token));
+    }
+
+
+    @PatchMapping("/edit")
     public ResponseEntity<User> changeUserInfo(
             @RequestBody UserFullInfoDto userFullInfoDto
     ) throws AuthException, UserException, DataException {
@@ -45,6 +67,19 @@ public class UserController {
 
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+
+    @GetMapping("/all-by-role/role-id={roleId}")
+    public ResponseEntity<List<User>> getUsersByRole(
+            @PathVariable Long roleId) throws DataException {
+
+        return ResponseEntity.ok(userService.getUsersByRole(roleId));
+
+    }
 
 
 }

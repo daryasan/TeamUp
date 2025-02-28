@@ -1,8 +1,6 @@
 package org.example.security;
 
 import lombok.AllArgsConstructor;
-import org.example.exceptions.RoleException;
-import org.example.models.Roles;
 import org.example.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
