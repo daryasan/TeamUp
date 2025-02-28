@@ -66,7 +66,7 @@ public class AuthController {
 
     }
 
-    @PatchMapping("/changePassword")
+    @PatchMapping("/change-password")
     public ResponseEntity<User> changePassword(
             @RequestBody ChangePasswordDto changePasswordDto
     ) throws DataException, AuthException, UserException {
@@ -75,7 +75,7 @@ public class AuthController {
 
     }
 
-    @PatchMapping("/changeEmail")
+    @PatchMapping("/change-email")
     public ResponseEntity<TokenResponseDto> changeEmail(
             @RequestBody ChangeEmailDto changeEmailDto
     ) throws DataException, AuthException, UserException {

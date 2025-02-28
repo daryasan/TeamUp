@@ -55,14 +55,13 @@ public class AuthService {
 
     // login user and return jwt token
     // throws 403 FORBIDDEN (if email is not registered OR password wrong)
-    public TokenResponseDto login(LoginDto loginDto) throws UserException, AuthException {
-        Optional<User> user = userService.getUserByEmail(loginDto.getEmail());
+    public TokenResponseDto login(LoginDto loginDto) throws UserException, AuthException, DataException {
+        User user = userService.getUserByEmail(loginDto.getEmail());
 
-        if (user.isEmpty()) throw new UserException("User doesn't exist");
-        if (!user.get().getPassword().equals(passwordEncoder.encode(loginDto.getPassword())))
+        if (!user.getPassword().equals(passwordEncoder.encode(loginDto.getPassword())))
             throw new UserException("Wrong password");
 
-        String token = tokenService.returnAccessToken(user.get());
+        String token = tokenService.returnAccessToken(user);
         sessionService.createSession(token);
 
         return new TokenResponseDto(token);
@@ -74,43 +73,37 @@ public class AuthService {
     //        401 UNAUTHORIZED (if token invalid),
     //        403 FORBIDDEN (if user not found)
     public User changePassword(ChangePasswordDto changePasswordDto) throws UserException, AuthException, DataException {
-        Optional<User> user = userService.getUserByToken(changePasswordDto.getToken());
-        if (user.isEmpty()){
-            throw new UserException("No such user!");
-        }
-        if (!user.get().getPassword().equals(
+        User user = userService.getUserByToken(changePasswordDto.getToken());
+        if (!user.getPassword().equals(
                 passwordEncoder.encode(changePasswordDto.getOldPassword()))
-        ){
+        ) {
             throw new DataException("Wrong old password!");
         }
-        if (!Utils.verifyPassword(changePasswordDto.getNewPassword())){
+        if (!Utils.verifyPassword(changePasswordDto.getNewPassword())) {
             throw new DataException("New password must contain at least one capital letter and a number.");
         }
 
-        user.get().setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
-        userService.saveUser(user.get());
-        return user.get();
+        user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+        userService.saveUser(user);
+        return user;
     }
 
 
     // changes email as major login method
     public TokenResponseDto changeEmail(ChangeEmailDto changeEmailDto) throws AuthException, UserException, DataException {
-        Optional<User> user = userService.getUserByToken(changeEmailDto.getToken());
-        if (user.isEmpty()){
-            throw new UserException("No such user!");
-        }
-        if (!Utils.verifyEmail(changeEmailDto.getNewEmail())){
+        User user = userService.getUserByToken(changeEmailDto.getToken());
+        if (!Utils.verifyEmail(changeEmailDto.getNewEmail())) {
             throw new DataException("Email doesn't match mask.");
         }
 
-        user.get().setEmail(changeEmailDto.getNewEmail());
-        userService.saveUser(user.get());
-        return new TokenResponseDto(tokenService.returnAccessToken(user.get()));
+        user.setEmail(changeEmailDto.getNewEmail());
+        userService.saveUser(user);
+        return new TokenResponseDto(tokenService.returnAccessToken(user));
     }
 
 
     // logout user
-    public void logout (String token) {
+    public void logout(String token) {
         // TODO
     }
 
