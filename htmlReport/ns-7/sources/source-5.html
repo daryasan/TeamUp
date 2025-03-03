@@ -1,0 +1,192 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1251"> 
+  <title>Coverage Report > Utils</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.services</a>
+</div>
+
+<h1>Coverage Summary for Class: Utils (org.example.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Utils</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    44,4%
+  </span>
+  <span class="absValue">
+    (4/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    28%
+  </span>
+  <span class="absValue">
+    (7/25)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.services;
+&nbsp;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.example.exceptions.DataException;
+&nbsp;import org.example.models.Role;
+&nbsp;import org.example.models.RolesEnum;
+&nbsp;import org.example.models.User;
+&nbsp;import org.example.repositories.RoleRepository;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.regex.Pattern;
+&nbsp;
+&nbsp;@Service
+<b class="nc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class Utils {
+&nbsp;
+<b class="fc">&nbsp;    final private static Pattern passwordPattern = Pattern.compile(&quot;^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$&quot;);</b>
+<b class="fc">&nbsp;    final private static Pattern emailPattern = Pattern.compile(&quot;^[a-z0-9!#$%&amp;&#39;*+=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&amp;&#39;*+=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$&quot;);</b>
+<b class="fc">&nbsp;    final private static Pattern nicknamePattern = Pattern.compile(&quot;^[a-z]+(?=.{2,32}$)(?=[^A-z0-9]*[A-z0-9])[-_.A-z0-9]+$&quot;);</b>
+<b class="fc">&nbsp;    final private static Pattern githubPattern = Pattern.compile(&quot;https:\\/\\/github\\.com\\/([^\\/]+)$&quot;);</b>
+&nbsp;    private UserService userService;
+&nbsp;    private RoleRepository roleRepository;
+&nbsp;
+&nbsp;    public boolean isEmailUnique(String email) {
+<b class="nc">&nbsp;        for (User u : userService.getAllUsers()) {</b>
+<b class="nc">&nbsp;            if (email.equals(u.getEmail())) return false;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean verifyEmail(String email) {
+<b class="fc">&nbsp;        return email.matches(emailPattern.pattern());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean verifyNickName(String nickname) {
+<b class="fc">&nbsp;        return nickname.matches(nicknamePattern.pattern());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean verifyPassword(String password) {
+<b class="nc">&nbsp;        return password.matches(passwordPattern.pattern());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // verifies GitHub link my the mask
+&nbsp;    public static boolean verifyGithub(String githubLink) {
+<b class="fc">&nbsp;        return githubLink.matches(githubPattern.pattern());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // checks if username if unique
+&nbsp;    public boolean isNicknameUnique(String nickname) {
+<b class="nc">&nbsp;        for (User u : userService.getAllUsers()) {</b>
+<b class="nc">&nbsp;            if (nickname.equals(u.getNickname())) return false;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public RolesEnum convertRoleIdToRole(Integer roleId) throws DataException {
+<b class="nc">&nbsp;        Optional&lt;Role&gt; role = roleRepository.findById(roleId);</b>
+<b class="nc">&nbsp;        if (role.isEmpty())</b>
+<b class="nc">&nbsp;            throw new DataException(&quot;Wrong role id!&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (role.get().getName().toLowerCase().contains(&quot;participant&quot;)) {</b>
+<b class="nc">&nbsp;            return RolesEnum.participant;</b>
+<b class="nc">&nbsp;        } else if (role.get().getName().toLowerCase().contains(&quot;organizer&quot;)) {</b>
+<b class="nc">&nbsp;            return RolesEnum.organizer;</b>
+<b class="nc">&nbsp;        } else if (role.get().getName().toLowerCase().contains(&quot;mentor&quot;)) {</b>
+<b class="nc">&nbsp;            return RolesEnum.mentor;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        throw new DataException(&quot;Wrong role id!&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-03-03 11:46</div>
+</div>
+</body>
+</html>

@@ -25,5 +25,6 @@ public class User {
     private String github;
     private String experience;
     private String description;
-    private Roles role;
+    private RolesEnum role;
+    private String image;
 }

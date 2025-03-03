@@ -1,6 +1,8 @@
 package org.example.security;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.example.exceptions.UserException;
 import org.example.models.User;
 import org.example.repositories.UserRepository;
@@ -15,6 +17,7 @@ import java.util.Optional;
 @Service
 @Primary
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserRepository userRepository;

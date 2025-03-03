@@ -1,5 +1,6 @@
 package org.example.models;
 
-public enum Roles {
+
+public enum RolesEnum {
     participant, mentor, organizer
 }
