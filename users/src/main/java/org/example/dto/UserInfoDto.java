@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserInfoDto {
     //  id контакты, ссылка на гитхаб, опыт, описание, фото
-    String token;
     String contacts;
     String github;
     String experience;

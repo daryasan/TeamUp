@@ -10,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +19,7 @@ public class AuthService {
     private TokenService tokenService;
     private PasswordEncoder passwordEncoder;
     private SessionService sessionService;
+    private Utils utils;
 
     // register user and add them to DB
     // return jwt token
@@ -28,19 +28,23 @@ public class AuthService {
     @Transactional
     public TokenResponseDto register(RegisterDto registerDto) throws DataException, UserException, AuthException {
 
-        if (!Utils.isEmailUnique(registerDto.getEmail()))
-            throw new UserException("User already exists!");
-        if (!Utils.isNicknameUnique(registerDto.getNickname()))
-            throw new DataException("Nickname is not unique! Try again.");
         if (!Utils.verifyEmail(registerDto.getEmail()))
             throw new DataException("Email is wrong!");
         if (!Utils.verifyPassword(registerDto.getPassword()))
             throw new DataException("Password must contain at least one capital letter and a number.");
+        if (!Utils.verifyNickname(registerDto.getNickname()))
+            throw new DataException("Nickname is wrong!");
+        if (!utils.isEmailUnique(registerDto.getEmail()))
+            throw new UserException("User already exists!");
+        if (!utils.isNicknameUnique(registerDto.getNickname()))
+            throw new DataException("Nickname is not unique! Try again.");
+        if (registerDto.getFirstName().isEmpty() || registerDto.getLastName().isEmpty())
+            throw new DataException("Fill in first and last name");
 
         User user = new User();
         user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        user.setRole(registerDto.getRole());
+        user.setRole(utils.convertRoleIdToRole(registerDto.getRoleId()));
         user.setNickname(registerDto.getNickname());
         user.setFirstName(registerDto.getFirstName());
         user.setLastName(registerDto.getLastName());

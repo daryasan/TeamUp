@@ -3,6 +3,7 @@ package org.example.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.models.Role;
 import org.example.models.RolesEnum;
 
 @Data
@@ -10,11 +11,11 @@ import org.example.models.RolesEnum;
 @NoArgsConstructor
 public class RegisterDto {
     // Роль, никнейм, email-адрес, фамилия, имя, отчество, пароль
-    RolesEnum role;
+    int roleId;
     String nickname;
     String email;
-    String lastName;
     String firstName;
+    String lastName;
     String middleName;
     String password;
 }

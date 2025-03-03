@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserFullInfoDto {
     // id, новый никнейм, фамилия, имя, отчество, контакты, ссылка на гитхаб, опыт, описание, фото
-    String token;
     String nickname;
     String lastName;
     String firstName;

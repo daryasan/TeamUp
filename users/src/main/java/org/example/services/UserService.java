@@ -22,15 +22,17 @@ public class UserService {
 
     private TokenService tokenService;
     private UserRepository userRepository;
+    private Utils utils;
 
     // saves user to DB
     // throws 403 FORBIDDEN
-    void saveUser(User user) throws UserException {
+    public User saveUser(User user) throws UserException {
         Optional<User> exists = userRepository.findByEmail(user.getEmail());
         if (exists.isPresent()) {
             throw new UserException("User is already present in DB!");
         }
         userRepository.save(user);
+        return user;
     }
 
     // adds user info OR rewrites it if exists
@@ -38,14 +40,14 @@ public class UserService {
     // right after registration
     // throws 401 UNAUTHORIZED or 400 BAD REQUEST
     @Transactional
-    public User addAdditionalUserInfo(UserInfoDto userInfoDto) throws UserException, AuthException {
+    public User addAdditionalUserInfo(Long id, UserInfoDto userInfoDto) throws UserException, DataException {
 
-        long id = tokenService.getUserIdFromToken(userInfoDto.getToken());
         Optional<User> exists = userRepository.findById(id);
 
         if (exists.isEmpty()) {
             throw new UserException("User doesn't exist!");
         }
+        if (!Utils.verifyGithub(userInfoDto.getGithub())) throw new DataException("Wrong git link!");
 
         User newUser = exists.get();
 
@@ -63,16 +65,13 @@ public class UserService {
     // gets more info as parameters compared to addUserInfo
     // throws 401 UNAUTHORIZED or 400 BAD REQUEST
     @Transactional
-    public User changeUserInfo(UserFullInfoDto userFullInfoDto) throws AuthException, UserException, DataException {
-        long id = tokenService.getUserIdFromToken(userFullInfoDto.getToken());
+    public User changeUserInfo(Long id, UserFullInfoDto userFullInfoDto) throws UserException, DataException {
         Optional<User> exists = userRepository.findById(id);
 
-        if (exists.isEmpty()) {
-            throw new UserException("User doesn't exist!");
-        }
-
-        if (!Utils.verifyGithub(userFullInfoDto.getGithub()))
-            throw new DataException("Wrong link!");
+        if (exists.isEmpty()) throw new UserException("User doesn't exist!");
+        if (userFullInfoDto.getFirstName() == null || userFullInfoDto.getLastName() == null)
+            throw new DataException("First and last name can't be empty!");
+        if (!Utils.verifyGithub(userFullInfoDto.getGithub())) throw new DataException("Wrong link!");
 
         User newUser = exists.get();
 
@@ -103,7 +102,8 @@ public class UserService {
 
     // fetches user by nickname to optional user -> doesn't throw
     // any exceptions
-    public User getUserByNickname(String nickname) throws UserException {
+    public User getUserByNickname(String nickname) throws UserException, DataException {
+        if (!Utils.verifyNickname(nickname)) throw new DataException("Wrong nickname!");
         Optional<User> user = userRepository.findByNickname(nickname);
         if (user.isEmpty()) throw new UserException("User does not exist!");
         else return user.get();
@@ -116,7 +116,8 @@ public class UserService {
         Optional<User> user = userRepository.findById(
                 tokenService.getUserIdFromToken(token)
         );
-        if (user.isEmpty()) throw new UserException("User does not exist!");
+        if (user.isEmpty())
+            throw new UserException("User does not exist!");
         else return user.get();
     }
 
@@ -137,12 +138,12 @@ public class UserService {
 
 
     // fetches all users with specified role
-    public List<User> getUsersByRole(Long roleId) throws DataException {
-        RolesEnum role = Utils.convertRoleIdToRole(roleId);
+    public List<User> getUsersByRole(int roleId) throws DataException {
+        RolesEnum role = utils.convertRoleIdToRole(roleId);
         List<User> users = userRepository.findAll();
-        List<User> usersByRole = new ArrayList<User>();
+        List<User> usersByRole = new ArrayList<>();
         for (User u : users) {
-            if (u.getRole() == role) usersByRole.add(u);
+            if (role == u.getRole()) usersByRole.add(u);
         }
         return usersByRole;
     }
@@ -150,7 +151,7 @@ public class UserService {
 
     // deletes user from db
     // returns if attempt is successful
-    boolean deleteUser(long id) {
+    public boolean deleteUser(long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) return false;
         userRepository.delete(user.get());

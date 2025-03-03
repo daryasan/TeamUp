@@ -36,7 +36,7 @@ public class AuthController {
     public ResponseEntity<TokenResponseDto> login(
             @RequestBody LoginDto loginDto,
             BindingResult bindingResult
-    ) throws AuthException, UserException {
+    ) throws AuthException, UserException, DataException {
 
         validator.validate(loginDto, bindingResult);
         return ResponseEntity.ok(authService.login(loginDto));

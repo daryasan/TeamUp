@@ -1,5 +1,6 @@
 package org.example.services;
 
+import lombok.RequiredArgsConstructor;
 import org.example.exceptions.DataException;
 import org.example.models.Role;
 import org.example.models.RolesEnum;
@@ -11,15 +12,17 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
+@RequiredArgsConstructor
 public class Utils {
 
-    final private static Pattern passwordPattern = Pattern.compile("^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$");
-    final private static Pattern emailPattern = Pattern.compile("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$");
-    final private static Pattern githubPattern = Pattern.compile("/https:\\/\\/github\\.com\\/([^\\/]+)$");
-    private static UserService userService;
-    private static RoleRepository roleRepository;
+    final private static Pattern passwordPattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d!@#$%^&*(),.?\":{}|<>_-]{8,}$");
+    final private static Pattern emailPattern =  Pattern.compile("^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)+$");
+    final private static Pattern nicknamePattern = Pattern.compile("^[a-z0-9._-]+$");
+    final private static Pattern githubPattern = Pattern.compile("^https:\\/\\/github\\.com\\/[a-zA-Z0-9-_]+$");
+    private UserService userService;
+    private RoleRepository roleRepository;
 
-    public static boolean isEmailUnique(String email) {
+    public boolean isEmailUnique(String email) {
         for (User u : userService.getAllUsers()) {
             if (email.equals(u.getEmail())) return false;
         }
@@ -28,6 +31,10 @@ public class Utils {
 
     public static boolean verifyEmail(String email) {
         return email.matches(emailPattern.pattern());
+    }
+
+    public static boolean verifyNickname(String nickname) {
+        return nickname.matches(nicknamePattern.pattern());
     }
 
     public static boolean verifyPassword(String password) {
@@ -42,7 +49,7 @@ public class Utils {
 
 
     // checks if username if unique
-    public static boolean isNicknameUnique(String nickname) {
+    public boolean isNicknameUnique(String nickname) {
         for (User u : userService.getAllUsers()) {
             if (nickname.equals(u.getNickname())) return false;
         }
@@ -50,7 +57,7 @@ public class Utils {
     }
 
 
-    public static RolesEnum convertRoleIdToRole(long roleId) throws DataException {
+    public RolesEnum convertRoleIdToRole(Integer roleId) throws DataException {
         Optional<Role> role = roleRepository.findById(roleId);
         if (role.isEmpty())
             throw new DataException("Wrong role id!");

@@ -13,11 +13,4 @@ public class AuthException extends Exception {
         super(message);
     }
 
-    public AuthException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public AuthException(Throwable cause) {
-        super(cause);
-    }
 }

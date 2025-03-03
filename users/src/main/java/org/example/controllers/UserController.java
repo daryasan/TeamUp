@@ -20,12 +20,13 @@ public class UserController {
 
     private UserService userService;
 
-    @PatchMapping("/add/")
+    @PatchMapping("/add/id={id}")
     public ResponseEntity<User> addUserAdditionalInfo(
+            @PathVariable Long id,
             @RequestBody UserInfoDto userInfoDto
-    ) throws AuthException, UserException {
+    ) throws UserException, DataException {
 
-        return ResponseEntity.ok(userService.addAdditionalUserInfo(userInfoDto));
+        return ResponseEntity.ok(userService.addAdditionalUserInfo(id, userInfoDto));
 
     }
 
@@ -46,7 +47,7 @@ public class UserController {
     @GetMapping("/nickname={nickname}")
     public ResponseEntity<User> getUserByNickname(
             @PathVariable String nickname
-    ) throws UserException {
+    ) throws UserException, DataException {
         return ResponseEntity.ok(userService.getUserByNickname(nickname));
     }
 
@@ -58,12 +59,13 @@ public class UserController {
     }
 
 
-    @PatchMapping("/edit")
+    @PatchMapping("/edit/id={id}")
     public ResponseEntity<User> changeUserInfo(
+            @PathVariable Long id,
             @RequestBody UserFullInfoDto userFullInfoDto
     ) throws AuthException, UserException, DataException {
 
-        return ResponseEntity.ok(userService.changeUserInfo(userFullInfoDto));
+        return ResponseEntity.ok(userService.changeUserInfo(id, userFullInfoDto));
 
     }
 
@@ -75,7 +77,7 @@ public class UserController {
 
     @GetMapping("/all-by-role/role-id={roleId}")
     public ResponseEntity<List<User>> getUsersByRole(
-            @PathVariable Long roleId) throws DataException {
+            @PathVariable Integer roleId) throws DataException {
 
         return ResponseEntity.ok(userService.getUsersByRole(roleId));
 
