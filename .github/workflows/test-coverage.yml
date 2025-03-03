@@ -1,0 +1,36 @@
+name: Test Coverage
+
+on:
+  push:
+    branches:
+      - dasha
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Клонируем репозиторий
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      # Устанавливаем JDK
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Устанавливаем зависимости и запускаем тесты
+      - name: Run tests with coverage
+        run: ./gradlew clean test jacocoTestReport
+
+      # Загружаем HTML-отчет как артефакт
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: build/reports/jacoco/test/html
