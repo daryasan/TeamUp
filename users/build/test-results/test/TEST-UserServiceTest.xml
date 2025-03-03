@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="UserServiceTest" tests="27" skipped="0" failures="0" errors="0" timestamp="2025-03-03T12:05:39" hostname="LAPTOP-NTMACC0E" time="1.03">
+<testsuite name="UserServiceTest" tests="27" skipped="0" failures="0" errors="0" timestamp="2025-03-03T12:13:53" hostname="LAPTOP-NTMACC0E" time="1.018">
   <properties/>
-  <testcase name="delete user unsuccessful" classname="UserServiceTest" time="0.904"/>
-  <testcase name="add additional user no user found" classname="UserServiceTest" time="0.008"/>
-  <testcase name="change user info successful" classname="UserServiceTest" time="0.02"/>
+  <testcase name="delete user unsuccessful" classname="UserServiceTest" time="0.892"/>
+  <testcase name="add additional user no user found" classname="UserServiceTest" time="0.007"/>
+  <testcase name="change user info successful" classname="UserServiceTest" time="0.019"/>
   <testcase name="change user info empty fields" classname="UserServiceTest" time="0.003"/>
-  <testcase name="change user info wrong git link" classname="UserServiceTest" time="0.005"/>
+  <testcase name="change user info wrong git link" classname="UserServiceTest" time="0.004"/>
   <testcase name="add additional user wrong git link" classname="UserServiceTest" time="0.004"/>
-  <testcase name="get user by token all correct" classname="UserServiceTest" time="0.004"/>
-  <testcase name="get user by nickname all correct" classname="UserServiceTest" time="0.003"/>
-  <testcase name="get users by role incorrect role identifier" classname="UserServiceTest" time="0.004"/>
-  <testcase name="get user by email incorrect email" classname="UserServiceTest" time="0.003"/>
+  <testcase name="get user by token all correct" classname="UserServiceTest" time="0.005"/>
+  <testcase name="get user by nickname all correct" classname="UserServiceTest" time="0.002"/>
+  <testcase name="get users by role incorrect role identifier" classname="UserServiceTest" time="0.006"/>
+  <testcase name="get user by email incorrect email" classname="UserServiceTest" time="0.004"/>
   <testcase name="get user by id user not found" classname="UserServiceTest" time="0.003"/>
-  <testcase name="get all users empty list" classname="UserServiceTest" time="0.003"/>
+  <testcase name="get all users empty list" classname="UserServiceTest" time="0.002"/>
   <testcase name="get users by role roles" classname="UserServiceTest" time="0.011"/>
-  <testcase name="get user by id all correct" classname="UserServiceTest" time="0.002"/>
+  <testcase name="get user by id all correct" classname="UserServiceTest" time="0.003"/>
   <testcase name="get user by token incorrect token" classname="UserServiceTest" time="0.003"/>
-  <testcase name="get users by role roles empty" classname="UserServiceTest" time="0.004"/>
+  <testcase name="get users by role roles empty" classname="UserServiceTest" time="0.003"/>
   <testcase name="delete user successful" classname="UserServiceTest" time="0.003"/>
   <testcase name="save same email user" classname="UserServiceTest" time="0.002"/>
   <testcase name="get user by email no user found" classname="UserServiceTest" time="0.002"/>
-  <testcase name="save correct user" classname="UserServiceTest" time="0.002"/>
-  <testcase name="change user info user not found" classname="UserServiceTest" time="0.002"/>
-  <testcase name="get user by nickname incorrect nickname" classname="UserServiceTest" time="0.003"/>
+  <testcase name="save correct user" classname="UserServiceTest" time="0.003"/>
+  <testcase name="change user info user not found" classname="UserServiceTest" time="0.003"/>
+  <testcase name="get user by nickname incorrect nickname" classname="UserServiceTest" time="0.002"/>
   <testcase name="add additional user info success" classname="UserServiceTest" time="0.003"/>
   <testcase name="get user by token user not found" classname="UserServiceTest" time="0.003"/>
   <testcase name="get all users correct" classname="UserServiceTest" time="0.002"/>

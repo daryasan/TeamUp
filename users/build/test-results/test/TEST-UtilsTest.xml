@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="UtilsTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2025-03-03T12:05:40" hostname="LAPTOP-NTMACC0E" time="0.062">
+<testsuite name="UtilsTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2025-03-03T12:13:54" hostname="LAPTOP-NTMACC0E" time="0.065">
   <properties/>
-  <testcase name="is email unique email not unique" classname="UtilsTest" time="0.032"/>
-  <testcase name="verify password correct" classname="UtilsTest" time="0.002"/>
+  <testcase name="is email unique email not unique" classname="UtilsTest" time="0.031"/>
+  <testcase name="verify password correct" classname="UtilsTest" time="0.003"/>
   <testcase name="convert role id to role incorrect role" classname="UtilsTest" time="0.002"/>
-  <testcase name="is email unique unique" classname="UtilsTest" time="0.002"/>
+  <testcase name="is email unique unique" classname="UtilsTest" time="0.001"/>
   <testcase name="verify password incorrect" classname="UtilsTest" time="0.001"/>
   <testcase name="verify email correct" classname="UtilsTest" time="0.001"/>
-  <testcase name="is nickname unique unique" classname="UtilsTest" time="0.002"/>
-  <testcase name="convert role id to role correct ids" classname="UtilsTest" time="0.003"/>
+  <testcase name="is nickname unique unique" classname="UtilsTest" time="0.001"/>
+  <testcase name="convert role id to role correct ids" classname="UtilsTest" time="0.002"/>
   <testcase name="is nickname unique nickname not unique" classname="UtilsTest" time="0.002"/>
   <testcase name="convert role id to role incorrect ids" classname="UtilsTest" time="0.002"/>
-  <testcase name="verify mail incorrect" classname="UtilsTest" time="0.001"/>
-  <testcase name="verify github correct" classname="UtilsTest" time="0.001"/>
-  <testcase name="verify github incorrect" classname="UtilsTest" time="0.001"/>
-  <testcase name="verify nickname correct" classname="UtilsTest" time="0.001"/>
-  <testcase name="verify nickname incorrect" classname="UtilsTest" time="0.001"/>
+  <testcase name="verify mail incorrect" classname="UtilsTest" time="0.002"/>
+  <testcase name="verify github correct" classname="UtilsTest" time="0.002"/>
+  <testcase name="verify github incorrect" classname="UtilsTest" time="0.002"/>
+  <testcase name="verify nickname correct" classname="UtilsTest" time="0.002"/>
+  <testcase name="verify nickname incorrect" classname="UtilsTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

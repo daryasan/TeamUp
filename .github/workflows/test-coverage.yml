@@ -1,4 +1,4 @@
-name: Test Coverage
+name: Users Microservice Test Coverage
 
 on:
   push:
@@ -38,5 +38,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: build/reports/jacoco/test/html
+          path: users/build/reports/jacoco/test/html
 
