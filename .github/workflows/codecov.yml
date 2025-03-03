@@ -1,0 +1,45 @@
+name: Run Unit Tests with Code Coverage
+
+on:
+  push:
+    branches:
+      - dasha
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle
+
+      # Запуск тестов с покрытием
+      - name: Run unit tests with coverage
+        run: ./gradlew :users:test --info
+
+      # Генерация отчета о покрытии (Jacoco)
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: '**/build/reports/jacoco/test/*.xml' # Убедитесь, что путь соответствует вашему отчету Jacoco
+          fail_ci_if_error: true

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="AuthServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-03-03T11:12:14" hostname="LAPTOP-NTMACC0E" time="0.019">
+<testsuite name="AuthServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-03-03T11:19:49" hostname="LAPTOP-NTMACC0E" time="0.022">
   <properties/>
-  <testcase name="register()" classname="AuthServiceTest" time="0.019"/>
+  <testcase name="register()" classname="AuthServiceTest" time="0.022"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
