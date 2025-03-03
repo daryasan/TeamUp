@@ -7,13 +7,13 @@ jacoco {
     toolVersion = "0.8.8" // Убедитесь, что версия Jacoco актуальна
 }
 
-tasks.test {
+test {
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
 }
 
 jacocoTestReport {
-    dependsOn tasks.test
+    dependsOn test
     reports {
         xml.required = true
         html.required = true
@@ -50,8 +50,4 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.21.0'
 
 
-}
-
-test {
-    useJUnitPlatform()
 }

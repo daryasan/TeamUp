@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">users</a> &gt; <a href="index.source.html" class="el_package">org.example.controllers</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package org.example.controllers;
+
+import org.example.dto.UserFullInfoDto;
+import org.example.dto.UserInfoDto;
+import org.example.exceptions.AuthException;
+import org.example.exceptions.DataException;
+import org.example.exceptions.UserException;
+import org.example.models.User;
+import org.example.services.UserService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@Controller
+@RequestMapping(&quot;/user&quot;)
+<span class="nc" id="L19">public class UserController {</span>
+
+    private UserService userService;
+
+    @PatchMapping(&quot;/add/id={id}&quot;)
+    public ResponseEntity&lt;User&gt; addUserAdditionalInfo(
+            @PathVariable Long id,
+            @RequestBody UserInfoDto userInfoDto
+    ) throws UserException, DataException {
+
+<span class="nc" id="L29">        return ResponseEntity.ok(userService.addAdditionalUserInfo(id, userInfoDto));</span>
+
+    }
+
+    @GetMapping(&quot;/id={id}&quot;)
+    public ResponseEntity&lt;User&gt; getUserById(
+            @PathVariable long id
+    ) throws UserException {
+<span class="nc" id="L37">        return ResponseEntity.ok(userService.getUserById(id));</span>
+    }
+
+    @GetMapping(&quot;/email={email}&quot;)
+    public ResponseEntity&lt;User&gt; getUserByEmail(
+            @PathVariable String email
+    ) throws DataException, UserException {
+<span class="nc" id="L44">        return ResponseEntity.ok(userService.getUserByEmail(email));</span>
+    }
+
+    @GetMapping(&quot;/nickname={nickname}&quot;)
+    public ResponseEntity&lt;User&gt; getUserByNickname(
+            @PathVariable String nickname
+    ) throws UserException, DataException {
+<span class="nc" id="L51">        return ResponseEntity.ok(userService.getUserByNickname(nickname));</span>
+    }
+
+    @GetMapping(&quot;/token={token}&quot;)
+    public ResponseEntity&lt;User&gt; getUserByToken(
+            @PathVariable String token
+    ) throws AuthException, UserException {
+<span class="nc" id="L58">        return ResponseEntity.ok(userService.getUserByToken(token));</span>
+    }
+
+
+    @PatchMapping(&quot;/edit/id={id}&quot;)
+    public ResponseEntity&lt;User&gt; changeUserInfo(
+            @PathVariable Long id,
+            @RequestBody UserFullInfoDto userFullInfoDto
+    ) throws AuthException, UserException, DataException {
+
+<span class="nc" id="L68">        return ResponseEntity.ok(userService.changeUserInfo(id, userFullInfoDto));</span>
+
+    }
+
+    @GetMapping(&quot;/all&quot;)
+    public ResponseEntity&lt;List&lt;User&gt;&gt; getAllUsers() {
+<span class="nc" id="L74">        return ResponseEntity.ok(userService.getAllUsers());</span>
+    }
+
+
+    @GetMapping(&quot;/all-by-role/role-id={roleId}&quot;)
+    public ResponseEntity&lt;List&lt;User&gt;&gt; getUsersByRole(
+            @PathVariable Integer roleId) throws DataException {
+
+<span class="nc" id="L82">        return ResponseEntity.ok(userService.getUsersByRole(roleId));</span>
+
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
