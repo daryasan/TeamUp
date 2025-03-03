@@ -17,6 +17,10 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
+      # Устанавливаем права на выполнение файла gradlew
+      - name: Grant execute permission for Gradle Wrapper
+        run: chmod +x gradlew
+
       # Устанавливаем JDK
       - name: Set up JDK
         uses: actions/setup-java@v3
