@@ -2,8 +2,8 @@ package org.example.models;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -14,6 +14,8 @@ import java.util.List;
 @Entity
 @Table(name = "events_")
 public class Event {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String description;
@@ -24,4 +26,6 @@ public class Event {
     private List<Long> participantsId;
     private List<EventStep> eventSteps;
     private List<Long> winnersId;
+    private Date startDate;
+    private Date endDate;
 }

@@ -2,8 +2,7 @@ package org.example.models;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 
@@ -15,6 +14,8 @@ import java.util.Date;
 @Entity
 @Table(name = "meetings_")
 public class Meeting {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private Team team;
     private String link;

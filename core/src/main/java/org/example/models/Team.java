@@ -2,8 +2,7 @@ package org.example.models;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @Setter
@@ -14,6 +13,8 @@ import java.util.List;
 @Entity
 @Table(name = "queries_")
 public class Team {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String description;
