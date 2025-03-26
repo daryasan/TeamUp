@@ -20,9 +20,9 @@ public class EventStepService {
     private EventStepRepository eventStepRepository;
 
     @Transactional
-    public EventStep createEventStep(CreateEventStepDto eventStepDto) {
+    public EventStep createEventStep(long eventId, CreateEventStepDto eventStepDto) {
         EventStep eventStep = new EventStep();
-        eventStep.setEventId(eventStepDto.getEventId());
+        eventStep.setEventId(eventId);
         eventStep.setStepNumber(eventStepDto.getStepNumber());
         eventStep.setEndDate(eventStepDto.getEndDate());
         eventStep.setStartDate(eventStepDto.getStartDate());
@@ -37,9 +37,9 @@ public class EventStepService {
         return eventStepOpt.get();
     }
 
-    public EventStep editEventStep(Long id, CreateEventStepDto eventStepDto) throws EventException {
+    public EventStep editEventStep(long eventId, long id, CreateEventStepDto eventStepDto) throws EventException {
         EventStep eventStep = findEventStepById(id);
-        eventStep.setEventId(eventStepDto.getEventId());
+        eventStep.setEventId(eventId);
         eventStep.setStepNumber(eventStepDto.getStepNumber());
         eventStep.setEndDate(eventStepDto.getEndDate());
         eventStep.setStartDate(eventStepDto.getStartDate());

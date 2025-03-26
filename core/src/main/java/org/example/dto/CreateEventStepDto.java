@@ -11,7 +11,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class CreateEventStepDto {
-    private Long eventId;
     private Date startDate;
     private Date endDate;
     private int stepNumber;

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.EditEventDto;
 import org.example.dto.EventInfoDto;
+import org.example.dto.UserDetailsDto;
 import org.example.dto.UserDto;
 import org.example.exceptions.DataException;
 import org.example.exceptions.EventException;
@@ -12,6 +13,9 @@ import org.example.models.Event;
 import org.example.models.Team;
 import org.example.repositories.EventRepository;
 import org.example.repositories.TeamRepository;
+import org.example.security.PublicKeyClient;
+import org.example.security.PublicKeyService;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -25,12 +29,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
 public class EventService {
 
     private EventRepository eventRepository;
     private RestTemplate restTemplate;
     private TeamRepository teamRepository;
+    private PublicKeyService publicKeyService;
 
     @Transactional
     public Event createEvent(EventInfoDto eventInfoDto) throws DataException {
@@ -97,12 +101,21 @@ public class EventService {
         return eventRepository.findAll();
     }
 
-    public void participateUser(Long eventId, Long userId) throws EventException {
-        Event event = getEventById(eventId);
+    public boolean participateUser(Long eventId) {
+        Event event;
+        try {
+            event = getEventById(eventId);
+        } catch (EventException e) {
+            return false;
+        }
         List<Long> participants = event.getParticipantsId();
-        participants.add(userId);
+
+
+        UserDetailsDto userDetailsDto = publicKeyService.getDetailsFromToken();
+        participants.add(userDetailsDto.getId());
 
         eventRepository.save(event);
+        return true;
     }
 
 

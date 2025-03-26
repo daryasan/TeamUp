@@ -1,5 +1,6 @@
 package org.example.security;
 
+import org.example.dto.UserDetailsDto;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -19,4 +20,10 @@ public class PublicKeyService {
         String key = publicKeyClient.getPublicKey();
         return JwtTokenValidator.getPublicKeyFromString(key);
     }
+
+    @Cacheable("userDetails")
+    public UserDetailsDto getDetailsFromToken() {
+        return publicKeyClient.getDetailsFromToken();
+    }
+
 }
