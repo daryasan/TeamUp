@@ -49,10 +49,10 @@ public class EventController {
     }
 
     @GetMapping("/id={id}")
-    public ResponseEntity<Event> getEventById(
+    public ResponseEntity<Event> findEventById(
             @PathVariable long id
     ) throws EventException {
-        return ResponseEntity.ok(eventService.getEventById(id));
+        return ResponseEntity.ok(eventService.findEventById(id));
     }
 
 
@@ -130,7 +130,7 @@ public class EventController {
             @PathVariable long eventId,
             @PathVariable long id
     ) throws EventException {
-        eventStepService.deleteEventStep(id);
+        eventStepService.deleteEventStep(eventId, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

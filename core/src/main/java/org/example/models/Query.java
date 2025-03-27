@@ -14,8 +14,9 @@ import javax.persistence.*;
 public class Query {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private Team team;
-    private Long userId;
-    private QueryStatus queryStatus;
+    private Long senderId;
+    private Long receiverId;
+    private QueryStatus queryStatus = QueryStatus.pinging;
 }

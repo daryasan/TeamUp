@@ -3,6 +3,7 @@ package org.example.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -22,9 +23,10 @@ public class Team {
     private String projectName;
     private Long mentorId;
     private Long leaderId;
-    private List<Long> participantsId;
+    private List<Long> participantsId = new ArrayList<>();
     // private List<Long> tagsId;
-    private boolean statusIsFormed;
+    private boolean statusIsFormed = false;
+    private boolean statusHasMentor = false;
     private List<Meeting> meetings;
     private List<Query> queries;
 }

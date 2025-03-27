@@ -1,11 +1,10 @@
 package org.example.services;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.EditEventDto;
 import org.example.dto.EventInfoDto;
-import org.example.dto.UserDetailsDto;
+import org.example.dto.UserDetailsFromTokenDto;
 import org.example.dto.UserDto;
 import org.example.exceptions.DataException;
 import org.example.exceptions.EventException;
@@ -13,9 +12,7 @@ import org.example.models.Event;
 import org.example.models.Team;
 import org.example.repositories.EventRepository;
 import org.example.repositories.TeamRepository;
-import org.example.security.PublicKeyClient;
-import org.example.security.PublicKeyService;
-import org.springframework.cloud.openfeign.FeignClient;
+import org.example.security.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -32,9 +29,9 @@ import java.util.Optional;
 public class EventService {
 
     private EventRepository eventRepository;
-    private RestTemplate restTemplate;
     private TeamRepository teamRepository;
-    private PublicKeyService publicKeyService;
+    private UserService userService;
+    Utils utils;
 
     @Transactional
     public Event createEvent(EventInfoDto eventInfoDto) throws DataException {
@@ -58,7 +55,7 @@ public class EventService {
 
 
     public Event editEvent(Long id, EditEventDto editEventDto) throws EventException {
-        Event event = getEventById(id);
+        Event event = findEventById(id);
 
         event.setName(editEventDto.getName());
         event.setDescription(editEventDto.getDescription());
@@ -72,7 +69,7 @@ public class EventService {
     }
 
 
-    public Event getEventById(Long id) throws EventException {
+    public Event findEventById(Long id) throws EventException {
         Optional<Event> eventOpt = eventRepository.findById(id);
 
         if (eventOpt.isEmpty()) throw new EventException("Event doesn't exist");
@@ -81,15 +78,12 @@ public class EventService {
     }
 
     public List<UserDto> getEventParticipants(Long id) throws EventException {
-        Event event = getEventById(id);
+        Event event = findEventById(id);
         List<Long> userIds = event.getParticipantsId();
         List<UserDto> users = new ArrayList<>();
 
         for (Long userId : userIds) {
-            ResponseEntity<UserDto> responseEntity = restTemplate
-                    // TODO set port
-                    .getForEntity("http://localhost:8081/auth/id=" + userId,
-                            UserDto.class);
+            ResponseEntity<UserDto> responseEntity = utils.getUserById(userId);
             users.add(responseEntity.getBody());
         }
 
@@ -104,15 +98,15 @@ public class EventService {
     public boolean participateUser(Long eventId) {
         Event event;
         try {
-            event = getEventById(eventId);
+            event = findEventById(eventId);
         } catch (EventException e) {
             return false;
         }
         List<Long> participants = event.getParticipantsId();
 
 
-        UserDetailsDto userDetailsDto = publicKeyService.getDetailsFromToken();
-        participants.add(userDetailsDto.getId());
+        UserDetailsFromTokenDto userDetailsFromTokenDto = userService.getDetailsFromToken();
+        participants.add(userDetailsFromTokenDto.getId());
 
         eventRepository.save(event);
         return true;

@@ -22,8 +22,9 @@ import static java.lang.Long.parseLong;
 public class TokenService {
 
     private JwtProperties jwtProperties;
+
     public enum ClaimsEnum {
-        email, id, nickname
+        email, id, nickname, role
     }
 
     // TODO null pointer
@@ -31,16 +32,17 @@ public class TokenService {
             jwtProperties.getKey().getBytes()
     );
 
-    String returnAccessToken(User user){
+    String returnAccessToken(User user) {
         return generateAccessToken(user, new Date(System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration()));
     }
 
-    private String generateAccessToken(User user, Date expires){
+    private String generateAccessToken(User user, Date expires) {
         Date issuedDate = new Date();
         return Jwts.builder()
                 .claim(ClaimsEnum.email.name(), user.getEmail())
                 .claim(ClaimsEnum.id.name(), user.getId())
                 .claim(ClaimsEnum.nickname.name(), user.getNickname())
+                .claim(ClaimsEnum.role.name(), user.getRole())
                 .issuedAt(issuedDate)
                 .expiration(expires)
                 .signWith(secretKey).compact();
@@ -75,12 +77,17 @@ public class TokenService {
         return getClaims(token).getExpiration();
     }
 
+    public String getRoleFromToken(String token) throws AuthException {
+        return getClaims(token).get(ClaimsEnum.role.name()).toString();
+    }
+
     public UserDetailsDto getDetails(String token) throws AuthException {
-        if (!isExpired(token)){
+        if (!isExpired(token)) {
             UserDetailsDto userDetailsDto = new UserDetailsDto();
             userDetailsDto.setId(getUserIdFromToken(token));
             userDetailsDto.setEmail(getEmailFromToken(token));
             userDetailsDto.setNickname(getNicknameFromToken(token));
+            userDetailsDto.setRole(getRoleFromToken(token));
             return userDetailsDto;
         } else throw new AuthException("Expired token!");
     }

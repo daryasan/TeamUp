@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.CreateEventStepDto;
 import org.example.exceptions.EventException;
+import org.example.models.Event;
 import org.example.models.EventStep;
 import org.example.repositories.EventStepRepository;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class EventStepService {
 
     private EventStepRepository eventStepRepository;
+    private EventService eventService;
 
     @Transactional
     public EventStep createEventStep(long eventId, CreateEventStepDto eventStepDto) {
@@ -48,9 +50,15 @@ public class EventStepService {
         return eventStep;
     }
 
-    public void deleteEventStep(Long id) throws EventException {
+    public void deleteEventStep(Long eventId, Long id) throws EventException {
         EventStep eventStep = findEventStepById(id);
-        eventStepRepository.delete(eventStep);
+        Event event = eventService.findEventById(eventId);
+        for (EventStep e : event.getEventSteps()) {
+            if (e.getId() == eventId) {
+                eventStepRepository.delete(eventStep);
+            }
+        }
+        throw new EventException("Event doesn't contains such step!");
     }
 
     public EventStep setWinners(Long id, List<Long> teams) throws EventException {

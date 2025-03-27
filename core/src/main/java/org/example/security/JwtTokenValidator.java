@@ -13,7 +13,7 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class JwtTokenValidator {
 
-    private PublicKeyService publicKeyService;
+    private UserService userService;
 
     public static PublicKey getPublicKeyFromString(String key) throws InvalidKeySpecException, NoSuchAlgorithmException {
         String publicKeyPEM = key.replace("-----BEGIN PUBLIC KEY-----", "")
@@ -29,7 +29,7 @@ public class JwtTokenValidator {
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .verifyWith(publicKeyService.getPublicKey())
+                    .verifyWith(userService.getPublicKey())
                     .build()
                     .parseSignedClaims(token);
             return true;
