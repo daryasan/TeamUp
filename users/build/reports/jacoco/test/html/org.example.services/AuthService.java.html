@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">users</a> &gt; <a href="index.source.html" class="el_package">org.example.services</a> &gt; <span class="el_source">AuthService.java</span></div><h1>AuthService.java</h1><pre class="source lang-java linenums">package org.example.services;
+
+import lombok.RequiredArgsConstructor;
+import org.example.dto.*;
+import org.example.exceptions.AuthException;
+import org.example.exceptions.DataException;
+import org.example.exceptions.UserException;
+import org.example.models.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+
+@Service
+<span class="nc" id="L15">@RequiredArgsConstructor</span>
+public class AuthService {
+
+    private UserService userService;
+    private TokenService tokenService;
+    private PasswordEncoder passwordEncoder;
+    private SessionService sessionService;
+    private Utils utils;
+
+    // register user and add them to DB
+    // return jwt token
+    // trows 400 BAD REQUEST (if nickname not unique | email or password doesn't fir mask)
+    //       403 FORBIDDEN (if user already exists)
+    @Transactional
+    public TokenResponseDto register(RegisterDto registerDto) throws DataException, UserException, AuthException {
+
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        if (!Utils.verifyEmail(registerDto.getEmail()))</span>
+<span class="nc" id="L32">            throw new DataException(&quot;Email is wrong!&quot;);</span>
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if (!Utils.verifyPassword(registerDto.getPassword()))</span>
+<span class="nc" id="L34">            throw new DataException(&quot;Password must contain at least one capital letter and a number.&quot;);</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        if (!Utils.verifyNickname(registerDto.getNickname()))</span>
+<span class="nc" id="L36">            throw new DataException(&quot;Nickname is wrong!&quot;);</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        if (!utils.isEmailUnique(registerDto.getEmail()))</span>
+<span class="nc" id="L38">            throw new UserException(&quot;User already exists!&quot;);</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (!utils.isNicknameUnique(registerDto.getNickname()))</span>
+<span class="nc" id="L40">            throw new DataException(&quot;Nickname is not unique! Try again.&quot;);</span>
+<span class="nc bnc" id="L41" title="All 4 branches missed.">        if (registerDto.getFirstName().isEmpty() || registerDto.getLastName().isEmpty())</span>
+<span class="nc" id="L42">            throw new DataException(&quot;Fill in first and last name&quot;);</span>
+
+<span class="nc" id="L44">        User user = new User();</span>
+<span class="nc" id="L45">        user.setEmail(registerDto.getEmail());</span>
+<span class="nc" id="L46">        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));</span>
+<span class="nc" id="L47">        user.setRole(utils.convertRoleIdToRole(registerDto.getRoleId()));</span>
+<span class="nc" id="L48">        user.setNickname(registerDto.getNickname());</span>
+<span class="nc" id="L49">        user.setFirstName(registerDto.getFirstName());</span>
+<span class="nc" id="L50">        user.setLastName(registerDto.getLastName());</span>
+<span class="nc" id="L51">        user.setMiddleName(registerDto.getMiddleName());</span>
+
+<span class="nc" id="L53">        String token = tokenService.returnAccessToken(user);</span>
+<span class="nc" id="L54">        sessionService.createSession(token);</span>
+
+<span class="nc" id="L56">        return new TokenResponseDto(token);</span>
+    }
+
+
+    // login user and return jwt token
+    // throws 403 FORBIDDEN (if email is not registered OR password wrong)
+    public TokenResponseDto login(LoginDto loginDto) throws UserException, AuthException, DataException {
+<span class="nc" id="L63">        User user = userService.getUserByEmail(loginDto.getEmail());</span>
+
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (!user.getPassword().equals(passwordEncoder.encode(loginDto.getPassword())))</span>
+<span class="nc" id="L66">            throw new UserException(&quot;Wrong password&quot;);</span>
+
+<span class="nc" id="L68">        String token = tokenService.returnAccessToken(user);</span>
+<span class="nc" id="L69">        sessionService.createSession(token);</span>
+
+<span class="nc" id="L71">        return new TokenResponseDto(token);</span>
+    }
+
+
+    // changes user password, if it doesn't match the mask
+    // throws 400 BAD REQUEST (if password wrong),
+    //        401 UNAUTHORIZED (if token invalid),
+    //        403 FORBIDDEN (if user not found)
+    public User changePassword(ChangePasswordDto changePasswordDto) throws UserException, AuthException, DataException {
+<span class="nc" id="L80">        User user = userService.getUserByToken(changePasswordDto.getToken());</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (!user.getPassword().equals(</span>
+<span class="nc" id="L82">                passwordEncoder.encode(changePasswordDto.getOldPassword()))</span>
+        ) {
+<span class="nc" id="L84">            throw new DataException(&quot;Wrong old password!&quot;);</span>
+        }
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (!Utils.verifyPassword(changePasswordDto.getNewPassword())) {</span>
+<span class="nc" id="L87">            throw new DataException(&quot;New password must contain at least one capital letter and a number.&quot;);</span>
+        }
+
+<span class="nc" id="L90">        user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));</span>
+<span class="nc" id="L91">        userService.saveUser(user);</span>
+<span class="nc" id="L92">        return user;</span>
+    }
+
+
+    // changes email as major login method
+    public TokenResponseDto changeEmail(ChangeEmailDto changeEmailDto) throws AuthException, UserException, DataException {
+<span class="nc" id="L98">        User user = userService.getUserByToken(changeEmailDto.getToken());</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (!Utils.verifyEmail(changeEmailDto.getNewEmail())) {</span>
+<span class="nc" id="L100">            throw new DataException(&quot;Email doesn't match mask.&quot;);</span>
+        }
+
+<span class="nc" id="L103">        user.setEmail(changeEmailDto.getNewEmail());</span>
+<span class="nc" id="L104">        userService.saveUser(user);</span>
+<span class="nc" id="L105">        return new TokenResponseDto(tokenService.returnAccessToken(user));</span>
+    }
+
+
+    // logout user
+    public void logout(String token) {
+        // TODO
+<span class="nc" id="L112">    }</span>
+
+
+    // delete user from DB
+    // throws 401 UNAUTHORIZED (if token invalid)
+    //        403 FORBIDDEN (if user doesn't exist)
+    public void deactivateAccount(String token) throws AuthException, UserException {
+<span class="nc" id="L119">        long userId = tokenService.getUserIdFromToken(token);</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (!userService.deleteUser(userId)) throw new UserException(&quot;User doesn't exist&quot;);</span>
+<span class="nc" id="L121">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
