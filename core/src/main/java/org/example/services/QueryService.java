@@ -2,6 +2,7 @@ package org.example.services;
 
 import lombok.RequiredArgsConstructor;
 import org.example.dto.UserDetailsFromTokenDto;
+import org.example.exceptions.AccessException;
 import org.example.exceptions.AuthException;
 import org.example.exceptions.QueryException;
 import org.example.exceptions.TeamException;
@@ -25,8 +26,10 @@ public class QueryService {
     private Utils utils;
 
     @Transactional
-    public Query participateInTeam(Long teamId) throws TeamException {
+    public Query participateInTeam(Long teamId) throws TeamException, AccessException {
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();
+
+        if (utils.isOrganizer(user)) throw new AccessException("Organizer cannot participate in a team!");
 
         // PARTICIPANT hase other team
         if (utils.isParticipant(user) && teamService.hasTeam(user.getId()))
@@ -43,13 +46,13 @@ public class QueryService {
     }
 
     @Transactional
-    public Query suggestParticipation(Long teamId, Long userId) throws TeamException {
+    public Query suggestParticipation(Long teamId, Long userId) throws TeamException, AccessException {
         // current user
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();
 
-        // current user (PARTICIPANT or MENTOR) is nor in current team
+        // current user (PARTICIPANT or MENTOR) is not in current team
         if (!teamService.isInTeam(user.getId(), teamId))
-            throw new TeamException("User who is suggesting to participate does not have a team");
+            throw new AccessException("User who is suggesting to participate does not have a team");
 
         Query query = new Query();
         query.setTeam(teamService.findTeamById(teamId));
@@ -62,16 +65,18 @@ public class QueryService {
 
     }
 
-
-    public Query acceptDeclineByReceiver(Long queryId, boolean isAccepted) throws QueryException, AuthException, TeamException {
+    @Transactional
+    public Query acceptDeclineByReceiver(Long queryId, boolean isAccepted) throws QueryException, TeamException, AccessException {
         // current user
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();
         Query query = findQueryById(queryId);
         Team team = query.getTeam();
 
-        if (!(query.getReceiverId() == user.getId())) throw new QueryException("Current user is not receiver");
-        if (utils.isOrganizer(user)) throw new AuthException("Organizer can't access team queries");
+        if (query.getQueryStatus() != QueryStatus.pinging) throw new QueryException("Action only available for pinging queries");
+        if (!(query.getReceiverId() == user.getId())) throw new AccessException("Current user is not receiver");
+        if (utils.isOrganizer(user)) throw new AccessException("Organizer can't access team queries");
 
+        // if query not accepted = nothing happens
         if (!isAccepted) {
             query.setQueryStatus(QueryStatus.declined);
             queryRepository.save(query);
@@ -99,7 +104,7 @@ public class QueryService {
             // user becomes MENTOR
             else if (utils.isMentor(user)) {
                 team.setMentorId(user.getId());
-                team.setStatusHasMentor(true);
+                team.setHasMentor(true);
             } else {
                 throw new QueryException("Bad query");
             }
@@ -109,6 +114,18 @@ public class QueryService {
             return query;
         }
 
+    }
+
+
+    public Query cancelBySender(Long queryId) throws QueryException, AccessException {
+        UserDetailsFromTokenDto user = userService.getDetailsFromToken();
+        Query query = findQueryById(queryId);
+
+        if (user.getId() == query.getSenderId()) {
+            query.setQueryStatus(QueryStatus.cancelled);
+            queryRepository.save(query);
+        }
+        throw new AccessException("User is not sender!");
     }
 
     public Query findQueryById(Long queryId) throws QueryException {

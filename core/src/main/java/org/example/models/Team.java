@@ -25,8 +25,8 @@ public class Team {
     private Long leaderId;
     private List<Long> participantsId = new ArrayList<>();
     // private List<Long> tagsId;
-    private boolean statusIsFormed = false;
-    private boolean statusHasMentor = false;
+    private boolean formed = false;
+    private boolean hasMentor = false;
     private List<Meeting> meetings;
     private List<Query> queries;
 }
