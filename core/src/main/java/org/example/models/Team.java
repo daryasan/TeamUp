@@ -23,10 +23,10 @@ public class Team {
     private String projectName;
     private Long mentorId;
     private Long leaderId;
-    private List<Long> participantsId = new ArrayList<>();
-    // private List<Long> tagsId;
-    private boolean formed = false;
-    private boolean hasMentor = false;
+    private List<Long> participantsId;
+    private List<Tag> tags;
+    private boolean formed;
+    private boolean hasMentor;
     private List<Meeting> meetings;
     private List<Query> queries;
 }

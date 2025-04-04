@@ -44,6 +44,8 @@ public class TeamService {
         team.setName(createTeamDto.getName());
         team.setEvent(eventService.findEventById(createTeamDto.getEventId()));
         team.setProjectName(createTeamDto.getProjectName());
+        team.setHasMentor(false);
+        team.setFormed(false);
 
         // user is PARTICIPANT
         if (utils.isParticipant(user)) {

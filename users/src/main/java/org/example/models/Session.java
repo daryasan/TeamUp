@@ -6,12 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-@Entity
 @Table(name = "session_")
 public class Session {
 
