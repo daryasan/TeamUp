@@ -1,24 +1,32 @@
 package org.example.controllers;
 
+import lombok.RequiredArgsConstructor;
+import org.example.dto.TagDto;
 import org.example.dto.UserFullInfoDto;
 import org.example.dto.UserInfoDto;
 import org.example.exceptions.AuthException;
 import org.example.exceptions.DataException;
 import org.example.exceptions.UserException;
 import org.example.models.User;
+import org.example.services.TagService;
 import org.example.services.UserService;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
+    private final TagService tagService;
 
     @PatchMapping("/add/id={id}")
     public ResponseEntity<User> addUserAdditionalInfo(
@@ -81,6 +89,16 @@ public class UserController {
 
         return ResponseEntity.ok(userService.getUsersByRole(roleId));
 
+    }
+
+
+    @PatchMapping("add-tags")
+    public ResponseEntity<User> assignTags(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody List<TagDto> tags
+    ) throws DataException, AuthException {
+        String token = authHeader.substring(7);
+        return ResponseEntity.ok(tagService.assignSkills(token, tags));
     }
 
 

@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReviewController {
 
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
 
     @PostMapping("/add/user={userId}")
     public ResponseEntity<Review> addReview(

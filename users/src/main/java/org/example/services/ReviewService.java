@@ -19,8 +19,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ReviewService {
 
-    private ReviewRepository reviewRepository;
-    private TokenService tokenService;
+    private final ReviewRepository reviewRepository;
+    private final TokenService tokenService;
 
     public Review addReview(String token, Long receiverId, CreateReviewDto createReviewDto) throws DataException, AuthException {
 

@@ -1,15 +1,13 @@
 package org.example.models;
 
+import jakarta.persistence.*;
 import lombok.Data;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.lang.reflect.Type;
+import lombok.RequiredArgsConstructor;
 
 @Data
+@Entity
 @Table(name = "reviews_")
+@RequiredArgsConstructor
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

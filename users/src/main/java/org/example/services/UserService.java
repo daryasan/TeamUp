@@ -1,5 +1,6 @@
 package org.example.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.UserFullInfoDto;
 import org.example.dto.UserInfoDto;
@@ -11,7 +12,6 @@ import org.example.models.User;
 import org.example.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +20,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private TokenService tokenService;
-    private UserRepository userRepository;
-    private Utils utils;
+    private final TokenService tokenService;
+    private final UserRepository userRepository;
+    private final Utils utils;
 
     // saves user to DB
     // throws 403 FORBIDDEN
@@ -61,6 +61,17 @@ public class UserService {
         return newUser;
     }
 
+    @Transactional
+    public User uploadProfilePhoto(String token, String photoPath) throws AuthException, UserException {
+        Long id = tokenService.getUserIdFromToken(token);
+
+        User user = getUserById(id);
+        user.setImage(photoPath);
+        userRepository.save(user);
+
+        return user;
+    }
+
     // adds user info OR rewrites it if exists.
     // gets more info as parameters compared to addUserInfo
     // throws 401 UNAUTHORIZED or 400 BAD REQUEST
@@ -79,7 +90,6 @@ public class UserService {
         newUser.setDescription(userFullInfoDto.getDescription());
         newUser.setExperience(userFullInfoDto.getExperience());
         newUser.setGithub(userFullInfoDto.getGithub());
-        newUser.setImage(userFullInfoDto.getImage());
         newUser.setNickname(userFullInfoDto.getNickname());
         newUser.setFirstName(userFullInfoDto.getFirstName());
         newUser.setLastName(userFullInfoDto.getLastName());

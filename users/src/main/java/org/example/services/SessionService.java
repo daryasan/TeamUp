@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SessionService {
 
-    private SessionRepository sessionRepository;
-    private TokenService tokenService;
+    private final SessionRepository sessionRepository;
+    private final TokenService tokenService;
 
     void createSession(String token) throws AuthException {
 

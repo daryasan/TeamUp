@@ -1,13 +1,14 @@
 package org.example.models;
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
+@Entity
 @Table(name = "session_")
+@RequiredArgsConstructor
 public class Session {
 
     @Id

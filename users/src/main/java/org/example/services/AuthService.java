@@ -1,5 +1,6 @@
 package org.example.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.*;
 import org.example.exceptions.AuthException;
@@ -9,17 +10,16 @@ import org.example.models.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private UserService userService;
-    private TokenService tokenService;
-    private PasswordEncoder passwordEncoder;
-    private SessionService sessionService;
-    private Utils utils;
+    private final UserService userService;
+    private final TokenService tokenService;
+    private final PasswordEncoder passwordEncoder;
+    private final SessionService sessionService;
+    private final Utils utils;
 
     // register user and add them to DB
     // return jwt token
@@ -38,7 +38,10 @@ public class AuthService {
             throw new UserException("User already exists!");
         if (!utils.isNicknameUnique(registerDto.getNickname()))
             throw new DataException("Nickname is not unique! Try again.");
-        if (registerDto.getFirstName().isEmpty() || registerDto.getLastName().isEmpty())
+        if (registerDto.getFirstName() == null ||
+                registerDto.getFirstName().isEmpty() ||
+                registerDto.getLastName() == null ||
+                registerDto.getLastName().isEmpty())
             throw new DataException("Fill in first and last name");
 
         User user = new User();
@@ -49,6 +52,8 @@ public class AuthService {
         user.setFirstName(registerDto.getFirstName());
         user.setLastName(registerDto.getLastName());
         user.setMiddleName(registerDto.getMiddleName());
+
+        userService.saveUser(user);
 
         String token = tokenService.returnAccessToken(user);
         sessionService.createSession(token);

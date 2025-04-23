@@ -1,11 +1,12 @@
 package org.example.models;
 
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
-
 @Data
+@Entity
+@RequiredArgsConstructor
 @Table(name = "role_")
 public class Role {
     @Id

@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "auth-service", url = "http://auth-service:8080/auth")
 public interface AuthClient {
 
-    @GetMapping("/public-key")
+    @GetMapping("auth/public-key")
     String getPublicKey();
 
-    @GetMapping("/user-details")
+    @GetMapping("auth/user-details")
     UserDetailsFromTokenDto getDetailsFromToken();
 }
