@@ -64,10 +64,5 @@ jwt:
 
 
   access-token-expiration: 3600000
-files:
-  key-id: YCAJEyTWy22Tw5r626sylCadZ
-  secret-key: YCMMaaNuGPEKALrNH6DYcUo4YnTD4tgJJy_XUoaC
-  region: ru-central1
-  s3-endpoint: https://storage:yandexcloud:net
-  bucket: team-up-file-storage
+
 
