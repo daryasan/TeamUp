@@ -1,6 +1,7 @@
 package org.example.services;
 
 import jakarta.transaction.Transactional;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.*;
 import org.example.exceptions.AuthException;

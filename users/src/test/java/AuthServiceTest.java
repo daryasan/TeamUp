@@ -18,7 +18,7 @@ public class AuthServiceTest {
 
     @BeforeTestClass
     public void init() {
-        authService = new AuthService();
+        //authService = new AuthService();
         authentication = Mockito.mock(Authentication.class);
         securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);

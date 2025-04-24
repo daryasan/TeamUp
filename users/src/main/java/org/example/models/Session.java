@@ -15,6 +15,7 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long userId;
+    @Column(columnDefinition = "TEXT")
     private String token;
     private Date expires;
 }

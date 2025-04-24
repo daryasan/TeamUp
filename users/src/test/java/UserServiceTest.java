@@ -177,7 +177,7 @@ public class UserServiceTest {
         userInfoDto.setFirstName("Даша");
         userInfoDto.setContacts("desudakova@edu.hse.ru");
         userInfoDto.setGithub("https://github.com/daryasan");
-        userInfoDto.setImage("path/to/image");
+        //userInfoDto.setImage("path/to/image");
         userInfoDto.setExperience("Опыт");
         userInfoDto.setNickname("dasha_san");
         userInfoDto.setLastName("Судакова");
@@ -209,7 +209,7 @@ public class UserServiceTest {
     UserFullInfoDto userInfoDto = new UserFullInfoDto();
     userInfoDto.setContacts("desudakova@edu.hse.ru");
     userInfoDto.setGithub("https://github.com/daryasan");
-    userInfoDto.setImage("path/to/image");
+    //userInfoDto.setImage("path/to/image");
     userInfoDto.setExperience("Опыт");
     when(userRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
