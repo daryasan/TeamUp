@@ -6,6 +6,7 @@ import org.example.models.Role;
 import org.example.models.RolesEnum;
 import org.example.models.User;
 import org.example.repositories.RoleRepository;
+import org.example.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,12 +19,12 @@ public class Utils {
     final private static Pattern passwordPattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d!@#$%^&*(),.?\":{}|<>_-]{8,}$");
     final private static Pattern emailPattern =  Pattern.compile("^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)+$");
     final private static Pattern nicknamePattern = Pattern.compile("^[a-z0-9._-]+$");
-    final private static Pattern githubPattern = Pattern.compile("^https:\\/\\/github\\.com\\/[a-zA-Z0-9-_]+$");
-    private UserService userService;
-    private RoleRepository roleRepository;
+    final private static Pattern githubPattern = Pattern.compile("^https://github\\.com/[a-zA-Z0-9-_]+$");
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     public boolean isEmailUnique(String email) {
-        for (User u : userService.getAllUsers()) {
+        for (User u : userRepository.findAll()) {
             if (email.equals(u.getEmail())) return false;
         }
         return true;
@@ -50,7 +51,7 @@ public class Utils {
 
     // checks if username if unique
     public boolean isNicknameUnique(String nickname) {
-        for (User u : userService.getAllUsers()) {
+        for (User u : userRepository.findAll()) {
             if (nickname.equals(u.getNickname())) return false;
         }
         return true;

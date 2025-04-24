@@ -1,5 +1,6 @@
 package org.example.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.example.dto.*;
 import org.example.exceptions.AuthException;
 import org.example.exceptions.DataException;
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    private AuthService authService;
-    private Validator validator;
+    private final AuthService authService;
+    private final Validator validator;
 
     @PostMapping("/register")
     public ResponseEntity<TokenResponseDto> register(

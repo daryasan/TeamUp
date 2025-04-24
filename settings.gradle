@@ -18,4 +18,5 @@ rootProject.name = "TeamUp"
 include ':app'
 include 'users'
 include 'core'
+include 'chats'
 

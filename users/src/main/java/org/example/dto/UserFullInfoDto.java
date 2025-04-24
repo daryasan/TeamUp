@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserFullInfoDto {
-    // id, новый никнейм, фамилия, имя, отчество, контакты, ссылка на гитхаб, опыт, описание, фото
     String nickname;
     String lastName;
     String firstName;
@@ -17,6 +16,4 @@ public class UserFullInfoDto {
     String github;
     String experience;
     String description;
-    // TODO try and store images correctly
-    String image;
 }

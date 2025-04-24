@@ -1,16 +1,13 @@
 package org.example.models;
 
+import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
-import javax.persistence.*;
-
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "user_")
+@RequiredArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +24,5 @@ public class User {
     private String description;
     private RolesEnum role;
     private String image;
+    private List<Long> tags;
 }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class VerificationController {
 
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
     // TODO SET PUBLIC KEY
     @GetMapping("/public-key")

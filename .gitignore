@@ -14,3 +14,4 @@
 .cxx
 local.properties
 htmlReport/*
+users/src/main/resources/application.yml
