@@ -3,7 +3,7 @@ import org.example.models.Role;
 import org.example.models.RolesEnum;
 import org.example.models.User;
 import org.example.repositories.RoleRepository;
-import org.example.services.UserService;
+import org.example.repositories.UserRepository;
 import org.example.services.Utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -14,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.*;
 public class UtilsTest {
 
     @Mock
-    UserService userService;
+    UserRepository userRepository;
 
     @Mock
     RoleRepository roleRepository;
@@ -42,15 +41,15 @@ public class UtilsTest {
         User user2 = new User();
         user2.setEmail("desudakova@edu.hse.ru");
         String email = ("mrbeast@gmail.com");
-        when(userService.getAllUsers()).thenReturn(List.of(user1, user2));
+        when(userRepository.findAll()).thenReturn(List.of(user1, user2));
 
 
         boolean res = utils.isEmailUnique(email);
 
 
         assertTrue(res);
-        verify(userService, times(1)).getAllUsers();
-        verifyNoMoreInteractions(userService);
+        verify(userRepository, times(1)).findAll();
+        verifyNoMoreInteractions(userRepository);
 
 
     }
@@ -62,15 +61,15 @@ public class UtilsTest {
         User user2 = new User();
         user2.setEmail("desudakova@edu.hse.ru");
         String email = ("desudakova@edu.hse.ru");
-        when(userService.getAllUsers()).thenReturn(List.of(user1, user2));
+        when(userRepository.findAll()).thenReturn(List.of(user1, user2));
 
 
         boolean res = utils.isEmailUnique(email);
 
 
         assertFalse(res);
-        verify(userService, times(1)).getAllUsers();
-        verifyNoMoreInteractions(userService);
+        verify(userRepository, times(1)).findAll();
+        verifyNoMoreInteractions(userRepository);
     }
 
     @Test
@@ -259,15 +258,15 @@ public class UtilsTest {
         User user2 = new User();
         user2.setNickname("desu_kova");
         String nickname = "mrbeast_9000";
-        when(userService.getAllUsers()).thenReturn(List.of(user1, user2));
+        when(userRepository.findAll()).thenReturn(List.of(user1, user2));
 
 
         boolean res = utils.isNicknameUnique(nickname);
 
 
         assertTrue(res);
-        verify(userService, times(1)).getAllUsers();
-        verifyNoMoreInteractions(userService);
+        verify(userRepository, times(1)).findAll();
+        verifyNoMoreInteractions(userRepository);
     }
 
 
@@ -278,15 +277,15 @@ public class UtilsTest {
         User user2 = new User();
         user2.setNickname("desu_dakova");
         String nickname = "desu_dakova";
-        when(userService.getAllUsers()).thenReturn(List.of(user1, user2));
+        when(userRepository.findAll()).thenReturn(List.of(user1, user2));
 
 
         boolean res = utils.isNicknameUnique(nickname);
 
 
         assertFalse(res);
-        verify(userService, times(1)).getAllUsers();
-        verifyNoMoreInteractions(userService);
+        verify(userRepository, times(1)).findAll();
+        verifyNoMoreInteractions(userRepository);
     }
 
 

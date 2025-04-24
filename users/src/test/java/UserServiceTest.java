@@ -10,7 +10,6 @@ import org.example.repositories.UserRepository;
 import org.example.services.TokenService;
 import org.example.services.UserService;
 import org.example.services.Utils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -24,6 +23,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,7 +77,7 @@ public class UserServiceTest {
         when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.of(user));
 
 
-        Assertions.assertThrows(UserException.class, () -> userService.saveUser(user));
+        assertThrows(UserException.class, () -> userService.saveUser(user));
         verify(userRepository, times(1)).findByEmail(any(String.class));
         verifyNoMoreInteractions(userRepository);
 
@@ -131,7 +131,7 @@ public class UserServiceTest {
         when(userRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
 
-        Assertions.assertThrows(UserException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), userInfoDto));
+        assertThrows(UserException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), userInfoDto));
         verify(userRepository, times(1)).findById(any(Long.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -152,11 +152,11 @@ public class UserServiceTest {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
 
 
-        Assertions.assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto1));
-        Assertions.assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto2));
-        Assertions.assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto3));
-        Assertions.assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto4));
-        Assertions.assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto5));
+        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto1));
+        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto2));
+        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto3));
+        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto4));
+        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto5));
         verify(userRepository, times(5)).findById(any(Long.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -214,7 +214,7 @@ public class UserServiceTest {
     when(userRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
 
-    Assertions.assertThrows(UserException.class, () -> userService.changeUserInfo((new Random()).nextLong(), userInfoDto));
+    assertThrows(UserException.class, () -> userService.changeUserInfo((new Random()).nextLong(), userInfoDto));
     verify(userRepository, times(1)).findById(any(Long.class));
     verifyNoMoreInteractions(userRepository);
     }
@@ -245,11 +245,11 @@ public class UserServiceTest {
         when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(new User()));
 
 
-        Assertions.assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto1));
-        Assertions.assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto2));
-        Assertions.assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto3));
-        Assertions.assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto4));
-        Assertions.assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto5));
+        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto1));
+        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto2));
+        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto3));
+        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto4));
+        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto5));
         verify(userRepository, times(5)).findById(any(Long.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -265,9 +265,9 @@ public class UserServiceTest {
         when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(new User()));
 
 
-        Assertions.assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto1));
-        Assertions.assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto2));
-        Assertions.assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto3));
+        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto1));
+        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto2));
+        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto3));
         verify(userRepository, times(3)).findById(any(Long.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -296,19 +296,19 @@ public class UserServiceTest {
 
     @Test
     public void get_user_by_email_incorrect_email() {
-        Assertions.assertThrows(DataException.class, () -> userService.getUserByEmail("darya_smile17mail.ru"));
+        assertThrows(DataException.class, () -> userService.getUserByEmail("darya_smile17mail.ru"));
         verifyNoMoreInteractions(userRepository);
 
-        Assertions.assertThrows(DataException.class, () -> userService.getUserByEmail("darya_smile17@mailru"));
+        assertThrows(DataException.class, () -> userService.getUserByEmail("darya_smile17@mailru"));
         verifyNoMoreInteractions(userRepository);
 
-        Assertions.assertThrows(DataException.class, () -> userService.getUserByEmail("mail.ru"));
+        assertThrows(DataException.class, () -> userService.getUserByEmail("mail.ru"));
         verifyNoMoreInteractions(userRepository);
 
-        Assertions.assertThrows(DataException.class, () -> userService.getUserByEmail("@@mail.ru"));
+        assertThrows(DataException.class, () -> userService.getUserByEmail("@@mail.ru"));
         verifyNoMoreInteractions(userRepository);
 
-        Assertions.assertThrows(DataException.class, () -> userService.getUserByEmail("@@mail.ru"));
+        assertThrows(DataException.class, () -> userService.getUserByEmail("@@mail.ru"));
         verifyNoMoreInteractions(userRepository);
     }
 
@@ -317,7 +317,7 @@ public class UserServiceTest {
         when(userRepository.findByEmail(any(String.class))).thenReturn(Optional.empty());
 
 
-        Assertions.assertThrows(UserException.class, () -> userService.getUserByEmail("darya_smile17@mail.ru"));
+        assertThrows(UserException.class, () -> userService.getUserByEmail("darya_smile17@mail.ru"));
         verify(userRepository, times(1)).findByEmail(any(String.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -345,16 +345,16 @@ public class UserServiceTest {
 
     @Test
     public void get_user_by_nickname_incorrect_nickname() {
-        Assertions.assertThrows(DataException.class, () -> userService.getUserByNickname("aaaaaaaaaaaaa  0"));
+        assertThrows(DataException.class, () -> userService.getUserByNickname("aaaaaaaaaaaaa  0"));
         verifyNoMoreInteractions(userRepository);
 
-        Assertions.assertThrows(DataException.class, () -> userService.getUserByNickname("asda!_0"));
+        assertThrows(DataException.class, () -> userService.getUserByNickname("asda!_0"));
         verifyNoMoreInteractions(userRepository);
 
-        Assertions.assertThrows(DataException.class, () -> userService.getUserByNickname("Asss0&&"));
+        assertThrows(DataException.class, () -> userService.getUserByNickname("Asss0&&"));
         verifyNoMoreInteractions(userRepository);
 
-        Assertions.assertThrows(DataException.class, () -> userService.getUserByNickname("@@"));
+        assertThrows(DataException.class, () -> userService.getUserByNickname("@@"));
         verifyNoMoreInteractions(userRepository);
     }
 
@@ -363,7 +363,7 @@ public class UserServiceTest {
         when(userRepository.findByNickname(any(String.class))).thenReturn(Optional.empty());
 
 
-        Assertions.assertThrows(UserException.class, () -> userService.getUserByNickname("dasha_san"));
+        assertThrows(UserException.class, () -> userService.getUserByNickname("dasha_san"));
         verify(userRepository, times(1)).findByNickname(any(String.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -396,7 +396,7 @@ public class UserServiceTest {
         when(tokenService.getUserIdFromToken(any(String.class))).thenThrow(AuthException.class);
 
 
-        Assertions.assertThrows(AuthException.class, () -> userService.getUserByToken("Some incorrect token"));
+        assertThrows(AuthException.class, () -> userService.getUserByToken("Some incorrect token"));
         verifyNoMoreInteractions(userRepository);
     }
 
@@ -405,7 +405,7 @@ public class UserServiceTest {
         when(userRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
 
-        Assertions.assertThrows(UserException.class, () -> userService.getUserByToken("some token"));
+        assertThrows(UserException.class, () -> userService.getUserByToken("some token"));
         verify(userRepository, times(1)).findById(any(Long.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -437,7 +437,7 @@ public class UserServiceTest {
         when(userRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
 
-        Assertions.assertThrows(UserException.class, () -> userService.getUserById((new Random()).nextLong()));
+        assertThrows(UserException.class, () -> userService.getUserById((new Random()).nextLong()));
         verify(userRepository, times(1)).findById(any(Long.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -568,7 +568,7 @@ public class UserServiceTest {
         when(utils.convertRoleIdToRole(anyInt())).thenThrow(DataException.class);
 
 
-        Assertions.assertThrows(DataException.class, () -> userService.getUsersByRole(333));
+        assertThrows(DataException.class, () -> userService.getUsersByRole(333));
         verifyNoMoreInteractions(userRepository);
         verify(utils, times(1)).convertRoleIdToRole(anyInt());
         verifyNoMoreInteractions(roleRepository);
@@ -608,6 +608,55 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findById(anyLong());
         verifyNoMoreInteractions(userRepository);
     }
+
+
+    @Test
+    public void upload_profile_photo_successful() throws AuthException, UserException {
+
+        User user = new User();
+        user.setImage("oldImagePath");
+        when(tokenService.getUserIdFromToken("validToken")).thenReturn(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+
+        User updatedUser = userService.uploadProfilePhoto("validToken", "newImagePath");
+
+
+        assertNotNull(updatedUser);
+        assertEquals("newImagePath", updatedUser.getImage());
+        verify(tokenService).getUserIdFromToken("validToken");
+        verify(userRepository).findById(1L);
+        verify(userRepository).save(any(User.class));
+        verifyNoMoreInteractions(userRepository);
+    }
+
+
+    @Test
+    public void upload_profile_photo_user_not_found() throws AuthException {
+
+        when(tokenService.getUserIdFromToken("someToken")).thenReturn(2L);
+        when(userRepository.findById(2L)).thenReturn(Optional.empty());
+
+
+        assertThrows(UserException.class, () -> userService.uploadProfilePhoto("someToken", "photoPath"));
+        verify(tokenService).getUserIdFromToken("someToken");
+        verify(userRepository).findById(2L);
+        verifyNoMoreInteractions(userRepository);
+    }
+
+
+    @Test
+    public void upload_profile_photo_invalid_token() throws AuthException {
+
+        when(tokenService.getUserIdFromToken("badToken")).thenThrow(new AuthException("Invalid token"));
+
+
+        assertThrows(AuthException.class, () -> userService.uploadProfilePhoto("badToken", "photoPath"));
+        verify(tokenService).getUserIdFromToken("badToken");
+        verifyNoMoreInteractions(userRepository);
+    }
+
 
 
 }

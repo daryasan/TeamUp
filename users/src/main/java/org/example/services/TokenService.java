@@ -72,11 +72,7 @@ public class TokenService {
     }
 
 
-//    private final SecretKey secretKey = Keys.hmacShaKeyFor(
-//            jwtProperties.getKey().getBytes()
-//    );
-
-    String returnAccessToken(User user) {
+    public String returnAccessToken(User user) {
         return generateAccessToken(user, new Date(System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration()));
     }
 
