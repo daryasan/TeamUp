@@ -1,6 +1,14 @@
-server:
+logging:
+  level:
+    root: INFO
+    org.example.exceptions: ERROR
+
+  server:
   port: 8080
 spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
   security.enable_csrf: false
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -10,13 +18,53 @@ spring:
   jpa:
     properties:
       hibernate:
-        default_schema: auth
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
         show_sql: true
     open-in-view: false
     generate-ddl: true
     hibernate:
       ddl-auto: update
 jwt:
-  key: e5ae6ed1504665b64d2f238d911a02f744a1d4d96d169d9fa4effe68e3f36b8eeb4075fa081b0660357c0f229c5ac7016462fa3585653dc2b3c8e72e8fdfa5466b1e60d0c75be5a057d568f0dd7058375807673986f5b1d8bd97c20ed00647a3dfb2db903b4ebda1102bc0c6e0cdefc9de394deda8c6c68beca639a40bc33610f6e4009f053c035641a1c6d3432028498517ae703b5af526edbef16f02a39dadff44cf2a70c36e0fbac211fd538546a0eecd6965c16dc6eddee9c523e68c8f55bab92cb9345c57773fb14ecd9e9e0a2bf114c81bf2e3e8bf467362e65e75d3ccd1776b6a72bbd792098e7ea5655d71350930d9963e6a3978f14e8a6ee84d5359
+  private-key: |
+    MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDPipO1ecR/JkRx
+    sCZkAn+Wh83wMJGpRBLXp5hYILndyMq3Y0MTiRdeEL29f1Pj2NCk2+OsrXhcwYFO
+    BKPCRvoX1GBG6fZ8EPJVQ98bAuQ1bfoyCuxYG/5YRyg/wd1PaBQZbMraZRCDyE7W
+    4bqtNljcDBJVodN1fd1oAjvjUPz0xvhK9lrDqS0koVHZMgQqIsWpF+L1x9yJsXMo
+    6J1ctMnt6tuz29/LjZoPG134VDmWVjCIyAlq9FppaDsrpdQLFl7JYE8/U+fnANEw
+    bnp5+UqpM94+gvFoyEoVzT+vSKR8xtXrqRJQ8ShzKWvJb+Gmzksp5hOepJX+iOxd
+    fezbABszAgMBAAECggEBAK4k+mIpJY8HPiEjDGOYkRRvKYckSeT84M6hqzwvYaZO
+    iIKuwKbQvpHIfF1YTLz/vbrHY1gOStOR7vzW+c3XnpyGMK7wPEnIMn8HL1rL509J
+    08lPzxbzjkzmkEhHVHr/uvXGisQMT3o0hqrZx7j1xEQHwQ6ndfa9QR232iaYW1jL
+    ZLYw+TvlcF3IIvE5nJubLwnTmHRWeYP5uqJlZxoKdijTWmpTrIzLKkNQbHbY9/aA
+    ZDT7wEKG4hQ3/TgAibHHsVdF6rBCLUiwyRpZ2jLsSQ9mDr5unDW0nfeCS4LZZtsb
+    HNFr2rxza7nRakZu6YEkN6rh3+k0YEugtPeAESfyAckCgYEA7CAYBlbTaLkwvsZS
+    YEgvAokOmXVU5pf6L+x9zRMqzGoQkkJzJAW2v36O+5lgUwC2eILEsg+feJ8a2lIy
+    LhLnOJF+XBN7cZbODeQhxh0s7BDx6TpNB0GqLG52FZeBEXmqP1lOrUxGb4rq18rK
+    z2f6dkEHbsVMEiXgEL4SUpMLXvUCgYEA4QKRpnYpP+omdDiofCAS1omoV/wW9pWk
+    XlpDIlXBr3oPaFBXkLa0yTUZ2cwBheVtnXj3fNlsr7jRDTi1tDHR2gn8GCIzTHQP
+    /RtlVU1aupgrLGE2cnCq6sjX8H8rcil1JEueAyAAisRwmCN9nipC+S7vKENoAp1v
+    TTOzdXxH6IcCgYEAhltgsEK5es5dgUBB4U1RioTITOOpkqiJkLllf8pXQQddNIwh
+    Di8+JEp0O4+zcqdmLL5kA9nF6RHHatD4gqT48oQ/PU9Mn36q8taLrToutIiTzh0B
+    dY6UsUGNaY3SwEnVaMR9cziCn7eRF4bpzgihSKaJ/yq+tVjd3Uj6DghjoP0CgYBC
+    Z2yukJ6Z0zNoBzSJ9Tk6AUQiOy5XtU/d3IuFfYN8kuwrH9LHzXPLEZXAdflZF51i
+    5Mk9Gjl+Hm/rk/nj5PQGgf3Y7XbwMCxryQL9yqdk+/V50nKsEV4PjhhUTGN4/I0q
+    mfpW98HRMin8bDTtUZGUUmqYGlR+uRGY2hIzMOtTzwKBgQCqCt55V70eFskL+1P1
+    mvBHlWIgVVDF6D2f5SmQzNtb5hTkvdE7YRk1znuGGx+wgax3zrGf7DohYuuCwFBc
+    1RzpOFCpZ9DMa7zYP2wkB2xQK4vO2tfoEIvwpo6KAKQZEyKmJuYqsWP/EBoKDyyH
+    G0V9NItoAP8XcSzHqL7h7qhLVQ==
+
+
+
+  public-key: |
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz4qTtXnEfyZEcbAmZAJ/
+    lofN8DCRqUQS16eYWCC53cjKt2NDE4kXXhC9vX9T49jQpNvjrK14XMGBTgSjwkb6
+    F9RgRun2fBDyVUPfGwLkNW36MgrsWBv+WEcoP8HdT2gUGWzK2mUQg8hO1uG6rTZY
+    3AwSVaHTdX3daAI741D89Mb4SvZaw6ktJKFR2TIEKiLFqRfi9cfcibFzKOidXLTJ
+    7erbs9vfy42aDxtd+FQ5llYwiMgJavRaaWg7K6XUCxZeyWBPP1Pn5wDRMG56eflK
+    qTPePoLxaMhKFc0/r0ikfMbV66kSUPEocylryW/hps5LKeYTnqSV/ojsXX3s2wAb
+    MwIDAQAB
+
+
+
   access-token-expiration: 3600000
+

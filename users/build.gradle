@@ -1,10 +1,12 @@
 plugins {
     id 'java'
     id 'jacoco'
+    id 'org.springframework.boot' version '3.3.3'
+    id 'io.spring.dependency-management' version '1.1.0'
 }
 
 jacoco {
-    toolVersion = "0.8.8" // Убедитесь, что версия Jacoco актуальна
+    toolVersion = "0.8.8"
 }
 
 test {
@@ -30,6 +32,7 @@ version = 'unspecified'
 
 
 dependencies {
+    implementation platform('org.springframework.boot:spring-boot-dependencies:3.3.3')
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
     implementation 'ch.qos.logback:logback-classic:1.5.16'
@@ -44,6 +47,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-test:3.3.3'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:3.3.3'
     implementation "org.springframework.boot:spring-boot-starter-web:3.3.3"
+    testImplementation 'org.springframework.security:spring-security-test:6.3.3'
 
 
     implementation "io.jsonwebtoken:jjwt-api:0.12.3"
@@ -60,7 +64,6 @@ dependencies {
 
     implementation("software.amazon.awssdk:aws-sdk-java:2.29.33")
     implementation("software.amazon.awssdk:apache-client:2.29.33")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 
 
 }

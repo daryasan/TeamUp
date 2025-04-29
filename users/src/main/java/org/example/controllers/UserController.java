@@ -10,15 +10,11 @@ import org.example.exceptions.UserException;
 import org.example.models.User;
 import org.example.services.TagService;
 import org.example.services.UserService;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import software.amazon.awssdk.services.s3.S3Client;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/user")

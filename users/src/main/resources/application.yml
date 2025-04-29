@@ -1,6 +1,9 @@
-#logging.level.org.springframework.boot.autoconfigure: DEBUG
+logging:
+  level:
+    root: INFO
+    org.example.exceptions: ERROR
 
-server:
+  server:
   port: 8080
 spring:
   autoconfigure:
@@ -65,8 +68,8 @@ jwt:
 
   access-token-expiration: 3600000
 files:
-  key-id: YCAJEyTWy22Tw5r626sylCadZ
-  secret-key: YCMMaaNuGPEKALrNH6DYcUo4YnTD4tgJJy_XUoaC
+  key-id: YCAJEAzaYa0oinyyhJTLYaSnr
+  secret-key: YCOaLdZ1QvvBlYWQE9diHymQHUX5rxP_Lx-fSvKa
   region: ru-central1
   s3-endpoint: https://storage:yandexcloud:net
   bucket: team-up-file-storage
