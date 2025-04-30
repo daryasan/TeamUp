@@ -7,20 +7,20 @@ logging:
   port: 8080
 spring:
   profiles:
-    active: test
+    active: prod
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
   security.enable_csrf: false
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/teamup_users
+    url: jdbc:postgresql://localhost:5432/teamup_users_core
     username: postgres
     password: 1234
   jpa:
     properties:
       hibernate:
-        default_schema: public
+        default_schema: users
         show_sql: true
     open-in-view: false
     generate-ddl: true
