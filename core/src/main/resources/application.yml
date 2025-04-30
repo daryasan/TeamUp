@@ -1,22 +1,32 @@
-server:
-  port: 8081
-spring:
+logging:
+  level:
+    root: INFO
+    org.example.exceptions: ERROR
+
+  server:
+    servlet:
+      context-path: /core-service
+    port: 8081
+  spring:
+    application:
+      name: users-service
+  profiles:
+    active: prod
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
   security.enable_csrf: false
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/teamup_core
+    url: jdbc:postgresql://localhost:5432/teamup_users_core
     username: postgres
     password: 1234
   jpa:
     properties:
       hibernate:
-        default_schema: auth
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: core
         show_sql: true
     open-in-view: false
     generate-ddl: true
     hibernate:
-      ddl-auto: update
-jwt:
-  key: e5ae6ed1504665b64d2f238d911a02f744a1d4d96d169d9fa4effe68e3f36b8eeb4075fa081b0660357c0f229c5ac7016462fa3585653dc2b3c8e72e8fdfa5466b1e60d0c75be5a057d568f0dd7058375807673986f5b1d8bd97c20ed00647a3dfb2db903b4ebda1102bc0c6e0cdefc9de394deda8c6c68beca639a40bc33610f6e4009f053c035641a1c6d3432028498517ae703b5af526edbef16f02a39dadff44cf2a70c36e0fbac211fd538546a0eecd6965c16dc6eddee9c523e68c8f55bab92cb9345c57773fb14ecd9e9e0a2bf114c81bf2e3e8bf467362e65e75d3ccd1776b6a72bbd792098e7ea5655d71350930d9963e6a3978f14e8a6ee84d5359
-  access-token-expiration: 3600000
+

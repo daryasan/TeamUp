@@ -1,5 +1,6 @@
 package org.example.services;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.EditEventDto;
@@ -15,9 +16,7 @@ import org.example.repositories.TeamRepository;
 import org.example.security.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -79,7 +78,7 @@ public class EventService {
 
     public List<UserDto> getEventParticipants(Long id) throws EventException {
         Event event = findEventById(id);
-        List<Long> userIds = event.getParticipantsId();
+        List<Long> userIds = event.getParticipants();
         List<UserDto> users = new ArrayList<>();
 
         for (Long userId : userIds) {
@@ -102,7 +101,7 @@ public class EventService {
         } catch (EventException e) {
             return false;
         }
-        List<Long> participants = event.getParticipantsId();
+        List<Long> participants = event.getParticipants();
 
 
         UserDetailsFromTokenDto userDetailsFromTokenDto = userService.getDetailsFromToken();

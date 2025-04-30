@@ -4,8 +4,7 @@ import org.example.dto.UserDetailsFromTokenDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-// TODO change port
-@FeignClient(name = "auth-service", url = "http://auth-service:8080/auth")
+@FeignClient(name = "users-service", url = "http://localhost:8080", path = "/users-service")
 public interface AuthClient {
 
     @GetMapping("auth/public-key")

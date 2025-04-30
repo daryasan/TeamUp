@@ -1,21 +1,30 @@
-#logging.level.org.springframework.boot.autoconfigure: DEBUG
+logging:
+  level:
+    root: INFO
+    org.example.exceptions: ERROR
 
-server:
+  server:
+    servlet:
+      context-path: /users-service
   port: 8080
 spring:
+  application:
+    name: users-service
+  profiles:
+    active: prod
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
   security.enable_csrf: false
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/teamup_users
+    url: jdbc:postgresql://localhost:5432/teamup_users_core
     username: postgres
     password: 1234
   jpa:
     properties:
       hibernate:
-        default_schema: public
+        default_schema: users
         show_sql: true
     open-in-view: false
     generate-ddl: true
@@ -65,8 +74,8 @@ jwt:
 
   access-token-expiration: 3600000
 files:
-  key-id: YCAJEyTWy22Tw5r626sylCadZ
-  secret-key: YCMMaaNuGPEKALrNH6DYcUo4YnTD4tgJJy_XUoaC
+  key-id: YCAJEAzaYa0oinyyhJTLYaSnr
+  secret-key: YCOaLdZ1QvvBlYWQE9diHymQHUX5rxP_Lx-fSvKa
   region: ru-central1
   s3-endpoint: https://storage:yandexcloud:net
   bucket: team-up-file-storage

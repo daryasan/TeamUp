@@ -10,33 +10,48 @@ on:
       - master
 
 jobs:
-  test:
+  test-users:
     runs-on: ubuntu-latest
+    env:
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/teamup_users_test
+      SPRING_DATASOURCE_USERNAME: testuser
+      SPRING_DATASOURCE_PASSWORD: testpassword
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: teamup_users_test
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-      # Клонируем репозиторий
       - name: Check out repository
         uses: actions/checkout@v3
 
-      # Устанавливаем права на выполнение файла gradlew
       - name: Grant execute permission for Gradle Wrapper
         run: chmod +x gradlew
 
-      # Устанавливаем JDK
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
 
-      # Устанавливаем зависимости и запускаем тесты
       - name: Run tests with coverage
-        run: ./gradlew clean test jacocoTestReport
+        run: ./gradlew clean test jacocoTestReport -Dspring.profiles.active=test
 
-      # Загружаем HTML-отчет как артефакт
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: users/build/reports/jacoco/test/html
-

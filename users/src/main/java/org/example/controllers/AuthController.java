@@ -45,16 +45,15 @@ public class AuthController {
 
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<HttpStatus> logout(
-            @RequestBody String token,
-            BindingResult bindingResult) {
-
-        validator.validate(token, bindingResult);
-        authService.logout(token);
-        return ResponseEntity.ok(HttpStatus.OK);
-
-    }
+//    @PostMapping("/logout")
+//    public ResponseEntity<HttpStatus> logout(
+//            @RequestBody String token,
+//            BindingResult bindingResult) {
+//
+//        validator.validate(token, bindingResult);
+//        return ResponseEntity.ok(HttpStatus.OK);
+//
+//    }
 
     @DeleteMapping("/deactivate")
     public ResponseEntity<HttpStatus> deactivateAccount(

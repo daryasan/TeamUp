@@ -28,6 +28,8 @@ public class TagService {
             user.get().getTags().add(t.getId());
         }
 
+        userRepository.save(user.get());
+
         return user.get();
 
     }

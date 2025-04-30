@@ -1,8 +1,8 @@
 package org.example.services;
 
 import jakarta.transaction.Transactional;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.dto.*;
 import org.example.exceptions.AuthException;
 import org.example.exceptions.DataException;
@@ -68,8 +68,9 @@ public class AuthService {
     public TokenResponseDto login(LoginDto loginDto) throws UserException, AuthException, DataException {
         User user = userService.getUserByEmail(loginDto.getEmail());
 
-        if (!user.getPassword().equals(passwordEncoder.encode(loginDto.getPassword())))
+        if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword()))
             throw new UserException("Wrong password");
+
 
         String token = tokenService.returnAccessToken(user);
         sessionService.createSession(token);
@@ -84,8 +85,7 @@ public class AuthService {
     //        403 FORBIDDEN (if user not found)
     public User changePassword(ChangePasswordDto changePasswordDto) throws UserException, AuthException, DataException {
         User user = userService.getUserByToken(changePasswordDto.getToken());
-        if (!user.getPassword().equals(
-                passwordEncoder.encode(changePasswordDto.getOldPassword()))
+        if (!passwordEncoder.matches(changePasswordDto.getOldPassword(), user.getPassword())
         ) {
             throw new DataException("Wrong old password!");
         }
@@ -109,12 +109,6 @@ public class AuthService {
         user.setEmail(changeEmailDto.getNewEmail());
         userService.saveUser(user);
         return new TokenResponseDto(tokenService.returnAccessToken(user));
-    }
-
-
-    // logout user
-    public void logout(String token) {
-        // TODO
     }
 
 

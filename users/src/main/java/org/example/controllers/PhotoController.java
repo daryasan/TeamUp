@@ -1,12 +1,8 @@
 package org.example.controllers;
 
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.example.config.ConfigProperties;
-import org.example.exceptions.AuthException;
-import org.example.exceptions.UserException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +24,6 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequestMapping("/photos")
-@ApiResponses(@ApiResponse(responseCode = "200", useReturnTypeSchema = true))
 @RequiredArgsConstructor
 public class PhotoController {
 
@@ -52,7 +47,7 @@ public class PhotoController {
 
     @PutMapping(consumes = MULTIPART_FORM_DATA_VALUE)
     public String uploadFile(
-            @RequestParam MultipartFile photo
+            @RequestParam("photo") MultipartFile photo
     ) throws IOException {
 
         String key = "photos/" + photo.getOriginalFilename();

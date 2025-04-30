@@ -1,5 +1,6 @@
 package org.example.services;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.CreateEventStepDto;
@@ -9,7 +10,6 @@ import org.example.models.EventStep;
 import org.example.repositories.EventStepRepository;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,7 +63,7 @@ public class EventStepService {
 
     public EventStep setWinners(Long id, List<Long> teams) throws EventException {
         EventStep eventStep = findEventStepById(id);
-        eventStep.setWinnersTeamsIds(teams);
+        eventStep.setWinnerTeams(teams);
         eventStepRepository.save(eventStep);
         return eventStep;
     }

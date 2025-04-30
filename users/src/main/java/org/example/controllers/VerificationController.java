@@ -1,6 +1,7 @@
 package org.example.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.example.config.JwtProperties;
 import org.example.dto.UserDetailsDto;
 import org.example.exceptions.AuthException;
 import org.example.services.TokenService;
@@ -16,13 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class VerificationController {
 
     private final TokenService tokenService;
+    private final JwtProperties jwtProperties;
 
-    // TODO SET PUBLIC KEY
     @GetMapping("/public-key")
     public String getPublicKey() {
-        // Возвращаем публичный ключ как строку (в формате PEM)
         return "-----BEGIN PUBLIC KEY-----\n" +
-                "YourPublicKeyHere\n" +
+                jwtProperties.getPublicKey() +
                 "-----END PUBLIC KEY-----";
     }
 
