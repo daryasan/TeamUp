@@ -3,18 +3,17 @@ logging:
     root: INFO
     org.example.exceptions: ERROR
 
-  server:
-  port: 8080
 spring:
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
-  security.enable_csrf: false
+  security:
+    enable_csrf: false
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/teamup_users
-    username: postgres
-    password: 1234
+    url: jdbc:postgresql://localhost:5432/teamup_users_test
+    username: testuser
+    password: testpassword
   jpa:
     properties:
       hibernate:
@@ -23,7 +22,8 @@ spring:
     open-in-view: false
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
+
 jwt:
   private-key: |
     MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDPipO1ecR/JkRx
@@ -53,8 +53,6 @@ jwt:
     1RzpOFCpZ9DMa7zYP2wkB2xQK4vO2tfoEIvwpo6KAKQZEyKmJuYqsWP/EBoKDyyH
     G0V9NItoAP8XcSzHqL7h7qhLVQ==
 
-
-
   public-key: |
     MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz4qTtXnEfyZEcbAmZAJ/
     lofN8DCRqUQS16eYWCC53cjKt2NDE4kXXhC9vX9T49jQpNvjrK14XMGBTgSjwkb6
@@ -64,7 +62,4 @@ jwt:
     qTPePoLxaMhKFc0/r0ikfMbV66kSUPEocylryW/hps5LKeYTnqSV/ojsXX3s2wAb
     MwIDAQAB
 
-
-
   access-token-expiration: 3600000
-
