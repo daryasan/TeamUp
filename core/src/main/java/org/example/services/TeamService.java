@@ -50,7 +50,7 @@ public class TeamService {
         // user is PARTICIPANT
         if (utils.isParticipant(user)) {
             team.setLeaderId(user.getId());
-            team.getParticipantsId().add(user.getId());
+            team.getParticipants().add(user.getId());
             // user is MENTOR
         } else if (utils.isMentor(user)) {
             team.setMentorId(user.getId());
@@ -77,7 +77,7 @@ public class TeamService {
         Team team = findTeamById(teamId);
         List<UserDto> participants = new ArrayList<>();
 
-        for (Long id : team.getParticipantsId()) {
+        for (Long id : team.getParticipants()) {
             participants.add(utils.getUserById(id).getBody());
         }
 
@@ -196,7 +196,7 @@ public class TeamService {
 
     public boolean hasTeam(long userId) {
         for (Team team : teamRepository.findAll()) {
-            if (team.getParticipantsId().contains(userId)) {
+            if (team.getParticipants().contains(userId)) {
                 return true;
             }
         }
@@ -204,7 +204,7 @@ public class TeamService {
     }
 
     public boolean isInTeam(long userId, Long teamId) throws TeamException {
-        return findTeamById(teamId).getParticipantsId().contains(userId);
+        return findTeamById(teamId).getParticipants().contains(userId);
     }
 
     public boolean isMentor(long userId, Long teamId) throws TeamException {
@@ -221,7 +221,7 @@ public class TeamService {
 
     public void addParticipant(long userId, long teamId) throws TeamException {
         Team team = findTeamById(teamId);
-        team.getParticipantsId().add(userId);
+        team.getParticipants().add(userId);
         teamRepository.save(team);
     }
 
@@ -240,16 +240,16 @@ public class TeamService {
     }
 
     private void deleteParticipant(Team team, Long participantId) {
-        List<Long> participants = team.getParticipantsId();
+        List<Long> participants = team.getParticipants();
 
-        for (Long id : team.getParticipantsId()) {
+        for (Long id : team.getParticipants()) {
             if (Objects.equals(id, participantId)) {
                 participants.remove(id);
                 break;
             }
         }
 
-        team.setParticipantsId(participants);
+        team.setParticipants(participants);
         teamRepository.save(team);
     }
 }

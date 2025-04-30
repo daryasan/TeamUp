@@ -79,7 +79,7 @@ public class EventService {
 
     public List<UserDto> getEventParticipants(Long id) throws EventException {
         Event event = findEventById(id);
-        List<Long> userIds = event.getParticipantsId();
+        List<Long> userIds = event.getParticipants();
         List<UserDto> users = new ArrayList<>();
 
         for (Long userId : userIds) {
@@ -102,7 +102,7 @@ public class EventService {
         } catch (EventException e) {
             return false;
         }
-        List<Long> participants = event.getParticipantsId();
+        List<Long> participants = event.getParticipants();
 
 
         UserDetailsFromTokenDto userDetailsFromTokenDto = userService.getDetailsFromToken();
