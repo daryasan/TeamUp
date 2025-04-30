@@ -4,6 +4,8 @@ logging:
     org.example.exceptions: ERROR
 
 spring:
+  profiles:
+    active: test
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration

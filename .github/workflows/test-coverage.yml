@@ -15,6 +15,9 @@ jobs:
     env:
       LANG: en_US.UTF-8
       LC_ALL: en_US.UTF-8
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/teamup_users_test
+      SPRING_DATASOURCE_USERNAME: testuser
+      SPRING_DATASOURCE_PASSWORD: testpassword
 
     services:
       postgres:
