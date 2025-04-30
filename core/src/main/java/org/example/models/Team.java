@@ -1,10 +1,9 @@
 package org.example.models;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.dto.UserDto;
 
-import javax.persistence.*;
 import java.util.List;
 
 @Data

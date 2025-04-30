@@ -1,10 +1,10 @@
 package org.example.models;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -31,5 +31,5 @@ public class EventStep {
     private int stepNumber;
 
     @OneToMany(mappedBy = "eventStep", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Team> winnerTeams;
+    private List<Long> winnerTeams;
 }

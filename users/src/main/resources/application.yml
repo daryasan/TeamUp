@@ -4,8 +4,12 @@ logging:
     org.example.exceptions: ERROR
 
   server:
+    servlet:
+      context-path: /users-service
   port: 8080
 spring:
+  application:
+    name: users-service
   profiles:
     active: prod
   autoconfigure:

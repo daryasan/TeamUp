@@ -1,7 +1,6 @@
 package org.example.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.bouncycastle.cert.ocsp.Req;
 import org.example.dto.*;
 import org.example.exceptions.*;
 import org.example.models.Meeting;

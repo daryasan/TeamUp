@@ -5,36 +5,41 @@ plugins {
 group = 'org.example'
 version = 'unspecified'
 
-
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation platform('org.springframework.boot:spring-boot-dependencies:3.3.3')
+
+    implementation platform("org.springframework.cloud:spring-cloud-dependencies:2022.0.3")
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
-
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    implementation 'ch.qos.logback:logback-classic:1.5.16'
     implementation 'org.postgresql:postgresql:42.7.2'
     implementation 'com.auth0:java-jwt:4.4.0'
-    implementation 'javax.xml.bind:jaxb-api:2.3.0'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.2'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.2'
-    implementation 'org.springframework.boot:spring-boot-starter-security:2.7.2'
-    implementation 'org.springframework.boot:spring-boot-starter-test:2.7.2'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.6.4'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket:3.3.3'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.3.3'
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.3.3'
+    implementation 'org.springframework.boot:spring-boot-starter-test:3.3.3'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:3.3.3'
+    implementation "org.springframework.boot:spring-boot-starter-web:3.3.3"
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    testImplementation 'org.springframework.security:spring-security-test:6.3.3'
 
     implementation "io.jsonwebtoken:jjwt-api:0.12.3"
     implementation "io.jsonwebtoken:jjwt-impl:0.12.3"
     implementation "io.jsonwebtoken:jjwt-jackson:0.12.3"
     implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
-    implementation 'org.springframework.cloud:spring-cloud-dependencies:Hoxton.RELEASE'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:2.2.5.RELEASE'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    testImplementation 'org.mockito:mockito-core:4.2.0'
-    testImplementation 'org.assertj:assertj-core:3.21.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.3'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.3'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
+    testImplementation 'org.assertj:assertj-core:3.25.3'
+
+    implementation("software.amazon.awssdk:aws-sdk-java:2.29.33")
+    implementation("software.amazon.awssdk:apache-client:2.29.33")
 }
 
 test {

@@ -1,9 +1,9 @@
 package org.example.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.UserDetailsFromTokenDto;
 import org.example.exceptions.AccessException;
-import org.example.exceptions.AuthException;
 import org.example.exceptions.QueryException;
 import org.example.exceptions.TeamException;
 import org.example.models.Query;
@@ -13,7 +13,6 @@ import org.example.repositories.QueryRepository;
 import org.example.security.UserService;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service

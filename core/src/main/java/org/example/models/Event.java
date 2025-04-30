@@ -1,12 +1,11 @@
 package org.example.models;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.example.dto.UserDto;
 import org.springframework.lang.NonNull;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
