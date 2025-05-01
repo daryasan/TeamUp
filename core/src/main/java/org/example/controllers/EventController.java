@@ -23,13 +23,12 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@AllArgsConstructor
 @RequiredArgsConstructor
 @RequestMapping("/events")
 public class EventController {
 
-    private EventService eventService;
-    private EventStepService eventStepService;
+    private final EventService eventService;
+    private final EventStepService eventStepService;
 
     @PostMapping("/add")
     @PreAuthorize("hasAnyRole('ORGANIZER')")
@@ -42,7 +41,7 @@ public class EventController {
     @PatchMapping("/id={id}/edit")
     @PreAuthorize("hasAnyRole('ORGANIZER')")
     public ResponseEntity<Event> editEvent(
-            @PathVariable long id,
+            @PathVariable Long id,
             @RequestBody EditEventDto editEventDto
     ) throws EventException {
         return ResponseEntity.ok(eventService.editEvent(id, editEventDto));

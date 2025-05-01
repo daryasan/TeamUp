@@ -19,10 +19,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class QueryService {
 
-    private QueryRepository queryRepository;
-    private TeamService teamService;
-    private UserService userService;
-    private Utils utils;
+    private final QueryRepository queryRepository;
+    private final TeamService teamService;
+    private final UserService userService;
+    private final Utils utils;
 
     @Transactional
     public Query participateInTeam(Long teamId) throws TeamException, AccessException {

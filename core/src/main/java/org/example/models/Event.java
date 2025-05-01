@@ -13,13 +13,11 @@ import java.util.List;
 @Entity
 @Table(name = "events_")
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NonNull
     private String name;
 
     private String description;
@@ -38,7 +36,7 @@ public class Event {
     //@OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Long> participants;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "eventId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EventStep> eventSteps;
 
     //@OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)

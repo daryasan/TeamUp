@@ -16,10 +16,10 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("tags/")
+@RequestMapping("/tags")
 public class TagController {
 
-    private TagService tagService;
+    private final TagService tagService;
 
 
     @PostMapping("/create")

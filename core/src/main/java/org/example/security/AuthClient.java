@@ -4,12 +4,12 @@ import org.example.dto.UserDetailsFromTokenDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "users-service", url = "http://localhost:8080", path = "/users-service")
+@FeignClient(name = "users-service", url = "http://localhost:8080") //path = "/users-service")
 public interface AuthClient {
 
-    @GetMapping("auth/public-key")
+    @GetMapping("/public-key")
     String getPublicKey();
 
-    @GetMapping("auth/user-details")
+    @GetMapping("/user-details")
     UserDetailsFromTokenDto getDetailsFromToken();
 }

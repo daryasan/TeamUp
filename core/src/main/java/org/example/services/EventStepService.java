@@ -14,12 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 @RequiredArgsConstructor
 public class EventStepService {
 
-    private EventStepRepository eventStepRepository;
-    private EventService eventService;
+    private final  EventStepRepository eventStepRepository;
+    private final EventService eventService;
 
     @Transactional
     public EventStep createEventStep(long eventId, CreateEventStepDto eventStepDto) {

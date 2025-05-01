@@ -2,14 +2,17 @@ logging:
   level:
     root: INFO
     org.example.exceptions: ERROR
+    org.springframework.security: DEBUG
+    org.springframework.web.filter: DEBUG
+    #org.springframework: DEBUG
 
-  server:
-    servlet:
-      context-path: /core-service
-    port: 8081
-  spring:
-    application:
-      name: users-service
+server:
+#  servlet:
+#    context-path: /core-service
+  port: 8081
+spring:
+  application:
+    name: core-service
   profiles:
     active: prod
   autoconfigure:
@@ -28,5 +31,4 @@ logging:
         show_sql: true
     open-in-view: false
     generate-ddl: true
-    hibernate:
 

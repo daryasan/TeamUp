@@ -2,6 +2,8 @@ logging:
   level:
     root: INFO
     org.example.exceptions: ERROR
+    org.springframework.security: DEBUG
+    org.springframework.web.filter: DEBUG
 
   server:
     servlet:
