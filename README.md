@@ -1,3 +1,5 @@
+## Сервис users
+(Postman-коллекция)[https://.postman.co/workspace/Ordering~ac545bba-63ec-4c3e-a8a8-87192465c0db/collection/36027467-89bbc04e-6fa0-45fb-847e-92ce01a387ac?action=share&creator=36027467] 
 # КАК ЗАПУСТИТЬ
 ## Сервис auth
 1. Настройте БД:
