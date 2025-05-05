@@ -8,11 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserInfoDto {
-    //  id контакты, ссылка на гитхаб, опыт, описание, фото
     String contacts;
     String github;
     String experience;
     String description;
-    // TODO try and store images correctly
-    String image;
+    //String image;
 }

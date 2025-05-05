@@ -19,6 +19,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.UUID;
 
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
@@ -50,16 +51,23 @@ public class PhotoController {
             @RequestParam("photo") MultipartFile photo
     ) throws IOException {
 
-        String key = "photos/" + photo.getOriginalFilename();
+        String originalFilename = photo.getOriginalFilename();
+        String extension = "";
+        if (originalFilename != null && originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
+
+        String uniqueFilename = "photos/" + UUID.randomUUID() + extension;
+
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(configProperties.getBucket())
-                .key(key)
+                .key(uniqueFilename)
                 .contentType(photo.getContentType())
                 .build();
 
         s3Client.putObject(putObjectRequest, RequestBody.fromBytes(photo.getBytes()));
 
-        return key;
+        return uniqueFilename;
     }
 
 

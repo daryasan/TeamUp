@@ -49,7 +49,7 @@ public class UserServiceTest {
     public void save_correct_user() throws UserException {
 
         User user = new User();
-        user.setRole(RolesEnum.mentor);
+        user.setRoleId(RolesEnum.mentor);
         user.setEmail("darya_smile17@mail.ru");
         user.setPassword("qwerty");
         user.setNickname("dasha_san");
@@ -70,7 +70,7 @@ public class UserServiceTest {
     @Test
     public void save_same_email_user() {
         User user = new User();
-        user.setRole(RolesEnum.mentor);
+        user.setRoleId(RolesEnum.mentor);
         user.setEmail("darya_smile17@mail.ru");
         user.setPassword("qwerty");
         user.setNickname("dasha_san");
@@ -86,9 +86,9 @@ public class UserServiceTest {
     }
 
     @Test
-    public void add_additional_user_info_success() throws UserException, DataException {
+    public void add_additional_user_info_success() throws UserException, DataException, AuthException {
         User user = new User();
-        user.setRole(RolesEnum.mentor);
+        user.setRoleId(RolesEnum.mentor);
         user.setEmail("darya_smile17@mail.ru");
         user.setPassword("qwerty");
         user.setNickname("dasha_san");
@@ -97,7 +97,6 @@ public class UserServiceTest {
         UserInfoDto userInfoDto = new UserInfoDto();
         userInfoDto.setContacts("desudakova@edu.hse.ru");
         userInfoDto.setGithub("https://github.com/daryasan");
-        userInfoDto.setImage("path/to/image");
         userInfoDto.setExperience("Опыт");
         User newUser = new User();
         newUser.setEmail("darya_smile17@mail.ru");
@@ -113,7 +112,7 @@ public class UserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(newUser);
 
 
-        User actual = userService.addAdditionalUserInfo((new Random()).nextLong(), userInfoDto);
+        User actual = userService.addAdditionalUserInfo("token", userInfoDto);
 
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(user);
@@ -128,12 +127,11 @@ public class UserServiceTest {
         UserInfoDto userInfoDto = new UserInfoDto();
         userInfoDto.setContacts("desudakova@edu.hse.ru");
         userInfoDto.setGithub("https://github.com/daryasan");
-        userInfoDto.setImage("path/to/image");
         userInfoDto.setExperience("Опыт");
         when(userRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
 
-        assertThrows(UserException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), userInfoDto));
+        assertThrows(UserException.class, () -> userService.addAdditionalUserInfo("token", userInfoDto));
         verify(userRepository, times(1)).findById(any(Long.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -154,22 +152,20 @@ public class UserServiceTest {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
 
 
-        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto1));
-        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto2));
-        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto3));
-        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto4));
-        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo((new Random()).nextLong(), dto5));
+        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo("token", dto1));
+        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo("token", dto2));
+        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo("token", dto3));
+        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo("token", dto4));
+        assertThrows(DataException.class, () -> userService.addAdditionalUserInfo("token", dto5));
         verify(userRepository, times(5)).findById(any(Long.class));
         verifyNoMoreInteractions(userRepository);
     }
 
 
-
-
     @Test
-    public void change_user_info_successful() throws DataException, UserException {
+    public void change_user_info_successful() throws DataException, UserException, AuthException {
         User user = new User();
-        user.setRole(RolesEnum.mentor);
+        user.setRoleId(RolesEnum.mentor);
         user.setEmail("darya_smile17@mail.ru");
         user.setPassword("qwerty");
         user.setNickname("dasha_san");
@@ -197,7 +193,7 @@ public class UserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(newUser);
 
 
-        User actual = userService.changeUserInfo((new Random()).nextLong(), userInfoDto);
+        User actual = userService.changeUserInfo("token", userInfoDto);
 
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(user);
@@ -206,19 +202,19 @@ public class UserServiceTest {
         verifyNoMoreInteractions(userRepository);
     }
 
-@Test
-    public void change_user_info_user_not_found(){
-    UserFullInfoDto userInfoDto = new UserFullInfoDto();
-    userInfoDto.setContacts("desudakova@edu.hse.ru");
-    userInfoDto.setGithub("https://github.com/daryasan");
-    //userInfoDto.setImage("path/to/image");
-    userInfoDto.setExperience("Опыт");
-    when(userRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+    @Test
+    public void change_user_info_user_not_found() {
+        UserFullInfoDto userInfoDto = new UserFullInfoDto();
+        userInfoDto.setContacts("desudakova@edu.hse.ru");
+        userInfoDto.setGithub("https://github.com/daryasan");
+        //userInfoDto.setImage("path/to/image");
+        userInfoDto.setExperience("Опыт");
+        when(userRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
 
-    assertThrows(UserException.class, () -> userService.changeUserInfo((new Random()).nextLong(), userInfoDto));
-    verify(userRepository, times(1)).findById(any(Long.class));
-    verifyNoMoreInteractions(userRepository);
+        assertThrows(UserException.class, () -> userService.changeUserInfo("token", userInfoDto));
+        verify(userRepository, times(1)).findById(any(Long.class));
+        verifyNoMoreInteractions(userRepository);
     }
 
 
@@ -247,18 +243,18 @@ public class UserServiceTest {
         when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(new User()));
 
 
-        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto1));
-        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto2));
-        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto3));
-        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto4));
-        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto5));
+        assertThrows(DataException.class, () -> userService.changeUserInfo("token", dto1));
+        assertThrows(DataException.class, () -> userService.changeUserInfo("token", dto2));
+        assertThrows(DataException.class, () -> userService.changeUserInfo("token", dto3));
+        assertThrows(DataException.class, () -> userService.changeUserInfo("token", dto4));
+        assertThrows(DataException.class, () -> userService.changeUserInfo("token", dto5));
         verify(userRepository, times(5)).findById(any(Long.class));
         verifyNoMoreInteractions(userRepository);
     }
 
 
     @Test
-    public void change_user_info_empty_fields(){
+    public void change_user_info_empty_fields() {
         UserFullInfoDto dto1 = new UserFullInfoDto();
         dto1.setFirstName("Дарья");
         UserFullInfoDto dto2 = new UserFullInfoDto();
@@ -267,9 +263,9 @@ public class UserServiceTest {
         when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(new User()));
 
 
-        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto1));
-        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto2));
-        assertThrows(DataException.class, () -> userService.changeUserInfo((new Random()).nextLong(), dto3));
+        assertThrows(DataException.class, () -> userService.changeUserInfo("token", dto1));
+        assertThrows(DataException.class, () -> userService.changeUserInfo("token", dto2));
+        assertThrows(DataException.class, () -> userService.changeUserInfo("token", dto3));
         verify(userRepository, times(3)).findById(any(Long.class));
         verifyNoMoreInteractions(userRepository);
     }
@@ -278,7 +274,7 @@ public class UserServiceTest {
     @Test
     public void get_user_by_email_all_correct() throws UserException, DataException {
         User user = new User();
-        user.setRole(RolesEnum.mentor);
+        user.setRoleId(RolesEnum.mentor);
         user.setEmail("darya_smile17@mail.ru");
         user.setPassword("qwerty");
         user.setNickname("dasha_san");
@@ -327,7 +323,7 @@ public class UserServiceTest {
     @Test
     public void get_user_by_nickname_all_correct() throws UserException, DataException {
         User user = new User();
-        user.setRole(RolesEnum.mentor);
+        user.setRoleId(RolesEnum.mentor);
         user.setEmail("darya_smile17@mail.ru");
         user.setPassword("qwerty");
         user.setNickname("dasha_san");
@@ -374,7 +370,7 @@ public class UserServiceTest {
     @Test
     public void get_user_by_token_all_correct() throws AuthException, UserException {
         User user = new User();
-        user.setRole(RolesEnum.mentor);
+        user.setRoleId(RolesEnum.mentor);
         user.setEmail("darya_smile17@mail.ru");
         user.setPassword("qwerty");
         user.setNickname("dasha_san");
@@ -416,7 +412,7 @@ public class UserServiceTest {
     @Test
     public void get_user_by_id_all_correct() throws UserException {
         User user = new User();
-        user.setRole(RolesEnum.mentor);
+        user.setRoleId(RolesEnum.mentor);
         user.setEmail("darya_smile17@mail.ru");
         user.setPassword("qwerty");
         user.setNickname("dasha_san");
@@ -447,14 +443,14 @@ public class UserServiceTest {
     @Test
     public void get_all_users_correct() {
         User user1 = new User();
-        user1.setRole(RolesEnum.mentor);
+        user1.setRoleId(RolesEnum.mentor);
         user1.setEmail("darya_smile17@mail.ru");
         user1.setPassword("qwerty");
         user1.setNickname("dasha_san");
         user1.setFirstName("Дарья");
         user1.setLastName("Судакова");
         User user2 = new User();
-        user2.setRole(RolesEnum.organizer);
+        user2.setRoleId(RolesEnum.organizer);
         user2.setEmail("aboba@gmail.com");
         user2.setPassword("1234");
         user2.setNickname("aboba_aboba.");
@@ -490,21 +486,21 @@ public class UserServiceTest {
     @Test
     public void get_users_by_role_roles() throws DataException {
         User user1 = new User();
-        user1.setRole(RolesEnum.mentor);
+        user1.setRoleId(RolesEnum.mentor);
         user1.setEmail("darya_smile17@mail.ru");
         user1.setPassword("qwerty");
         user1.setNickname("dasha_san");
         user1.setFirstName("Дарья");
         user1.setLastName("Судакова");
         User user2 = new User();
-        user2.setRole(RolesEnum.organizer);
+        user2.setRoleId(RolesEnum.organizer);
         user2.setEmail("aboba@gmail.com");
         user2.setPassword("1234");
         user2.setNickname("aboba_aboba.");
         user2.setFirstName("Иван");
         user2.setLastName("Иванов");
         User user3 = new User();
-        user3.setRole(RolesEnum.participant);
+        user3.setRoleId(RolesEnum.participant);
         user3.setEmail("cupcake@gmail.com");
         user3.setPassword("eastisup");
         user3.setNickname("ruby");
@@ -535,14 +531,14 @@ public class UserServiceTest {
     @Test
     public void get_users_by_role_roles_empty() throws DataException {
         User user1 = new User();
-        user1.setRole(RolesEnum.mentor);
+        user1.setRoleId(RolesEnum.mentor);
         user1.setEmail("darya_smile17@mail.ru");
         user1.setPassword("qwerty");
         user1.setNickname("dasha_san");
         user1.setFirstName("Дарья");
         user1.setLastName("Судакова");
         User user2 = new User();
-        user2.setRole(RolesEnum.organizer);
+        user2.setRoleId(RolesEnum.organizer);
         user2.setEmail("aboba@gmail.com");
         user2.setPassword("1234");
         user2.setNickname("aboba_aboba.");
@@ -564,7 +560,6 @@ public class UserServiceTest {
     }
 
 
-
     @Test
     public void get_users_by_role_incorrect_role_identifier() throws DataException {
         when(utils.convertRoleIdToRole(anyInt())).thenThrow(DataException.class);
@@ -577,9 +572,9 @@ public class UserServiceTest {
     }
 
     @Test
-    public void delete_user_successful(){
+    public void delete_user_successful() {
         User user = new User();
-        user.setRole(RolesEnum.mentor);
+        user.setRoleId(RolesEnum.mentor);
         user.setEmail("darya_smile17@mail.ru");
         user.setPassword("qwerty");
         user.setNickname("dasha_san");
@@ -599,7 +594,7 @@ public class UserServiceTest {
 
 
     @Test
-    public void delete_user_unsuccessful(){
+    public void delete_user_unsuccessful() {
         when(userRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
 
@@ -659,6 +654,41 @@ public class UserServiceTest {
         verifyNoMoreInteractions(userRepository);
     }
 
+    @Test
+    public void set_user_photo_valid_existing_user_returns_photo_path() throws AuthException, UserException {
+        String token = "dummy-token";
+        String photoPath = "photos/random.png";
+        Long userId = 100L;
+        User user = new User();
+        user.setId(userId);
+
+
+        when(tokenService.getUserIdFromToken(token)).thenReturn(userId);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+
+        String result = userService.setUserPhoto(token, photoPath);
+
+
+        assertEquals(photoPath, result);
+        assertEquals(photoPath, user.getImage());
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    public void set_user_photo_user_not_exists_throws_user_exception() throws AuthException {
+        String token = "dummy-token";
+        String photoPath = "photos/random.png";
+        Long userId = 100L;
+
+
+        when(tokenService.getUserIdFromToken(token)).thenReturn(userId);
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+
+        UserException exception = assertThrows(UserException.class, () -> userService.setUserPhoto(token, photoPath));
+        assertEquals("User doesn't exist!", exception.getMessage());
+    }
 
 
 }

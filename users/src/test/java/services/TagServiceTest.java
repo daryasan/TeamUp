@@ -6,6 +6,7 @@ import org.example.exceptions.AuthException;
 import org.example.exceptions.DataException;
 import org.example.models.User;
 import org.example.repositories.UserRepository;
+import org.example.repositories.UserTagMappingRepository;
 import org.example.services.TagService;
 import org.example.services.TokenService;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -34,6 +35,9 @@ public class TagServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private UserTagMappingRepository userTagMappingRepository;
 
     @Mock
     private TokenService tokenService;

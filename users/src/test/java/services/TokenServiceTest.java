@@ -60,7 +60,7 @@ public class TokenServiceTest {
         user.setId(123L);
         user.setEmail("test@example.com");
         user.setNickname("testnick");
-        user.setRole(RolesEnum.participant);
+        user.setRoleId(RolesEnum.participant);
 
         String token = tokenService.returnAccessToken(user);
 
@@ -75,7 +75,7 @@ public class TokenServiceTest {
         user.setId(234L);
         user.setEmail("email@example.com");
         user.setNickname("nick");
-        user.setRole(RolesEnum.participant);
+        user.setRoleId(RolesEnum.participant);
 
         String token = tokenService.returnAccessToken(user);
 
@@ -91,7 +91,7 @@ public class TokenServiceTest {
         user.setId(345L);
         user.setEmail("nick@example.com");
         user.setNickname("nickname");
-        user.setRole(RolesEnum.participant);
+        user.setRoleId(RolesEnum.participant);
 
         String token = tokenService.returnAccessToken(user);
 
@@ -107,7 +107,7 @@ public class TokenServiceTest {
         user.setId(456L);
         user.setEmail("id@example.com");
         user.setNickname("idnick");
-        user.setRole(RolesEnum.participant);
+        user.setRoleId(RolesEnum.participant);
 
         String token = tokenService.returnAccessToken(user);
 
@@ -123,7 +123,7 @@ public class TokenServiceTest {
         user.setId(567L);
         user.setEmail("exp@example.com");
         user.setNickname("expnick");
-        user.setRole(RolesEnum.participant);
+        user.setRoleId(RolesEnum.participant);
 
         String token = tokenService.returnAccessToken(user);
 
@@ -139,7 +139,7 @@ public class TokenServiceTest {
         user.setId(678L);
         user.setEmail("role@example.com");
         user.setNickname("rolenick");
-        user.setRole(RolesEnum.participant);
+        user.setRoleId(RolesEnum.participant);
 
         String token = tokenService.returnAccessToken(user);
 
@@ -155,7 +155,7 @@ public class TokenServiceTest {
         user.setId(789L);
         user.setEmail("details@example.com");
         user.setNickname("detailnick");
-        user.setRole(RolesEnum.participant);
+        user.setRoleId(RolesEnum.participant);
 
         String token = tokenService.returnAccessToken(user);
 
@@ -174,7 +174,7 @@ public class TokenServiceTest {
         user.setId(890L);
         user.setEmail("expired@example.com");
         user.setNickname("expnick");
-        user.setRole(RolesEnum.participant);
+        user.setRoleId(RolesEnum.participant);
 
         Date pastDate = new Date(System.currentTimeMillis() - 1000);
         String expiredToken = ReflectionTestUtils.invokeMethod(tokenService, "generateAccessToken", user, pastDate);
@@ -189,16 +189,17 @@ public class TokenServiceTest {
         user.setId(901L);
         user.setEmail("valid@example.com");
         user.setNickname("validnick");
-        user.setRole(RolesEnum.participant);
+        user.setRoleId(RolesEnum.participant);
 
         String token = tokenService.returnAccessToken(user);
 
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User("valid@example.com", "pass", List.of());
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User("validnick", "pass", List.of());
 
         boolean valid = tokenService.isValid(token, userDetails);
 
         assertTrue(valid);
     }
+
 
 
     @Test
@@ -207,7 +208,7 @@ public class TokenServiceTest {
         user.setId(902L);
         user.setEmail("valid@example.com");
         user.setNickname("validnick");
-        user.setRole(RolesEnum.participant);
+        user.setRoleId(RolesEnum.participant);
 
         String token = tokenService.returnAccessToken(user);
 

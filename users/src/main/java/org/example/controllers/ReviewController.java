@@ -20,37 +20,37 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping("/add/user={userId}")
+    @PostMapping("/add")
     public ResponseEntity<Review> addReview(
             @RequestHeader("Authorization") String authHeader,
-            @PathVariable Long userId,
+            @RequestParam Long userId,
             @RequestBody CreateReviewDto createReviewDto
-    ) throws DataException, AuthException {
+    ) throws DataException, AuthException, ReviewException {
         String token = authHeader.substring(7);
         return new ResponseEntity<>(reviewService.addReview(token, userId, createReviewDto), HttpStatus.CREATED);
     }
 
 
-    @GetMapping("id={id}")
+    @GetMapping("/id")
     public ResponseEntity<Review> findReviewById(
-            @PathVariable Long id
+            @RequestParam Long id
     ) throws ReviewException {
         return ResponseEntity.ok(reviewService.findReviewById(id));
     }
 
 
-    @PatchMapping("id={id}/edit")
+    @PatchMapping("/edit")
     public ResponseEntity<Review> editReview(
-            @PathVariable Long id,
+            @RequestParam Long id,
             @RequestBody CreateReviewDto createReviewDto
     ) throws DataException, ReviewException {
         return ResponseEntity.ok(reviewService.editReview(id, createReviewDto));
     }
 
-    @DeleteMapping("id={id}/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<HttpStatus> deleteReview(
             @RequestHeader("Authorization") String authHeader,
-            @PathVariable Long id
+            @RequestParam Long id
     ) throws AuthException {
         String token = authHeader.substring(7);
         boolean ans = reviewService.deleteReview(token, id);
@@ -59,17 +59,17 @@ public class ReviewController {
     }
 
 
-    @GetMapping("/by-user/id={userId}")
+    @GetMapping("/by-user")
     public ResponseEntity<List<Review>> getUserReviews(
-            @PathVariable Long userId
+            @RequestParam Long userId
     ){
         return ResponseEntity.ok(reviewService.getUserReviews(userId));
     }
 
 
-    @GetMapping("/by-user/id={userId}/rating")
+    @GetMapping("/by-user/rating")
     public ResponseEntity<Double> getUserRate(
-            @PathVariable Long userId
+            @RequestParam Long userId
     ) {
         return ResponseEntity.ok(reviewService.getUserRating(userId));
     }

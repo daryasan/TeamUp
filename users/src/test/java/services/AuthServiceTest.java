@@ -10,6 +10,8 @@ import org.example.exceptions.DataException;
 import org.example.exceptions.UserException;
 import org.example.models.RolesEnum;
 import org.example.models.User;
+import org.example.repositories.SessionRepository;
+import org.example.repositories.UserRepository;
 import org.example.services.*;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -40,7 +42,13 @@ public class AuthServiceTest {
     UserService userService;
 
     @Mock
+    SessionRepository sessionRepository;
+
+    @Mock
     TokenService tokenService;
+
+    @Mock
+    UserRepository userRepository;
 
     @Mock
     PasswordEncoder passwordEncoder;
@@ -242,7 +250,7 @@ public class AuthServiceTest {
             savedUser.setFirstName("John");
             savedUser.setLastName("Doe");
             savedUser.setMiddleName("M");
-            savedUser.setRole(RolesEnum.participant);
+            savedUser.setRoleId(RolesEnum.participant);
 
             when(userService.saveUser(any(User.class))).thenReturn(savedUser);
             when(tokenService.returnAccessToken(savedUser)).thenReturn("token123");
@@ -307,7 +315,6 @@ public class AuthServiceTest {
     @Test
     public void changePassword_wrong_old_password() throws AuthException, UserException {
         ChangePasswordDto dto = new ChangePasswordDto();
-        dto.setToken("token");
         dto.setOldPassword("oldPass");
         dto.setNewPassword("NewValidPass1");
 
@@ -317,7 +324,7 @@ public class AuthServiceTest {
         when(userService.getUserByToken("token")).thenReturn(user);
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
 
-        assertThrows(DataException.class, () -> authService.changePassword(dto));
+        assertThrows(DataException.class, () -> authService.changePassword("token", dto));
 
         verify(userService).getUserByToken("token");
     }
@@ -326,7 +333,6 @@ public class AuthServiceTest {
     @Test
     public void changePassword_invalid_new_password() throws AuthException, UserException {
         ChangePasswordDto dto = new ChangePasswordDto();
-        dto.setToken("token");
         dto.setOldPassword("oldPass");
         dto.setNewPassword("badnew");
 
@@ -340,7 +346,7 @@ public class AuthServiceTest {
             utilsMock.when(() -> Utils.verifyPassword("badnew")).thenReturn(false);
 
 
-            assertThrows(DataException.class, () -> authService.changePassword(dto));
+            assertThrows(DataException.class, () -> authService.changePassword("token", dto));
 
 
             utilsMock.verify(() -> Utils.verifyPassword("badnew"));
@@ -351,7 +357,6 @@ public class AuthServiceTest {
     @Test
     public void changePassword_successful() throws UserException, AuthException, DataException {
         ChangePasswordDto dto = new ChangePasswordDto();
-        dto.setToken("token");
         dto.setOldPassword("oldPass");
         dto.setNewPassword("NewValidPass1");
 
@@ -361,15 +366,14 @@ public class AuthServiceTest {
         when(userService.getUserByToken("token")).thenReturn(user);
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
         when(passwordEncoder.encode("NewValidPass1")).thenReturn("encodedNewPass");
-        when(userService.saveUser(user)).thenReturn(user);
 
-        User result = authService.changePassword(dto);
+        User result = authService.changePassword("token", dto);
 
         assertNotNull(result);
         assertEquals("encodedNewPass", result.getPassword());
 
         verify(userService).getUserByToken("token");
-        verify(userService).saveUser(user);
+        verify(userRepository).save(user);
     }
 
 
@@ -406,7 +410,6 @@ public class AuthServiceTest {
 
         try (MockedStatic<Utils> utilsMock = org.mockito.Mockito.mockStatic(Utils.class)) {
             utilsMock.when(() -> Utils.verifyEmail("new@example.com")).thenReturn(true);
-            when(userService.saveUser(user)).thenReturn(user);
             when(tokenService.returnAccessToken(user)).thenReturn("newtoken");
 
             TokenResponseDto response = authService.changeEmail(dto);

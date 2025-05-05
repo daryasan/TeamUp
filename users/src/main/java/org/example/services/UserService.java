@@ -40,8 +40,9 @@ public class UserService {
     // right after registration
     // throws 401 UNAUTHORIZED or 400 BAD REQUEST
     @Transactional
-    public User addAdditionalUserInfo(Long id, UserInfoDto userInfoDto) throws UserException, DataException {
+    public User addAdditionalUserInfo(String token, UserInfoDto userInfoDto) throws UserException, DataException, AuthException {
 
+        Long id = tokenService.getUserIdFromToken(token);
         Optional<User> exists = userRepository.findById(id);
 
         if (exists.isEmpty()) {
@@ -55,7 +56,6 @@ public class UserService {
         newUser.setDescription(userInfoDto.getDescription());
         newUser.setExperience(userInfoDto.getExperience());
         newUser.setGithub(userInfoDto.getGithub());
-        newUser.setImage(userInfoDto.getImage());
 
         userRepository.save(newUser);
         return newUser;
@@ -76,7 +76,8 @@ public class UserService {
     // gets more info as parameters compared to addUserInfo
     // throws 401 UNAUTHORIZED or 400 BAD REQUEST
     @Transactional
-    public User changeUserInfo(Long id, UserFullInfoDto userFullInfoDto) throws UserException, DataException {
+    public User changeUserInfo(String token, UserFullInfoDto userFullInfoDto) throws UserException, DataException, AuthException {
+        Long id = tokenService.getUserIdFromToken(token);
         Optional<User> exists = userRepository.findById(id);
 
         if (exists.isEmpty()) throw new UserException("User doesn't exist!");
@@ -97,6 +98,18 @@ public class UserService {
 
         userRepository.save(newUser);
         return newUser;
+    }
+
+    public String setUserPhoto(String token, String photoPath) throws AuthException, UserException {
+        Long id = tokenService.getUserIdFromToken(token);
+        Optional<User> exists = userRepository.findById(id);
+
+        if (exists.isEmpty()) throw new UserException("User doesn't exist!");
+
+        exists.get().setImage(photoPath);
+        userRepository.save(exists.get());
+
+        return photoPath;
     }
 
 
@@ -153,7 +166,7 @@ public class UserService {
         List<User> users = userRepository.findAll();
         List<User> usersByRole = new ArrayList<>();
         for (User u : users) {
-            if (role == u.getRole()) usersByRole.add(u);
+            if (role == u.getRoleId()) usersByRole.add(u);
         }
         return usersByRole;
     }

@@ -44,7 +44,7 @@ public class ReviewServiceTest {
     private TokenService tokenService;
 
     @Test
-    public void add_review_successful() throws DataException, AuthException {
+    public void add_review_successful() throws DataException, AuthException, ReviewException {
         CreateReviewDto dto = new CreateReviewDto();
         dto.setRate(5);
         dto.setText("Great work!");

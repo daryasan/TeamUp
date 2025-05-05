@@ -82,7 +82,7 @@ public class TokenService {
                 .claim(ClaimsEnum.email.name(), user.getEmail())
                 .claim(ClaimsEnum.id.name(), user.getId())
                 .claim(ClaimsEnum.nickname.name(), user.getNickname())
-                .claim(ClaimsEnum.role.name(), user.getRole())
+                .claim(ClaimsEnum.role.name(), user.getRoleId())
                 .issuedAt(issuedDate)
                 .expiration(expires)
                 .signWith(privateKey)
@@ -136,10 +136,10 @@ public class TokenService {
     }
 
     public boolean isValid(String token, UserDetails userDetails) {
-        String email;
+        String nickname;
         try {
-            email = getEmailFromToken(token);
-            return Objects.equals(userDetails.getUsername(), email) && !isExpired(token);
+            nickname = getNicknameFromToken(token);
+            return Objects.equals(userDetails.getUsername(), nickname) && !isExpired(token);
         } catch (AuthException e) {
             return false;
         }
