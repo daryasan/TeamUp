@@ -22,13 +22,12 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@AllArgsConstructor
 public class TeamService {
 
-    private TeamRepository teamRepository;
-    private EventService eventService;
-    private UserService userService;
-    private Utils utils;
+    private final TeamRepository teamRepository;
+    private final EventService eventService;
+    private final UserService userService;
+    private final Utils utils;
 
 
     @Transactional

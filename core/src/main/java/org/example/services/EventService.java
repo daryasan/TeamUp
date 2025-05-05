@@ -24,18 +24,18 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@AllArgsConstructor
 public class EventService {
 
-    private EventRepository eventRepository;
-    private TeamRepository teamRepository;
-    private UserService userService;
-    Utils utils;
+    private final EventRepository eventRepository;
+    private final TeamRepository teamRepository;
+    private final  UserService userService;
+    private final Utils utils;
 
     @Transactional
     public Event createEvent(EventInfoDto eventInfoDto) throws DataException {
 
-        if (!Utils.verifyWebLink(eventInfoDto.getWebLink())) throw new DataException("Wring link!");
+        if (eventInfoDto.getWebLink() != null
+                && !Utils.verifyWebLink(eventInfoDto.getWebLink())) throw new DataException("Wring link!");
 
         Event event = new Event();
         event.setName(eventInfoDto.getName());

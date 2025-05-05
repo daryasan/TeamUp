@@ -36,6 +36,8 @@ public class UtilsTest {
     @InjectMocks
     Utils utils;
 
+    private final Utils.RolesEnumConverter converter = new Utils.RolesEnumConverter();
+
     @Test
     public void is_email_unique_unique() {
         User user1 = new User();
@@ -327,6 +329,71 @@ public class UtilsTest {
         verify(roleRepository, times(1)).findById(anyInt());
         verifyNoMoreInteractions(roleRepository);
     }
+
+    @Test
+    public void convert_to_database_column_valid_roles_return_expected_values() {
+        RolesEnum participant = RolesEnum.participant;
+        RolesEnum mentor = RolesEnum.mentor;
+        RolesEnum organizer = RolesEnum.organizer;
+
+
+        Integer participantValue = converter.convertToDatabaseColumn(participant);
+        Integer mentorValue = converter.convertToDatabaseColumn(mentor);
+        Integer organizerValue = converter.convertToDatabaseColumn(organizer);
+
+
+        assertEquals(1, participantValue);
+        assertEquals(2, mentorValue);
+        assertEquals(3, organizerValue);
+    }
+
+    @Test
+    public void convert_to_database_column_null_role_throws_nullpointerexception() {
+        RolesEnum role = null;
+
+
+        assertThrows(NullPointerException.class, () -> converter.convertToDatabaseColumn(role));
+    }
+
+    @Test
+    public void convert_to_entity_attribute_valid_values_return_expected_roles() {
+        Integer dbValue1 = 1;
+        Integer dbValue2 = 2;
+        Integer dbValue3 = 3;
+
+
+        RolesEnum role1 = converter.convertToEntityAttribute(dbValue1);
+        RolesEnum role2 = converter.convertToEntityAttribute(dbValue2);
+        RolesEnum role3 = converter.convertToEntityAttribute(dbValue3);
+
+
+        assertEquals(RolesEnum.participant, role1);
+        assertEquals(RolesEnum.mentor, role2);
+        assertEquals(RolesEnum.organizer, role3);
+    }
+
+    @Test
+    public void convert_to_entity_attribute_null_returns_null() {
+        Integer dbValue = null;
+
+
+        RolesEnum role = converter.convertToEntityAttribute(dbValue);
+
+
+        assertNull(role);
+    }
+
+    @Test
+    public void convert_to_entity_attribute_invalid_values_throw_exception() {
+        Integer invalidLow = 0;
+        Integer invalidHigh = 4;
+
+
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> converter.convertToEntityAttribute(invalidLow));
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> converter.convertToEntityAttribute(invalidHigh));
+    }
+
+
 
 
 }

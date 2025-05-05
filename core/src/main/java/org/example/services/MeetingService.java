@@ -20,10 +20,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MeetingService {
 
-    private MeetingRepository meetingRepository;
-    private TeamService teamService;
-    private UserService userService;
-    private Utils utils;
+    private final  MeetingRepository meetingRepository;
+    private final TeamService teamService;
+    private final UserService userService;
+    private final Utils utils;
 
     public Meeting createMeeting(Long teamId, CreateMeetingDto createMeetingDto) throws TeamException, DataException, AccessException {
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();

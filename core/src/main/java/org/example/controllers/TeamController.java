@@ -21,9 +21,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TeamController {
 
-    private TeamService teamService;
-    private QueryService queryService;
-    private MeetingService meetingService;
+    private final TeamService teamService;
+    private final QueryService queryService;
+    private final MeetingService meetingService;
 
     @PostMapping("/add")
     @PreAuthorize("hasAnyRole('PARTICIPANT', 'MENTOR')")

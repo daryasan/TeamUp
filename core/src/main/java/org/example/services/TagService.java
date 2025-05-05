@@ -24,10 +24,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TagService {
 
-    private TagRepository tagRepository;
-    private UserService userService;
-    private TeamRepository teamRepository;
-    private EventRepository eventRepository;
+    private final TagRepository tagRepository;
+    private final UserService userService;
+    private final TeamRepository teamRepository;
+    private final EventRepository eventRepository;
 
     public List<Tag> getAllTags() {
         List<Tag> tags = new ArrayList<>();

@@ -57,11 +57,9 @@ public class AuthController {
 
     @DeleteMapping("/deactivate")
     public ResponseEntity<HttpStatus> deactivateAccount(
-            @RequestBody String token,
-            BindingResult bindingResult
+            @RequestHeader("Authorization") String authHeader
     ) throws AuthException, UserException {
-
-        validator.validate(token, bindingResult);
+        String token = authHeader.substring(7);
         authService.deactivateAccount(token);
         return ResponseEntity.ok(HttpStatus.OK);
 
@@ -69,18 +67,21 @@ public class AuthController {
 
     @PatchMapping("/change-password")
     public ResponseEntity<User> changePassword(
+            @RequestHeader("Authorization") String authHeader,
             @RequestBody ChangePasswordDto changePasswordDto
     ) throws DataException, AuthException, UserException {
-
-        return new ResponseEntity<>(authService.changePassword(changePasswordDto), HttpStatus.OK);
+        String token = authHeader.substring(7);
+        return new ResponseEntity<>(authService.changePassword(token, changePasswordDto), HttpStatus.OK);
 
     }
 
     @PatchMapping("/change-email")
     public ResponseEntity<TokenResponseDto> changeEmail(
+            @RequestHeader("Authorization") String authHeader,
             @RequestBody ChangeEmailDto changeEmailDto
     ) throws DataException, AuthException, UserException {
-
+        String token = authHeader.substring(7);
+        changeEmailDto.setToken(token);
         return new ResponseEntity<>(authService.changeEmail(changeEmailDto), HttpStatus.OK);
 
     }

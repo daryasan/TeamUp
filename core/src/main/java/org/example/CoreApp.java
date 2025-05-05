@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-@EnableFeignClients
+@EnableFeignClients(basePackages = "org.example.security")
 public class CoreApp {
     public static void main(String[] args) {
         SpringApplication.run(CoreApp.class, args);

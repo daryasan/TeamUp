@@ -2,6 +2,8 @@ logging:
   level:
     root: INFO
     org.example.exceptions: ERROR
+    org.springframework.security: DEBUG
+    org.springframework.web.filter: DEBUG
 
   server:
     servlet:
@@ -77,6 +79,6 @@ files:
   key-id: YCAJEAzaYa0oinyyhJTLYaSnr
   secret-key: YCOaLdZ1QvvBlYWQE9diHymQHUX5rxP_Lx-fSvKa
   region: ru-central1
-  s3-endpoint: https://storage:yandexcloud:net
+  s3-endpoint: https://storage.yandexcloud.net
   bucket: team-up-file-storage
 

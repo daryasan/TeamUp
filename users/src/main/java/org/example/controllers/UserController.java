@@ -11,66 +11,80 @@ import org.example.models.User;
 import org.example.services.TagService;
 import org.example.services.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
-@Controller
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+
+@RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final TagService tagService;
+    private final PhotoController photoController;
 
-    @PatchMapping("/add/id={id}")
+
+    @PatchMapping("/add-info")
     public ResponseEntity<User> addUserAdditionalInfo(
-            @PathVariable Long id,
+            @RequestHeader("Authorization") String authHeader,
             @RequestBody UserInfoDto userInfoDto
-    ) throws UserException, DataException {
-
-        return ResponseEntity.ok(userService.addAdditionalUserInfo(id, userInfoDto));
+    ) throws UserException, DataException, AuthException, IOException {
+        String token = authHeader.substring(7);
+        return ResponseEntity.ok(userService.addAdditionalUserInfo(token, userInfoDto));
 
     }
 
-    @GetMapping("/id={id}")
+    @GetMapping("/id")
     public ResponseEntity<User> getUserById(
-            @PathVariable long id
+            @RequestParam long id
     ) throws UserException {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @GetMapping("/email={email}")
+    @GetMapping("/email")
     public ResponseEntity<User> getUserByEmail(
-            @PathVariable String email
+            @RequestParam String email
     ) throws DataException, UserException {
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
-    @GetMapping("/nickname={nickname}")
+    @GetMapping("/nickname")
     public ResponseEntity<User> getUserByNickname(
-            @PathVariable String nickname
+            @RequestParam String nickname
     ) throws UserException, DataException {
         return ResponseEntity.ok(userService.getUserByNickname(nickname));
     }
 
-    @GetMapping("/token={token}")
+    @GetMapping("/token")
     public ResponseEntity<User> getUserByToken(
-            @PathVariable String token
+            @RequestParam String token
     ) throws AuthException, UserException {
         return ResponseEntity.ok(userService.getUserByToken(token));
     }
 
 
-    @PatchMapping("/edit/id={id}")
+    @PatchMapping("/edit")
     public ResponseEntity<User> changeUserInfo(
-            @PathVariable Long id,
+            @RequestHeader("Authorization") String authHeader,
             @RequestBody UserFullInfoDto userFullInfoDto
-    ) throws AuthException, UserException, DataException {
+    ) throws AuthException, UserException, DataException, IOException {
+        String token = authHeader.substring(7);
+        return ResponseEntity.ok(userService.changeUserInfo( token, userFullInfoDto));
+    }
 
-        return ResponseEntity.ok(userService.changeUserInfo(id, userFullInfoDto));
-
+    @PutMapping(consumes = MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping("add-photo")
+    public ResponseEntity<User> uploadProfilePhoto(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam("photo") MultipartFile photo) throws IOException, AuthException, UserException {
+        String token = authHeader.substring(7);
+        String filename = photoController.uploadFile(photo);
+        return ResponseEntity.ok(userService.uploadProfilePhoto(token, filename));
     }
 
     @GetMapping("/all")
@@ -79,10 +93,9 @@ public class UserController {
     }
 
 
-    @GetMapping("/all-by-role/role-id={roleId}")
+    @GetMapping("/all-by-role/")
     public ResponseEntity<List<User>> getUsersByRole(
-            @PathVariable Integer roleId) throws DataException {
-
+            @RequestParam Integer roleId) throws DataException {
         return ResponseEntity.ok(userService.getUsersByRole(roleId));
 
     }

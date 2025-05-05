@@ -1,6 +1,7 @@
 package org.example.security;
 
 import org.example.dto.UserDetailsFromTokenDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 

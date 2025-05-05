@@ -22,13 +22,14 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final TokenService tokenService;
 
-    public Review addReview(String token, Long receiverId, CreateReviewDto createReviewDto) throws DataException, AuthException {
+    public Review addReview(String token, Long receiverId, CreateReviewDto createReviewDto) throws DataException, AuthException, ReviewException {
 
         UserDetailsDto user = tokenService.getDetails(token);
 
         if (createReviewDto.getRate() < 1 || createReviewDto.getRate() > 5)
             throw new DataException("Rate can be 1 to 5");
 
+        if (receiverId == user.getId()) throw new ReviewException("Can't send review to yourself");
         Review review = new Review();
         review.setSenderId(user.getId());
         review.setReceiverId(receiverId);

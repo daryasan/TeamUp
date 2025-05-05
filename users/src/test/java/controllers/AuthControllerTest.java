@@ -3,7 +3,6 @@ package controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.AuthApp;
 import org.example.config.Config;
-import org.example.config.JwtProperties;
 import org.example.dto.ChangeEmailDto;
 import org.example.dto.ChangePasswordDto;
 import org.example.dto.LoginDto;
@@ -20,10 +19,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.Validator;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = {AuthApp.class, Config.class, SecurityConfig.class})
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class AuthControllerTest {
 
@@ -107,22 +108,25 @@ public class AuthControllerTest {
 //    }
 
     @Test
+    @WithMockUser
     public void deactivate_account_valid_deactivate() throws Exception {
         String token = "dummy-token";
 
 
         mockMvc.perform(delete("/auth/deactivate")
+                        .header("Authorization", "Bearer token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("\"" + token + "\""))
+
 
 
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser
     public void change_password_valid_change_password() throws Exception {
         ChangePasswordDto changePasswordDto = new ChangePasswordDto();
-        changePasswordDto.setToken("dummy-token");
         changePasswordDto.setOldPassword("oldPass");
         changePasswordDto.setNewPassword("NewPass1");
 
@@ -132,10 +136,11 @@ public class AuthControllerTest {
         user.setEmail("user@example.com");
         user.setNickname("nickname");
 
-        given(authService.changePassword(any(ChangePasswordDto.class))).willReturn(user);
+        given(authService.changePassword(anyString(), any(ChangePasswordDto.class))).willReturn(user);
 
 
         mockMvc.perform(patch("/auth/change-password")
+                        .header("Authorization", "Bearer token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(changePasswordDto)))
 
@@ -145,6 +150,7 @@ public class AuthControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void change_email_valid_change_email() throws Exception {
         ChangeEmailDto changeEmailDto = new ChangeEmailDto();
         changeEmailDto.setToken("dummy-token");
@@ -157,6 +163,7 @@ public class AuthControllerTest {
 
         mockMvc.perform(patch("/auth/change-email")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer token")
                         .content(objectMapper.writeValueAsString(changeEmailDto)))
 
 

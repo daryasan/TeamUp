@@ -2,12 +2,13 @@ package org.example.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.example.dto.*;
 import org.example.exceptions.AuthException;
 import org.example.exceptions.DataException;
 import org.example.exceptions.UserException;
 import org.example.models.User;
+import org.example.repositories.SessionRepository;
+import org.example.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,8 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final SessionService sessionService;
     private final Utils utils;
+    private final SessionRepository sessionRepository;
+    private final UserRepository userRepository;
 
     // register user and add them to DB
     // return jwt token
@@ -48,7 +51,7 @@ public class AuthService {
         User user = new User();
         user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        user.setRole(utils.convertRoleIdToRole(registerDto.getRoleId()));
+        user.setRoleId(utils.convertRoleIdToRole(registerDto.getRoleId()));
         user.setNickname(registerDto.getNickname());
         user.setFirstName(registerDto.getFirstName());
         user.setLastName(registerDto.getLastName());
@@ -83,8 +86,8 @@ public class AuthService {
     // throws 400 BAD REQUEST (if password wrong),
     //        401 UNAUTHORIZED (if token invalid),
     //        403 FORBIDDEN (if user not found)
-    public User changePassword(ChangePasswordDto changePasswordDto) throws UserException, AuthException, DataException {
-        User user = userService.getUserByToken(changePasswordDto.getToken());
+    public User changePassword(String token, ChangePasswordDto changePasswordDto) throws UserException, AuthException, DataException {
+        User user = userService.getUserByToken(token);
         if (!passwordEncoder.matches(changePasswordDto.getOldPassword(), user.getPassword())
         ) {
             throw new DataException("Wrong old password!");
@@ -94,7 +97,7 @@ public class AuthService {
         }
 
         user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
-        userService.saveUser(user);
+        userRepository.save(user);
         return user;
     }
 
@@ -107,16 +110,15 @@ public class AuthService {
         }
 
         user.setEmail(changeEmailDto.getNewEmail());
-        userService.saveUser(user);
+        userRepository.save(user);
         return new TokenResponseDto(tokenService.returnAccessToken(user));
     }
 
 
-    // delete user from DB
-    // throws 401 UNAUTHORIZED (if token invalid)
-    //        403 FORBIDDEN (if user doesn't exist)
+    @Transactional
     public void deactivateAccount(String token) throws AuthException, UserException {
         long userId = tokenService.getUserIdFromToken(token);
+        sessionRepository.deleteByUserId(userId);
         if (!userService.deleteUser(userId)) throw new UserException("User doesn't exist");
     }
 }

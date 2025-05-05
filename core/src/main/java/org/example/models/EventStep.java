@@ -16,9 +16,8 @@ import java.util.List;
 public class EventStep {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)
     private Long eventId;
 
@@ -30,6 +29,6 @@ public class EventStep {
 
     private int stepNumber;
 
-    @OneToMany(mappedBy = "eventStep", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@OneToMany(mappedBy = "eventStep", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Long> winnerTeams;
 }
