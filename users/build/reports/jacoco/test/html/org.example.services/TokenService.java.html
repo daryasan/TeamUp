@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TokenService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">users</a> &gt; <a href="index.source.html" class="el_package">org.example.services</a> &gt; <span class="el_source">TokenService.java</span></div><h1>TokenService.java</h1><pre class="source lang-java linenums">package org.example.services;
+
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
+import org.example.dto.UserDetailsDto;
+import org.example.exceptions.AuthException;
+import org.example.models.User;
+import org.example.config.JwtProperties;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+import java.util.Date;
+import java.util.Objects;
+
+import static java.lang.Long.parseLong;
+
+@Service
+@RequiredArgsConstructor
+public class TokenService {
+
+    private final JwtProperties jwtProperties;
+
+<span class="nc" id="L33">    public enum ClaimsEnum {</span>
+<span class="nc" id="L34">        email, id, nickname, role</span>
+    }
+
+    private PrivateKey privateKey;
+    private PublicKey publicKey;
+
+
+    @PostConstruct
+    private void initKeys() {
+<span class="nc" id="L43">        this.privateKey = getPrivateKey(jwtProperties.getPrivateKey());</span>
+<span class="nc" id="L44">        this.publicKey = getPublicKey(jwtProperties.getPublicKey());</span>
+<span class="nc" id="L45">    }</span>
+
+    private String cleanKey(String key) {
+<span class="nc" id="L48">        return key.replace(&quot;\n&quot;, &quot;&quot;)</span>
+<span class="nc" id="L49">                .trim();</span>
+    }
+
+    private PrivateKey getPrivateKey(String key) {
+        try {
+<span class="nc" id="L54">            byte[] keyBytes = Base64.getDecoder().decode(cleanKey(key));</span>
+<span class="nc" id="L55">            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);</span>
+<span class="nc" id="L56">            KeyFactory kf = KeyFactory.getInstance(&quot;RSA&quot;);</span>
+<span class="nc" id="L57">            return kf.generatePrivate(spec);</span>
+<span class="nc" id="L58">        } catch (Exception e) {</span>
+<span class="nc" id="L59">            throw new RuntimeException(&quot;Error loading private key&quot;, e);</span>
+        }
+    }
+
+    private PublicKey getPublicKey(String key) {
+        try {
+<span class="nc" id="L65">            byte[] keyBytes = Base64.getDecoder().decode(cleanKey(key));</span>
+<span class="nc" id="L66">            X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);</span>
+<span class="nc" id="L67">            KeyFactory kf = KeyFactory.getInstance(&quot;RSA&quot;);</span>
+<span class="nc" id="L68">            return kf.generatePublic(spec);</span>
+<span class="nc" id="L69">        } catch (Exception e) {</span>
+<span class="nc" id="L70">            throw new RuntimeException(&quot;Error loading public key&quot;, e);</span>
+        }
+    }
+
+
+    public String returnAccessToken(User user) {
+<span class="nc" id="L76">        return generateAccessToken(user, new Date(System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration()));</span>
+    }
+
+    private String generateAccessToken(User user, Date expires) {
+<span class="nc" id="L80">        Date issuedDate = new Date();</span>
+<span class="nc" id="L81">        return Jwts.builder()</span>
+<span class="nc" id="L82">                .claim(ClaimsEnum.email.name(), user.getEmail())</span>
+<span class="nc" id="L83">                .claim(ClaimsEnum.id.name(), user.getId())</span>
+<span class="nc" id="L84">                .claim(ClaimsEnum.nickname.name(), user.getNickname())</span>
+<span class="nc" id="L85">                .claim(ClaimsEnum.role.name(), user.getRoleId())</span>
+<span class="nc" id="L86">                .issuedAt(issuedDate)</span>
+<span class="nc" id="L87">                .expiration(expires)</span>
+<span class="nc" id="L88">                .signWith(privateKey)</span>
+<span class="nc" id="L89">                .compact();</span>
+    }
+
+    private io.jsonwebtoken.Claims getClaims(String token) throws AuthException {
+        try {
+<span class="nc" id="L94">            JwtParser parser = Jwts.parser().</span>
+<span class="nc" id="L95">                    verifyWith(publicKey).</span>
+<span class="nc" id="L96">                    build();</span>
+<span class="nc" id="L97">            return parser.parseSignedClaims(token).getPayload();</span>
+<span class="nc" id="L98">        } catch (Exception e) {</span>
+<span class="nc" id="L99">            throw new AuthException(&quot;Invalid token!&quot;);</span>
+        }
+    }
+
+    public String getEmailFromToken(String token) throws AuthException {
+<span class="nc" id="L104">        return getClaims(token).get(ClaimsEnum.email.name()).toString();</span>
+    }
+
+    public String getNicknameFromToken(String token) throws AuthException {
+<span class="nc" id="L108">        return getClaims(token).get(ClaimsEnum.nickname.name()).toString();</span>
+    }
+
+    public Long getUserIdFromToken(String token) throws AuthException {
+<span class="nc" id="L112">        return parseLong(getClaims(token).get(ClaimsEnum.id.name()).toString());</span>
+    }
+
+    public Date getExpirationDateFromToken(String token) throws AuthException {
+<span class="nc" id="L116">        return getClaims(token).getExpiration();</span>
+    }
+
+    public String getRoleFromToken(String token) throws AuthException {
+<span class="nc" id="L120">        return getClaims(token).get(ClaimsEnum.role.name()).toString();</span>
+    }
+
+    public UserDetailsDto getDetails(String token) throws AuthException {
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (!isExpired(token)) {</span>
+<span class="nc" id="L125">            UserDetailsDto userDetailsDto = new UserDetailsDto();</span>
+<span class="nc" id="L126">            userDetailsDto.setId(getUserIdFromToken(token));</span>
+<span class="nc" id="L127">            userDetailsDto.setEmail(getEmailFromToken(token));</span>
+<span class="nc" id="L128">            userDetailsDto.setNickname(getNicknameFromToken(token));</span>
+<span class="nc" id="L129">            userDetailsDto.setRole(getRoleFromToken(token));</span>
+<span class="nc" id="L130">            return userDetailsDto;</span>
+<span class="nc" id="L131">        } else throw new AuthException(&quot;Expired token!&quot;);</span>
+    }
+
+    private boolean isExpired(String token) throws AuthException {
+<span class="nc" id="L135">        return getClaims(token).getExpiration().before(new Date(System.currentTimeMillis()));</span>
+    }
+
+    public boolean isValid(String token, UserDetails userDetails) {
+        String nickname;
+        try {
+<span class="nc" id="L141">            nickname = getNicknameFromToken(token);</span>
+<span class="nc bnc" id="L142" title="All 4 branches missed.">            return Objects.equals(userDetails.getUsername(), nickname) &amp;&amp; !isExpired(token);</span>
+<span class="nc" id="L143">        } catch (AuthException e) {</span>
+<span class="nc" id="L144">            return false;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

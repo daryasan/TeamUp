@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Utils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">users</a> &gt; <a href="index.source.html" class="el_package">org.example.services</a> &gt; <span class="el_source">Utils.java</span></div><h1>Utils.java</h1><pre class="source lang-java linenums">package org.example.services;
+
+import lombok.RequiredArgsConstructor;
+import org.example.exceptions.DataException;
+import org.example.models.Role;
+import org.example.models.RolesEnum;
+import org.example.models.User;
+import org.example.repositories.RoleRepository;
+import org.example.repositories.UserRepository;
+import org.springframework.stereotype.Service;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+
+import java.util.Optional;
+import java.util.regex.Pattern;
+
+@Service
+@RequiredArgsConstructor
+public class Utils {
+
+<span class="fc" id="L21">    final private static Pattern passwordPattern = Pattern.compile(&quot;^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d!@#$%^&amp;*(),.?\&quot;:{}|&lt;&gt;_-]{8,}$&quot;);</span>
+<span class="fc" id="L22">    final private static Pattern emailPattern = Pattern.compile(&quot;^[a-zA-Z0-9.!#$%&amp;'*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)+$&quot;);</span>
+<span class="fc" id="L23">    final private static Pattern nicknamePattern = Pattern.compile(&quot;^[a-z0-9._-]+$&quot;);</span>
+<span class="fc" id="L24">    final private static Pattern githubPattern = Pattern.compile(&quot;^https://github\\.com/[a-zA-Z0-9-_]+$&quot;);</span>
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+
+    public boolean isEmailUnique(String email) {
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        for (User u : userRepository.findAll()) {</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">            if (email.equals(u.getEmail())) return false;</span>
+<span class="fc" id="L31">        }</span>
+<span class="fc" id="L32">        return true;</span>
+    }
+
+    public static boolean verifyEmail(String email) {
+<span class="fc" id="L36">        return email.matches(emailPattern.pattern());</span>
+    }
+
+    public static boolean verifyNickname(String nickname) {
+<span class="fc" id="L40">        return nickname.matches(nicknamePattern.pattern());</span>
+    }
+
+    public static boolean verifyPassword(String password) {
+<span class="fc" id="L44">        return password.matches(passwordPattern.pattern());</span>
+    }
+
+
+    // verifies GitHub link my the mask
+    public static boolean verifyGithub(String githubLink) {
+<span class="fc" id="L50">        return githubLink.matches(githubPattern.pattern());</span>
+    }
+
+
+    // checks if username if unique
+    public boolean isNicknameUnique(String nickname) {
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        for (User u : userRepository.findAll()) {</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            if (nickname.equals(u.getNickname())) return false;</span>
+<span class="fc" id="L58">        }</span>
+<span class="fc" id="L59">        return true;</span>
+    }
+
+
+    public RolesEnum convertRoleIdToRole(Integer roleId) throws DataException {
+<span class="fc" id="L64">        Optional&lt;Role&gt; role = roleRepository.findById(roleId);</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (role.isEmpty())</span>
+<span class="fc" id="L66">            throw new DataException(&quot;Wrong role id!&quot;);</span>
+
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (role.get().getName().toLowerCase().contains(&quot;participant&quot;)) {</span>
+<span class="fc" id="L69">            return RolesEnum.participant;</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        } else if (role.get().getName().toLowerCase().contains(&quot;organizer&quot;)) {</span>
+<span class="fc" id="L71">            return RolesEnum.organizer;</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        } else if (role.get().getName().toLowerCase().contains(&quot;mentor&quot;)) {</span>
+<span class="fc" id="L73">            return RolesEnum.mentor;</span>
+        }
+<span class="fc" id="L75">        throw new DataException(&quot;Wrong role id!&quot;);</span>
+    }
+
+    @Converter(autoApply = true)
+<span class="fc" id="L79">    public static class RolesEnumConverter implements AttributeConverter&lt;RolesEnum, Integer&gt; {</span>
+
+        @Override
+        public Integer convertToDatabaseColumn(RolesEnum role) {
+<span class="pc bpc" id="L83" title="1 of 4 branches missed.">            switch (role) {</span>
+                case participant -&gt; {
+<span class="fc" id="L85">                    return 1;</span>
+                }
+                case mentor -&gt; {
+<span class="fc" id="L88">                    return 2;</span>
+                }
+                case organizer -&gt; {
+<span class="fc" id="L91">                    return 3;</span>
+                }
+                default -&gt; {
+<span class="nc" id="L94">                    return 0;</span>
+                }
+            }
+        }
+
+        @Override
+        public RolesEnum convertToEntityAttribute(Integer dbValue) {
+<span class="fc bfc" id="L101" title="All 2 branches covered.">            return dbValue == null ? null : RolesEnum.values()[dbValue - 1];</span>
+        }
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

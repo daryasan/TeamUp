@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">users</a> &gt; <a href="index.source.html" class="el_package">org.example.services</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">package org.example.services;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.example.dto.UserFullInfoDto;
+import org.example.dto.UserInfoDto;
+import org.example.exceptions.AuthException;
+import org.example.exceptions.DataException;
+import org.example.exceptions.UserException;
+import org.example.models.RolesEnum;
+import org.example.models.User;
+import org.example.repositories.UserRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class UserService {
+
+    private final TokenService tokenService;
+    private final UserRepository userRepository;
+    private final Utils utils;
+
+    // saves user to DB
+    // throws 403 FORBIDDEN
+    public User saveUser(User user) throws UserException {
+<span class="nc" id="L30">        Optional&lt;User&gt; exists = userRepository.findByEmail(user.getEmail());</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        if (exists.isPresent()) {</span>
+<span class="nc" id="L32">            throw new UserException(&quot;User is already present in DB!&quot;);</span>
+        }
+<span class="nc" id="L34">        userRepository.save(user);</span>
+<span class="nc" id="L35">        return user;</span>
+    }
+
+    // adds user info OR rewrites it if exists
+    // is supposed to use when suggesting to fill additional info
+    // right after registration
+    // throws 401 UNAUTHORIZED or 400 BAD REQUEST
+    @Transactional
+    public User addAdditionalUserInfo(String token, UserInfoDto userInfoDto) throws UserException, DataException, AuthException {
+
+<span class="nc" id="L45">        Long id = tokenService.getUserIdFromToken(token);</span>
+<span class="nc" id="L46">        Optional&lt;User&gt; exists = userRepository.findById(id);</span>
+
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        if (exists.isEmpty()) {</span>
+<span class="nc" id="L49">            throw new UserException(&quot;User doesn't exist!&quot;);</span>
+        }
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (!Utils.verifyGithub(userInfoDto.getGithub())) throw new DataException(&quot;Wrong git link!&quot;);</span>
+
+<span class="nc" id="L53">        User newUser = exists.get();</span>
+
+<span class="nc" id="L55">        newUser.setContacts(userInfoDto.getContacts());</span>
+<span class="nc" id="L56">        newUser.setDescription(userInfoDto.getDescription());</span>
+<span class="nc" id="L57">        newUser.setExperience(userInfoDto.getExperience());</span>
+<span class="nc" id="L58">        newUser.setGithub(userInfoDto.getGithub());</span>
+
+<span class="nc" id="L60">        userRepository.save(newUser);</span>
+<span class="nc" id="L61">        return newUser;</span>
+    }
+
+    @Transactional
+    public User uploadProfilePhoto(String token, String photoPath) throws AuthException, UserException {
+<span class="nc" id="L66">        Long id = tokenService.getUserIdFromToken(token);</span>
+
+<span class="nc" id="L68">        User user = getUserById(id);</span>
+<span class="nc" id="L69">        user.setImage(photoPath);</span>
+<span class="nc" id="L70">        userRepository.save(user);</span>
+
+<span class="nc" id="L72">        return user;</span>
+    }
+
+    // adds user info OR rewrites it if exists.
+    // gets more info as parameters compared to addUserInfo
+    // throws 401 UNAUTHORIZED or 400 BAD REQUEST
+    @Transactional
+    public User changeUserInfo(String token, UserFullInfoDto userFullInfoDto) throws UserException, DataException, AuthException {
+<span class="nc" id="L80">        Long id = tokenService.getUserIdFromToken(token);</span>
+<span class="nc" id="L81">        Optional&lt;User&gt; exists = userRepository.findById(id);</span>
+
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (exists.isEmpty()) throw new UserException(&quot;User doesn't exist!&quot;);</span>
+<span class="nc bnc" id="L84" title="All 4 branches missed.">        if (userFullInfoDto.getFirstName() == null || userFullInfoDto.getLastName() == null)</span>
+<span class="nc" id="L85">            throw new DataException(&quot;First and last name can't be empty!&quot;);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (!Utils.verifyGithub(userFullInfoDto.getGithub())) throw new DataException(&quot;Wrong link!&quot;);</span>
+
+<span class="nc" id="L88">        User newUser = exists.get();</span>
+
+<span class="nc" id="L90">        newUser.setContacts(userFullInfoDto.getContacts());</span>
+<span class="nc" id="L91">        newUser.setDescription(userFullInfoDto.getDescription());</span>
+<span class="nc" id="L92">        newUser.setExperience(userFullInfoDto.getExperience());</span>
+<span class="nc" id="L93">        newUser.setGithub(userFullInfoDto.getGithub());</span>
+<span class="nc" id="L94">        newUser.setNickname(userFullInfoDto.getNickname());</span>
+<span class="nc" id="L95">        newUser.setFirstName(userFullInfoDto.getFirstName());</span>
+<span class="nc" id="L96">        newUser.setLastName(userFullInfoDto.getLastName());</span>
+<span class="nc" id="L97">        newUser.setMiddleName(userFullInfoDto.getMiddleName());</span>
+
+<span class="nc" id="L99">        userRepository.save(newUser);</span>
+<span class="nc" id="L100">        return newUser;</span>
+    }
+
+    public String setUserPhoto(String token, String photoPath) throws AuthException, UserException {
+<span class="nc" id="L104">        Long id = tokenService.getUserIdFromToken(token);</span>
+<span class="nc" id="L105">        Optional&lt;User&gt; exists = userRepository.findById(id);</span>
+
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (exists.isEmpty()) throw new UserException(&quot;User doesn't exist!&quot;);</span>
+
+<span class="nc" id="L109">        exists.get().setImage(photoPath);</span>
+<span class="nc" id="L110">        userRepository.save(exists.get());</span>
+
+<span class="nc" id="L112">        return photoPath;</span>
+    }
+
+
+    // fetches user by email to optional user -&gt; doesn't throw
+    // any exceptions
+    public User getUserByEmail(String email) throws DataException, UserException {
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (!Utils.verifyEmail(email)) throw new DataException(&quot;Wrong email!&quot;);</span>
+<span class="nc" id="L120">        Optional&lt;User&gt; user = userRepository.findByEmail(email);</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">        if (user.isEmpty()) throw new UserException(&quot;User does not exist!&quot;);</span>
+<span class="nc" id="L122">        else return user.get();</span>
+    }
+
+
+    // fetches user by nickname to optional user -&gt; doesn't throw
+    // any exceptions
+    public User getUserByNickname(String nickname) throws UserException, DataException {
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        if (!Utils.verifyNickname(nickname)) throw new DataException(&quot;Wrong nickname!&quot;);</span>
+<span class="nc" id="L130">        Optional&lt;User&gt; user = userRepository.findByNickname(nickname);</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (user.isEmpty()) throw new UserException(&quot;User does not exist!&quot;);</span>
+<span class="nc" id="L132">        else return user.get();</span>
+    }
+
+
+    // fetches user by token to optional user -&gt; throws 401 UNAUTHORIZED
+    // if wrong token
+    public User getUserByToken(String token) throws AuthException, UserException {
+<span class="nc" id="L139">        Optional&lt;User&gt; user = userRepository.findById(</span>
+<span class="nc" id="L140">                tokenService.getUserIdFromToken(token)</span>
+        );
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (user.isEmpty())</span>
+<span class="nc" id="L143">            throw new UserException(&quot;User does not exist!&quot;);</span>
+<span class="nc" id="L144">        else return user.get();</span>
+    }
+
+
+    // fetches user by id to optional user -&gt; doesn't throw
+    // any exceptions
+    public User getUserById(Long id) throws UserException {
+<span class="nc" id="L151">        Optional&lt;User&gt; user = userRepository.findById(id);</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        if (user.isEmpty()) throw new UserException(&quot;User does not exist!&quot;);</span>
+<span class="nc" id="L153">        else return user.get();</span>
+    }
+
+
+    // fetches a collection of all users
+    public List&lt;User&gt; getAllUsers() {
+<span class="nc" id="L159">        return userRepository.findAll();</span>
+    }
+
+
+    // fetches all users with specified role
+    public List&lt;User&gt; getUsersByRole(int roleId) throws DataException {
+<span class="nc" id="L165">        RolesEnum role = utils.convertRoleIdToRole(roleId);</span>
+<span class="nc" id="L166">        List&lt;User&gt; users = userRepository.findAll();</span>
+<span class="nc" id="L167">        List&lt;User&gt; usersByRole = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        for (User u : users) {</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">            if (role == u.getRoleId()) usersByRole.add(u);</span>
+<span class="nc" id="L170">        }</span>
+<span class="nc" id="L171">        return usersByRole;</span>
+    }
+
+
+    // deletes user from db
+    // returns if attempt is successful
+    public boolean deleteUser(long id) {
+<span class="nc" id="L178">        Optional&lt;User&gt; user = userRepository.findById(id);</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">        if (user.isEmpty()) return false;</span>
+<span class="nc" id="L180">        userRepository.delete(user.get());</span>
+<span class="nc" id="L181">        return true;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

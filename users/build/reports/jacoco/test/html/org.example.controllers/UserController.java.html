@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">users</a> &gt; <a href="index.source.html" class="el_package">org.example.controllers</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package org.example.controllers;
+
+import lombok.RequiredArgsConstructor;
+import org.example.dto.TagDto;
+import org.example.dto.UserFullInfoDto;
+import org.example.dto.UserInfoDto;
+import org.example.exceptions.AuthException;
+import org.example.exceptions.DataException;
+import org.example.exceptions.UserException;
+import org.example.models.User;
+import org.example.services.TagService;
+import org.example.services.UserService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+
+@RestController
+@RequestMapping(&quot;/user&quot;)
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService userService;
+    private final TagService tagService;
+    private final PhotoController photoController;
+
+
+    @PatchMapping(&quot;/add-info&quot;)
+    public ResponseEntity&lt;User&gt; addUserAdditionalInfo(
+            @RequestHeader(&quot;Authorization&quot;) String authHeader,
+            @RequestBody UserInfoDto userInfoDto
+    ) throws UserException, DataException, AuthException, IOException {
+<span class="nc" id="L37">        String token = authHeader.substring(7);</span>
+<span class="nc" id="L38">        return ResponseEntity.ok(userService.addAdditionalUserInfo(token, userInfoDto));</span>
+
+    }
+
+    @GetMapping(&quot;/id&quot;)
+    public ResponseEntity&lt;User&gt; getUserById(
+            @RequestParam long id
+    ) throws UserException {
+<span class="nc" id="L46">        return ResponseEntity.ok(userService.getUserById(id));</span>
+    }
+
+    @GetMapping(&quot;/email&quot;)
+    public ResponseEntity&lt;User&gt; getUserByEmail(
+            @RequestParam String email
+    ) throws DataException, UserException {
+<span class="nc" id="L53">        return ResponseEntity.ok(userService.getUserByEmail(email));</span>
+    }
+
+    @GetMapping(&quot;/nickname&quot;)
+    public ResponseEntity&lt;User&gt; getUserByNickname(
+            @RequestParam String nickname
+    ) throws UserException, DataException {
+<span class="nc" id="L60">        return ResponseEntity.ok(userService.getUserByNickname(nickname));</span>
+    }
+
+    @GetMapping(&quot;/token&quot;)
+    public ResponseEntity&lt;User&gt; getUserByToken(
+            @RequestParam String token
+    ) throws AuthException, UserException {
+<span class="nc" id="L67">        return ResponseEntity.ok(userService.getUserByToken(token));</span>
+    }
+
+
+    @PatchMapping(&quot;/edit&quot;)
+    public ResponseEntity&lt;User&gt; changeUserInfo(
+            @RequestHeader(&quot;Authorization&quot;) String authHeader,
+            @RequestBody UserFullInfoDto userFullInfoDto
+    ) throws AuthException, UserException, DataException, IOException {
+<span class="nc" id="L76">        String token = authHeader.substring(7);</span>
+<span class="nc" id="L77">        return ResponseEntity.ok(userService.changeUserInfo( token, userFullInfoDto));</span>
+    }
+
+    @PutMapping(consumes = MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(&quot;add-photo&quot;)
+    public ResponseEntity&lt;User&gt; uploadProfilePhoto(
+            @RequestHeader(&quot;Authorization&quot;) String authHeader,
+            @RequestParam(&quot;photo&quot;) MultipartFile photo) throws IOException, AuthException, UserException {
+<span class="nc" id="L85">        String token = authHeader.substring(7);</span>
+<span class="nc" id="L86">        String filename = photoController.uploadFile(photo);</span>
+<span class="nc" id="L87">        return ResponseEntity.ok(userService.uploadProfilePhoto(token, filename));</span>
+    }
+
+    @GetMapping(&quot;/all&quot;)
+    public ResponseEntity&lt;List&lt;User&gt;&gt; getAllUsers() {
+<span class="nc" id="L92">        return ResponseEntity.ok(userService.getAllUsers());</span>
+    }
+
+
+    @GetMapping(&quot;/all-by-role/&quot;)
+    public ResponseEntity&lt;List&lt;User&gt;&gt; getUsersByRole(
+            @RequestParam Integer roleId) throws DataException {
+<span class="nc" id="L99">        return ResponseEntity.ok(userService.getUsersByRole(roleId));</span>
+
+    }
+
+
+    @PatchMapping(&quot;add-tags&quot;)
+    public ResponseEntity&lt;User&gt; assignTags(
+            @RequestHeader(&quot;Authorization&quot;) String authHeader,
+            @RequestBody List&lt;TagDto&gt; tags
+    ) throws DataException, AuthException {
+<span class="nc" id="L109">        String token = authHeader.substring(7);</span>
+<span class="nc" id="L110">        return ResponseEntity.ok(tagService.assignSkills(token, tags));</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

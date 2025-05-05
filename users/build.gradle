@@ -5,6 +5,16 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.0'
 }
 
+repositories {
+    mavenCentral()
+}
+
+configurations.configureEach {
+    resolutionStrategy {
+        force 'org.apache.commons:commons-compress:1.21'
+    }
+}
+
 jacoco {
     toolVersion = "0.8.8"
 }
@@ -66,4 +76,8 @@ dependencies {
     implementation("software.amazon.awssdk:apache-client:2.29.33")
 
 
+}
+
+bootJar {
+    mainClass.set("org.example.AuthApp")
 }
