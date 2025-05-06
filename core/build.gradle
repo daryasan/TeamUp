@@ -17,11 +17,6 @@ configurations.configureEach {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
-
 
 bootJar {
     mainClass.set("org.example.CoreApp")

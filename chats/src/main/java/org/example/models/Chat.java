@@ -17,7 +17,7 @@ public class Chat {
     private Long id;
 
     @Column(nullable = false)
-    private boolean type;
+    private boolean isGroup;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

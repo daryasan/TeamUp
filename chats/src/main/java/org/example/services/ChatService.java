@@ -1,23 +1,22 @@
 package org.example.services;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.AttachmentDto;
-import org.example.dto.MessageDto;
+import org.example.exceptions.AuthException;
+import org.example.exceptions.ChatException;
 import org.example.models.Attachment;
 import org.example.models.Chat;
 import org.example.models.ChatParticipant;
-import org.example.models.Message;
-import org.example.redis.ChatRedisPublisher;
-import org.example.repositories.AttachmentRepository;
 import org.example.repositories.ChatParticipantRepository;
 import org.example.repositories.ChatRepository;
-import org.example.repositories.MessageRepository;
-import org.springframework.data.domain.Pageable;
+import org.example.security.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,63 +25,69 @@ public class ChatService {
 
     private final ChatRepository chatRepository;
     private final ChatParticipantRepository chatParticipantRepository;
-    private final MessageRepository messageRepository;
-    private final ChatRedisPublisher redisPublisher;
-    private final AttachmentRepository attachmentRepository;
+    private UserService userService;
 
 
     @Transactional
     public Chat createChat(boolean isGroupChat, List<Long> participantIds) {
         Chat chat = new Chat();
-        chat.setType(isGroupChat);
+        chat.setGroup(isGroupChat);
         chat.setCreatedAt(LocalDateTime.now());
-        Chat savedChat = chatRepository.save(chat);
 
-        participantIds.forEach(userId -> {
+        chatRepository.save(chat);
+
+        participantIds.forEach(userId ->
+
+        {
             ChatParticipant participant = new ChatParticipant();
-            participant.setChat(savedChat);
+            participant.setChat(chat);
             participant.setUserId(userId);
             participant.setJoinedAt(LocalDateTime.now());
             chatParticipantRepository.save(participant);
         });
 
-        return savedChat;
+
+        return chat;
+    }
+
+    public Chat getChatById(Long chatId) throws ChatException {
+        Optional<Chat> chat = chatRepository.findById(chatId);
+        if (chat.isEmpty()) throw new ChatException("No such chat!");
+        return chat.get();
     }
 
 
-    @Transactional
-    public Message sendMessage(MessageDto messageDto) {
-        Chat chat = chatRepository.findById(messageDto.getChatId())
-                .orElseThrow(() -> new RuntimeException("Чат с id " + messageDto.getChatId() + " не найден!"));
-        Message message = new Message();
-        message.setChat(chat);
-        message.setSenderId(messageDto.getSenderId());
-        message.setContent(messageDto.getContent());
-        message.setTimestamp(LocalDateTime.now());
-        Message savedMessage = messageRepository.save(message);
-
-        redisPublisher.publish("chat-channel:" +
-                        messageDto.getChatId(),
-                        messageDto.getContent());
-
-        return savedMessage;
+    public List<Chat> getChatsForUser(Long userId) throws AuthException {
+        if (userService.getDetailsFromToken().getId() != userId)
+            throw new AuthException("User can only see their chats");
+        List<Chat> chats = new ArrayList<>();
+        for (ChatParticipant c : chatParticipantRepository.findAll()) {
+            if (Objects.equals(c.getUserId(), userId)) chats.add(c.getChat());
+        }
+        return chats;
     }
 
 
-    public List<Message> getMessages(Long chatId, Pageable pageable) {
-        return messageRepository.findByChatId(chatId, pageable);
+    public List<ChatParticipant> getChatParticipants(Long chatId) throws ChatException {
+        return getChatById(chatId).getParticipants();
     }
 
 
-    public List<Chat> getChatsForUser(Long userId) {
-        List<ChatParticipant> participantRecords = chatParticipantRepository.findByUserId(userId);
-        return participantRecords.stream()
-                .map(ChatParticipant::getChat)
-                .distinct()
-                .collect(Collectors.toList());
+    public Chat addParticipant(Long chatId, Long participantId) throws ChatException {
+
+        Chat chat = getChatById(chatId);
+        if (!chat.isGroup()) throw new ChatException("This chat is private! Can't add more participants");
+        if (chat.getParticipants().stream().anyMatch(o -> Objects.equals(o.getId(), participantId)))
+            throw new ChatException("This user is already in chat!");
+
+
+        ChatParticipant participant = new ChatParticipant();
+        participant.setChat(chat);
+        participant.setUserId(participantId);
+        participant.setJoinedAt(LocalDateTime.now());
+        chatParticipantRepository.save(participant);
+
+        return chat;
     }
 
-    public List<Attachment> getAttachmentsByChat(Long chatId) {
-        return attachmentRepository.findByMessageId(chatId);
-    }
 }

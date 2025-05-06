@@ -5,10 +5,6 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.0'
 }
 
-repositories {
-    mavenCentral()
-}
-
 configurations.configureEach {
     resolutionStrategy {
         force 'org.apache.commons:commons-compress:1.21'

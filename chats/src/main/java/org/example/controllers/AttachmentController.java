@@ -1,14 +1,10 @@
 package org.example.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.AttachmentDto;
-import org.example.exceptions.ChatException;
 import org.example.models.Attachment;
-import org.example.services.ChatService;
-import org.springframework.http.HttpStatus;
+import org.example.services.AttachmentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,18 +13,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AttachmentController {
 
-    private final ChatService chatService;
+    private final AttachmentService attachmentService;
 
-    @PostMapping
-    public ResponseEntity<AttachmentDto> uploadAttachment(
-            @RequestBody AttachmentDto attachmentDto) {
-        return null;
-    }
+//    @PostMapping
+//    public ResponseEntity<AttachmentDto> uploadAttachment(
+//            @RequestBody AttachmentDto attachmentDto) {
+//        return null;
+//    }
 
 
     @GetMapping("/{chatId}")
     public ResponseEntity<List<Attachment>> getAttachmentsByChat(@PathVariable("chatId") Long chatId) {
-        List<Attachment> attachments = chatService.getAttachmentsByChat(chatId);
+        List<Attachment> attachments = attachmentService.getAttachmentsByChat(chatId);
         return ResponseEntity.ok(attachments);
     }
 

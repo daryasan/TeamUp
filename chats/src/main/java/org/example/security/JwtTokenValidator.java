@@ -2,6 +2,7 @@ package org.example.security;
 
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -11,9 +12,10 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 @RequiredArgsConstructor
+@Component
 public class JwtTokenValidator {
 
-    private UserService userService;
+    private final UserService userService;
 
     public static PublicKey getPublicKeyFromString(String key) throws InvalidKeySpecException, NoSuchAlgorithmException {
         String publicKeyPEM = key.replace("-----BEGIN PUBLIC KEY-----", "")
@@ -25,7 +27,6 @@ public class JwtTokenValidator {
         return keyFactory.generatePublic(spec);
     }
 
-    // TODO (SET PUBLIC KEY)
     public boolean validateToken(String token) {
         try {
             Jwts.parser()

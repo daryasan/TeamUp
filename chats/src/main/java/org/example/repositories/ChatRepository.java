@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Long> {
-
-    // get all chats where current user exists
-    List<Chat> findDistinctByParticipantsUserId(Long userId);
+//
+//    // get all chats where current user exists
+//    List<Chat> findDistinctByParticipantsUserId(Long userId);
 }
