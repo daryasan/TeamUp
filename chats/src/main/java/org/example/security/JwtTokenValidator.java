@@ -2,6 +2,7 @@ package org.example.security;
 
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.example.services.UserService;
 import org.springframework.stereotype.Component;
 
 import java.security.KeyFactory;

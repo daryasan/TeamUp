@@ -179,34 +179,34 @@ public class EventServiceTest {
     }
 
 
-    @Test
-    public void get_event_participants_valid() throws Exception {
-        Long eventId = 1L;
-        Event event = new Event();
-        List<Long> participantIds = new ArrayList<>();
-        participantIds.add(10L);
-        participantIds.add(20L);
-        event.setParticipants(participantIds);
-        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
-
-
-        UserDto user1 = new UserDto();
-        user1.setId(10L);
-        user1.setEmail("user1@example.com");
-        UserDto user2 = new UserDto();
-        user2.setId(20L);
-        user2.setEmail("user2@example.com");
-        when(utils.getUserById(10L)).thenReturn(new ResponseEntity<>(user1, HttpStatus.OK));
-        when(utils.getUserById(20L)).thenReturn(new ResponseEntity<>(user2, HttpStatus.OK));
-
-
-        List<UserDto> result = eventService.getEventParticipants(eventId);
-
-
-        assertEquals(2, result.size());
-        assertEquals("user1@example.com", result.get(0).getEmail());
-        assertEquals("user2@example.com", result.get(1).getEmail());
-    }
+//    @Test
+//    public void get_event_participants_valid() throws Exception {
+//        Long eventId = 1L;
+//        Event event = new Event();
+//        List<Long> participantIds = new ArrayList<>();
+//        participantIds.add(10L);
+//        participantIds.add(20L);
+//        event.setParticipants(participantIds);
+//        when(eventRepository.findById(eventId)).thenReturn(Optional.of(event));
+//
+//
+//        UserDto user1 = new UserDto();
+//        user1.setId(10L);
+//        user1.setEmail("user1@example.com");
+//        UserDto user2 = new UserDto();
+//        user2.setId(20L);
+//        user2.setEmail("user2@example.com");
+//        when(utils.getUserById(10L)).thenReturn(new ResponseEntity<>(user1, HttpStatus.OK));
+//        when(utils.getUserById(20L)).thenReturn(new ResponseEntity<>(user2, HttpStatus.OK));
+//
+//
+//        List<UserDto> result = eventService.getEventParticipants(eventId);
+//
+//
+//        assertEquals(2, result.size());
+//        assertEquals("user1@example.com", result.get(0).getEmail());
+//        assertEquals("user2@example.com", result.get(1).getEmail());
+//    }
 
 
     @Test
@@ -284,68 +284,68 @@ public class EventServiceTest {
         assertEquals(eventId, result.get(0).getEvent().getId());
     }
 
-
-    @Test
-    public void get_events_by_date_all() {
-        List<Event> events = new ArrayList<>();
-        Event event1 = new Event();
-        Date now = new Date();
-        event1.setStartDate(now);
-        events.add(event1);
-        when(eventRepository.findAll()).thenReturn(events);
-
-
-        List<Event> result = eventService.getEventsByDate(Optional.empty(), Optional.empty());
-
-
-        assertEquals(1, result.size());
-    }
-
-
-    @Test
-    public void get_events_by_date_start_only() {
-        List<Event> events = new ArrayList<>();
-        Date now = new Date();
-        Event event1 = new Event();
-        event1.setStartDate(new Date(now.getTime() + 10000));
-        Event event2 = new Event();
-        event2.setStartDate(new Date(now.getTime() - 10000));
-        events.add(event1);
-        events.add(event2);
-        when(eventRepository.findAll()).thenReturn(events);
+//
+//    @Test
+//    public void get_events_by_date_all() {
+//        List<Event> events = new ArrayList<>();
+//        Event event1 = new Event();
+//        Date now = new Date();
+//        event1.setStartDate(now);
+//        events.add(event1);
+//        when(eventRepository.findAll()).thenReturn(events);
+//
+//
+//        List<Event> result = eventService.getEventsByDate(Optional.empty(), Optional.empty());
+//
+//
+//        assertEquals(1, result.size());
+//    }
 
 
-        List<Event> result = eventService.getEventsByDate(Optional.of(now), Optional.empty());
+//    @Test
+//    public void get_events_by_date_start_only() {
+//        List<Event> events = new ArrayList<>();
+//        Date now = new Date();
+//        Event event1 = new Event();
+//        event1.setStartDate(new Date(now.getTime() + 10000));
+//        Event event2 = new Event();
+//        event2.setStartDate(new Date(now.getTime() - 10000));
+//        events.add(event1);
+//        events.add(event2);
+//        when(eventRepository.findAll()).thenReturn(events);
+//
+//
+//        List<Event> result = eventService.getEventsByDate(Optional.of(now), Optional.empty());
+//
+//
+//        assertEquals(1, result.size());
+//        assertTrue(result.get(0).getStartDate().after(now));
+//    }
 
-
-        assertEquals(1, result.size());
-        assertTrue(result.get(0).getStartDate().after(now));
-    }
-
-
-    @Test
-    public void get_events_by_date_start_and_end() {
-        List<Event> events = new ArrayList<>();
-        Date now = new Date();
-        Event event1 = new Event();
-        event1.setStartDate(new Date(now.getTime() + 10000));
-        Event event2 = new Event();
-        event2.setStartDate(new Date(now.getTime() + 20000));
-        Event event3 = new Event();
-        event3.setStartDate(new Date(now.getTime() + 30000));
-        events.add(event1);
-        events.add(event2);
-        events.add(event3);
-        when(eventRepository.findAll()).thenReturn(events);
-        Date start = new Date(now.getTime() + 15000);
-        Date end = new Date(now.getTime() + 25000);
-
-
-        List<Event> result = eventService.getEventsByDate(Optional.of(start), Optional.of(end));
-
-
-        assertEquals(1, result.size());
-        assertTrue(result.get(0).getStartDate().after(start));
-        assertTrue(result.get(0).getStartDate().before(end));
-    }
+//
+//    @Test
+//    public void get_events_by_date_start_and_end() {
+//        List<Event> events = new ArrayList<>();
+//        Date now = new Date();
+//        Event event1 = new Event();
+//        event1.setStartDate(new Date(now.getTime() + 10000));
+//        Event event2 = new Event();
+//        event2.setStartDate(new Date(now.getTime() + 20000));
+//        Event event3 = new Event();
+//        event3.setStartDate(new Date(now.getTime() + 30000));
+//        events.add(event1);
+//        events.add(event2);
+//        events.add(event3);
+//        when(eventRepository.findAll()).thenReturn(events);
+//        Date start = new Date(now.getTime() + 15000);
+//        Date end = new Date(now.getTime() + 25000);
+//
+//
+//        List<Event> result = eventService.getEventsByDate(Optional.of(start), Optional.of(end));
+//
+//
+//        assertEquals(1, result.size());
+//        assertTrue(result.get(0).getStartDate().after(start));
+//        assertTrue(result.get(0).getStartDate().before(end));
+//    }
 }

@@ -2,6 +2,8 @@ package org.example.services;
 
 import lombok.RequiredArgsConstructor;
 import org.example.dto.MessageDto;
+import org.example.exceptions.ChatException;
+import org.example.exceptions.MessageException;
 import org.example.models.Chat;
 import org.example.models.Message;
 import org.example.redis.ChatRedisPublisher;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +47,17 @@ public class MessageService {
 
     public List<Message> getMessages(Long chatId, Pageable pageable) {
         return messageRepository.findByChatId(chatId, pageable);
+    }
+
+    public List<Message> getMessages(Long chatId) {
+        return messageRepository.findByChatIdOrderByTimestampAsc(chatId);
+    }
+
+    public Chat getChatByMessageId(Long messageId) throws ChatException, MessageException {
+        Optional<Message> message = messageRepository.findById(messageId);
+        if (message.isEmpty()) throw new MessageException("No such message");
+        return message.get().getChat();
+
     }
 
 }

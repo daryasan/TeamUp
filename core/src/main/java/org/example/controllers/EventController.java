@@ -13,6 +13,7 @@ import org.example.models.EventStep;
 import org.example.models.Team;
 import org.example.services.EventService;
 import org.example.services.EventStepService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,7 +59,7 @@ public class EventController {
     @GetMapping("id={id}/get-participants")
     public ResponseEntity<List<UserDto>> getEventParticipants(
             @PathVariable long id
-    ) throws EventException {
+            ) throws EventException {
         return ResponseEntity.ok(eventService.getEventParticipants(id));
     }
 
@@ -69,10 +70,10 @@ public class EventController {
     }
 
 
-    @PatchMapping("/id={id}/participate")
-    @PreAuthorize("hasAnyRole('PARTICIPANT')")
+    @PatchMapping("/participate")
+    @PreAuthorize("hasAnyRole('PARTICIPANT', 'MENTOR')")
     public ResponseEntity<HttpStatus> participateUser(
-            @PathVariable long eventId
+            @RequestParam long eventId
     ) throws EventException {
         if (eventService.participateUser(eventId)) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -80,67 +81,68 @@ public class EventController {
     }
 
 
-    @GetMapping("id={id}/teams")
+    @GetMapping("/teams")
     public ResponseEntity<List<Team>> getTeamsByEvent(
-            @PathVariable long id
+            @RequestParam long id
     ) {
         return ResponseEntity.ok(eventService.getTeamsByEvent(id));
     }
 
 
-    @GetMapping("/all/filter?dateStart={dateStart}&dateEnd={dateEnd}")
+    @GetMapping("/all/filter")
     public ResponseEntity<List<Event>> getAllEvents(
-            @PathVariable Optional<Date> dateStart,
-            @PathVariable Optional<Date> dateEnd
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date dateStart,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date dateEnd
     ) {
         return ResponseEntity.ok(eventService.getEventsByDate(dateStart, dateEnd));
     }
 
 
-    @PostMapping("id={eventId}/add-step")
+    @PreAuthorize("hasAnyRole('ORGANIZER')")
+    @PostMapping("/add-step")
     public ResponseEntity<EventStep> createStep(
-            @PathVariable long eventId,
+            @RequestParam long eventId,
             @RequestBody CreateEventStepDto createEventStepDto
     ) {
         return new ResponseEntity<>(eventStepService.createEventStep(eventId, createEventStepDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("id={eventId}/step-id={id}")
+    @GetMapping("step-id")
     public ResponseEntity<EventStep> getEventStepById(
-            @PathVariable long id
+            @RequestParam long id
     ) throws EventException {
         return ResponseEntity.ok(eventStepService.findEventStepById(id));
     }
 
-    @PatchMapping("id={eventId}/step-id={id}/edit")
+    @PatchMapping("edit")
     @PreAuthorize("hasAnyRole('ORGANIZER')")
     public ResponseEntity<EventStep> editEventStep(
-            @PathVariable long eventId,
-            @PathVariable long id,
+            @RequestParam long eventId,
+            @RequestParam long stepId,
             @RequestBody CreateEventStepDto createEventStepDto
     ) throws EventException {
-        return ResponseEntity.ok(eventStepService.editEventStep(eventId, id, createEventStepDto));
+        return ResponseEntity.ok(eventStepService.editEventStep(eventId, stepId, createEventStepDto));
     }
 
 
-    @PatchMapping("id={eventId}/step-id={id}/delete")
+    @PatchMapping("/delete")
     @PreAuthorize("hasAnyRole('ORGANIZER')")
     public ResponseEntity<HttpStatus> deleteEventStep(
-            @PathVariable long eventId,
-            @PathVariable long id
+            @RequestParam long eventId,
+            @RequestParam long stepId
     ) throws EventException {
-        eventStepService.deleteEventStep(eventId, id);
+        eventStepService.deleteEventStep(eventId, stepId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
-    @PatchMapping("id={eventId}/step-id={id}/set-winner")
+    @PatchMapping("/set-winner")
     @PreAuthorize("hasAnyRole('ORGANIZER')")
     public ResponseEntity<EventStep> setWinners(
-            @PathVariable long id,
+            @RequestParam long stepId,
             @RequestBody List<Long> teamsIds
     ) throws EventException {
-        return ResponseEntity.ok(eventStepService.setWinners(id, teamsIds));
+        return ResponseEntity.ok(eventStepService.setWinners(stepId, teamsIds));
     }
 
 

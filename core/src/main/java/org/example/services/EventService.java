@@ -28,7 +28,7 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final TeamRepository teamRepository;
-    private final  UserService userService;
+    private final UserService userService;
     private final Utils utils;
 
     @Transactional
@@ -53,6 +53,7 @@ public class EventService {
     }
 
 
+    @Transactional
     public Event editEvent(Long id, EditEventDto editEventDto) throws EventException {
         Event event = findEventById(id);
 
@@ -64,10 +65,12 @@ public class EventService {
 
         eventRepository.save(event);
 
+        event.setTags(event.getTags());
         return event;
     }
 
 
+    @Transactional
     public Event findEventById(Long id) throws EventException {
         Optional<Event> eventOpt = eventRepository.findById(id);
 
@@ -78,12 +81,11 @@ public class EventService {
 
     public List<UserDto> getEventParticipants(Long id) throws EventException {
         Event event = findEventById(id);
-        List<Long> userIds = event.getParticipants();
+        List<Long> userIds = event.getParticipants() == null ? new ArrayList<>() : event.getParticipants();
         List<UserDto> users = new ArrayList<>();
 
         for (Long userId : userIds) {
-            ResponseEntity<UserDto> responseEntity = utils.getUserById(userId);
-            users.add(responseEntity.getBody());
+            users.add(userService.getUserById(userId));
         }
 
         return users;
@@ -101,11 +103,13 @@ public class EventService {
         } catch (EventException e) {
             return false;
         }
-        List<Long> participants = event.getParticipants();
+        List<Long> participants = event.getParticipants() == null ? new ArrayList<>() : event.getParticipants();
 
 
         UserDetailsFromTokenDto userDetailsFromTokenDto = userService.getDetailsFromToken();
         participants.add(userDetailsFromTokenDto.getId());
+
+        event.setParticipants(participants);
 
         eventRepository.save(event);
         return true;
@@ -116,20 +120,18 @@ public class EventService {
         return teamRepository.findAll().stream().filter(t -> t.getEvent().getId() == eventId).toList();
     }
 
-    public List<Event> getEventsByDate(Optional<Date> start, Optional<Date> end) {
+    public List<Event> getEventsByDate(Date start, Date end) {
         List<Event> events = getAllEvents();
-        List<Event> eventsStart;
+        List<Event> res = new ArrayList<>();
 
-        eventsStart = start.map(date -> events.stream().filter(
-                e -> e.getStartDate().after(date)).toList()).orElse(events);
-
-        List<Event> eventsEnd = eventsStart;
-        if (end.isPresent()) {
-            eventsEnd = eventsStart.stream().filter(
-                    e -> e.getStartDate().before(end.get())).toList();
+        for (Event e : events){
+            if (e.getStartDate().after(start) && e.getEndDate().before(end)){
+                res.add(e);
+            }
         }
 
-        return eventsEnd;
+
+        return res;
 
     }
 

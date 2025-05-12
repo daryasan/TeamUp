@@ -1,5 +1,6 @@
 package org.example.repositories;
 
+import org.example.models.Chat;
 import org.example.models.Message;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     // get all chat messages sorted ascending
     List<Message> findByChatIdOrderByTimestampAsc(Long chatId);
+
+    Long findChatIdById(Long id);
 
     // paging
     List<Message> findByChatId(Long chatId, Pageable pageable);

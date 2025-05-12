@@ -50,6 +50,9 @@ public class ChatController {
     }
 
 
+
+
+    // TODO debug
     @GetMapping("/user")
     public List<Chat> getChatsForUser(@RequestParam Long userId) throws AuthException {
         return chatService.getChatsForUser(userId);

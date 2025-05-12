@@ -5,7 +5,7 @@
 -- Dumped from database version 15.2
 -- Dumped by pg_dump version 15.2
 
--- Started on 2025-05-05 18:17:56
+-- Started on 2025-05-11 18:53:45
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -39,7 +39,7 @@ CREATE SCHEMA users;
 ALTER SCHEMA users OWNER TO pg_database_owner;
 
 --
--- TOC entry 3485 (class 0 OID 0)
+-- TOC entry 3454 (class 0 OID 0)
 -- Dependencies: 5
 -- Name: SCHEMA users; Type: COMMENT; Schema: -; Owner: pg_database_owner
 --
@@ -82,7 +82,7 @@ CREATE SEQUENCE core.event_participants__id_seq
 ALTER TABLE core.event_participants__id_seq OWNER TO postgres;
 
 --
--- TOC entry 3486 (class 0 OID 0)
+-- TOC entry 3455 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: event_participants__id_seq; Type: SEQUENCE OWNED BY; Schema: core; Owner: postgres
 --
@@ -121,7 +121,7 @@ CREATE SEQUENCE core.event_step_winner_teams__id_seq
 ALTER TABLE core.event_step_winner_teams__id_seq OWNER TO postgres;
 
 --
--- TOC entry 3487 (class 0 OID 0)
+-- TOC entry 3456 (class 0 OID 0)
 -- Dependencies: 232
 -- Name: event_step_winner_teams__id_seq; Type: SEQUENCE OWNED BY; Schema: core; Owner: postgres
 --
@@ -163,7 +163,7 @@ CREATE SEQUENCE core.event_steps__id_seq
 ALTER TABLE core.event_steps__id_seq OWNER TO postgres;
 
 --
--- TOC entry 3488 (class 0 OID 0)
+-- TOC entry 3457 (class 0 OID 0)
 -- Dependencies: 230
 -- Name: event_steps__id_seq; Type: SEQUENCE OWNED BY; Schema: core; Owner: postgres
 --
@@ -215,7 +215,7 @@ CREATE SEQUENCE core.event_winners__id_seq
 ALTER TABLE core.event_winners__id_seq OWNER TO postgres;
 
 --
--- TOC entry 3489 (class 0 OID 0)
+-- TOC entry 3458 (class 0 OID 0)
 -- Dependencies: 228
 -- Name: event_winners__id_seq; Type: SEQUENCE OWNED BY; Schema: core; Owner: postgres
 --
@@ -261,7 +261,7 @@ CREATE SEQUENCE core.events__id_seq
 ALTER TABLE core.events__id_seq OWNER TO postgres;
 
 --
--- TOC entry 3490 (class 0 OID 0)
+-- TOC entry 3459 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: events__id_seq; Type: SEQUENCE OWNED BY; Schema: core; Owner: postgres
 --
@@ -302,7 +302,7 @@ CREATE SEQUENCE core.meetings__id_seq
 ALTER TABLE core.meetings__id_seq OWNER TO postgres;
 
 --
--- TOC entry 3491 (class 0 OID 0)
+-- TOC entry 3460 (class 0 OID 0)
 -- Dependencies: 239
 -- Name: meetings__id_seq; Type: SEQUENCE OWNED BY; Schema: core; Owner: postgres
 --
@@ -343,7 +343,7 @@ CREATE SEQUENCE core.queries__id_seq
 ALTER TABLE core.queries__id_seq OWNER TO postgres;
 
 --
--- TOC entry 3492 (class 0 OID 0)
+-- TOC entry 3461 (class 0 OID 0)
 -- Dependencies: 241
 -- Name: queries__id_seq; Type: SEQUENCE OWNED BY; Schema: core; Owner: postgres
 --
@@ -382,7 +382,7 @@ CREATE SEQUENCE core.tags__id_seq
 ALTER TABLE core.tags__id_seq OWNER TO postgres;
 
 --
--- TOC entry 3493 (class 0 OID 0)
+-- TOC entry 3462 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: tags__id_seq; Type: SEQUENCE OWNED BY; Schema: core; Owner: postgres
 --
@@ -421,7 +421,7 @@ CREATE SEQUENCE core.team_participants__id_seq
 ALTER TABLE core.team_participants__id_seq OWNER TO postgres;
 
 --
--- TOC entry 3494 (class 0 OID 0)
+-- TOC entry 3463 (class 0 OID 0)
 -- Dependencies: 237
 -- Name: team_participants__id_seq; Type: SEQUENCE OWNED BY; Schema: core; Owner: postgres
 --
@@ -480,7 +480,7 @@ CREATE SEQUENCE core.teams__id_seq
 ALTER TABLE core.teams__id_seq OWNER TO postgres;
 
 --
--- TOC entry 3495 (class 0 OID 0)
+-- TOC entry 3464 (class 0 OID 0)
 -- Dependencies: 234
 -- Name: teams__id_seq; Type: SEQUENCE OWNED BY; Schema: core; Owner: postgres
 --
@@ -708,324 +708,6 @@ ALTER TABLE ONLY core.team_participants_ ALTER COLUMN id SET DEFAULT nextval('co
 --
 
 ALTER TABLE ONLY core.teams_ ALTER COLUMN id SET DEFAULT nextval('core.teams__id_seq'::regclass);
-
-
---
--- TOC entry 3461 (class 0 OID 42436)
--- Dependencies: 227
--- Data for Name: event_participants_; Type: TABLE DATA; Schema: core; Owner: postgres
---
-
-COPY core.event_participants_ (id, event_id, participant_id) FROM stdin;
-\.
-
-
---
--- TOC entry 3467 (class 0 OID 42472)
--- Dependencies: 233
--- Data for Name: event_step_winner_teams_; Type: TABLE DATA; Schema: core; Owner: postgres
---
-
-COPY core.event_step_winner_teams_ (id, event_step_id, winner_team_id) FROM stdin;
-\.
-
-
---
--- TOC entry 3465 (class 0 OID 42460)
--- Dependencies: 231
--- Data for Name: event_steps_; Type: TABLE DATA; Schema: core; Owner: postgres
---
-
-COPY core.event_steps_ (id, event_id, start_date, end_date, step_number, winner_teams) FROM stdin;
-\.
-
-
---
--- TOC entry 3459 (class 0 OID 42420)
--- Dependencies: 225
--- Data for Name: event_tags; Type: TABLE DATA; Schema: core; Owner: postgres
---
-
-COPY core.event_tags (event_id, tag_id) FROM stdin;
-\.
-
-
---
--- TOC entry 3463 (class 0 OID 42448)
--- Dependencies: 229
--- Data for Name: event_winners_; Type: TABLE DATA; Schema: core; Owner: postgres
---
-
-COPY core.event_winners_ (id, event_id, winner_id) FROM stdin;
-\.
-
-
---
--- TOC entry 3458 (class 0 OID 42412)
--- Dependencies: 224
--- Data for Name: events_; Type: TABLE DATA; Schema: core; Owner: postgres
---
-
-COPY core.events_ (id, name, description, photo_path, web_link, prize_description, start_date, end_date, participants, winners) FROM stdin;
-1	ИМя	\N	\N	\N	\N	\N	\N	\N	\N
-\.
-
-
---
--- TOC entry 3474 (class 0 OID 42535)
--- Dependencies: 240
--- Data for Name: meetings_; Type: TABLE DATA; Schema: core; Owner: postgres
---
-
-COPY core.meetings_ (id, team_id, link, start_time, end_time) FROM stdin;
-\.
-
-
---
--- TOC entry 3476 (class 0 OID 42549)
--- Dependencies: 242
--- Data for Name: queries_; Type: TABLE DATA; Schema: core; Owner: postgres
---
-
-COPY core.queries_ (id, team_id, sender_id, receiver_id, query_status) FROM stdin;
-\.
-
-
---
--- TOC entry 3456 (class 0 OID 42403)
--- Dependencies: 222
--- Data for Name: tags_; Type: TABLE DATA; Schema: core; Owner: postgres
---
-
-COPY core.tags_ (id, author_id, name) FROM stdin;
-1	\N	Java
-2	\N	Spring
-\.
-
-
---
--- TOC entry 3472 (class 0 OID 42523)
--- Dependencies: 238
--- Data for Name: team_participants_; Type: TABLE DATA; Schema: core; Owner: postgres
---
-
-COPY core.team_participants_ (id, team_id, participant_id) FROM stdin;
-\.
-
-
---
--- TOC entry 3470 (class 0 OID 42507)
--- Dependencies: 236
--- Data for Name: team_tags; Type: TABLE DATA; Schema: core; Owner: postgres
---
-
-COPY core.team_tags (team_id, tag_id) FROM stdin;
-\.
-
-
---
--- TOC entry 3469 (class 0 OID 42484)
--- Dependencies: 235
--- Data for Name: teams_; Type: TABLE DATA; Schema: core; Owner: postgres
---
-
-COPY core.teams_ (id, name, description, event_id, project_name, mentor_id, leader_id, formed, has_mentor, participants) FROM stdin;
-\.
-
-
---
--- TOC entry 3454 (class 0 OID 41976)
--- Dependencies: 220
--- Data for Name: reviews_; Type: TABLE DATA; Schema: users; Owner: postgres
---
-
-COPY users.reviews_ (sender_id, receiver_id, review_text, rate, id) FROM stdin;
-16	15	Плохой ментор	1	2
-16	15	Хороший ментор	5	3
-\.
-
-
---
--- TOC entry 3452 (class 0 OID 41944)
--- Dependencies: 218
--- Data for Name: role_; Type: TABLE DATA; Schema: users; Owner: postgres
---
-
-COPY users.role_ (id, name) FROM stdin;
-1	participant
-2	mentor
-3	organizer
-\.
-
-
---
--- TOC entry 3451 (class 0 OID 41939)
--- Dependencies: 217
--- Data for Name: session_; Type: TABLE DATA; Schema: users; Owner: postgres
---
-
-COPY users.session_ (user_id, token, expires, id) FROM stdin;
-12	eyJhbGciOiJSUzI1NiJ9.eyJlbWFpbCI6InBhcnRpY2lwYW50LWVtYWlsQG1haWwucnUiLCJpZCI6MTIsIm5pY2tuYW1lIjoicGFydGljaXBhbnQiLCJyb2xlIjoicGFydGljaXBhbnQiLCJpYXQiOjE3NDY0MzYxOTAsImV4cCI6MTc0NjQzOTc5MH0.h8AFecuWzgC2CiemhDSYDoqDf_smx8m3f8H5RdVHoRZNuDoRlAPUejHm9Mkh0eJ8YyNdvbR1SCzHJgdrvrsoXVRP4d0ch_vLvG2bDpvsYotawFEAxqhU5ZRy9Tj6jd5G5Rf1UEMfAe-FLi8xnrZfiHrpjOa6cU55oKpCOxmKBy1YgvZMOcC02cuPRQci3A04eCk9FOYtsv7n1X-pViPbm45dLTUZA7av50Xw8ZjA7e6kRVbw1lW6iUke18ur0pbu7wY1qFtuz3vAoV6KTKLbm98w6xgQKQHUWKwkfCR1X2Ff3Q20jyaB46jRB6z1lB7DHXD19O9kc_GnsYcJs7B59g	2025-05-05 13:09:50	1
-12	eyJhbGciOiJSUzI1NiJ9.eyJlbWFpbCI6InBhcnRpY2lwYW50LWVtYWlsQG1haWwucnUiLCJpZCI6MTIsIm5pY2tuYW1lIjoicGFydGljaXBhbnQiLCJyb2xlIjoibWVudG9yIiwiaWF0IjoxNzQ2NDM2NjI4LCJleHAiOjE3NDY0NDAyMjh9.c4L52e7yMs6ep0t5NkI992oMStLtQ8uEskeQCeMSbk3pHm85zwByKiGOC6WMjx9UiXbgq_q507Ao_JRDQQzL34iDFLX_UiQ_1zK6CB8GH347DwTJXVm5Rp_3xN7lJTJk6wj14IAtNkXAcd2CPeDJf0sHZPN8ZExxsWiw0xjRb_JiOVS2tn99zhXB9Iy5aCT5Kk-Jf_ABVnwyS3BRmowE8ZMeufyN-jSktsLeQcALQFPHb65J69kJEL3GizriGItBexBnIk-SWM0U6GNP9yUexoHAsptKLmj9j3wPmyYFdCTcHkdnG-4tRDmBDWypdqDlqMqCn-kC7phwFH9vg4blFg	2025-05-05 13:17:08	2
-15	eyJhbGciOiJSUzI1NiJ9.eyJlbWFpbCI6Im1lbnRvci1lbWFpbEBtYWlsLnJ1IiwiaWQiOjE1LCJuaWNrbmFtZSI6Im1lbnRvciIsInJvbGUiOiJtZW50b3IiLCJpYXQiOjE3NDY0MzY5NzUsImV4cCI6MTc0NjQ0MDU3NX0.DLpYOc82rtFk_grk3sDseb7ldzOr6l8a620P4D5PAiKRxK6KVHhEZIlStF7tIyMtMZKixRCtXpehpSu89Y5NQYmWbBjousLT0v7XHCSLHbv9CFCzXF8MdAm19ohhGv0uu4ialUuBy1M1Fpb5gVvMRFDO1exgHN877shLO_sakhLMHnIV5GrB3d-DE6MG-MDRJJJJeyeJZvK3Ed-Y65htpQCvqWDvwbnew8gp7qlnwYuxXO6w6GvOxU0x3xtWHAEmKDnLCS69v479Z4uTgD8FoENKHHd-NSWQ4Yd10XeqkGB22m8VbfDxCJGkzkwOuErfR75F2dikbSEw7PCve3MYvg	2025-05-05 13:22:55	3
-16	eyJhbGciOiJSUzI1NiJ9.eyJlbWFpbCI6Im9yZ2FuaXplci1lbWFpbEBtYWlsLnJ1IiwiaWQiOjE2LCJuaWNrbmFtZSI6Im9yZ2FuaXplciIsInJvbGUiOiJvcmdhbml6ZXIiLCJpYXQiOjE3NDY0NDAzODEsImV4cCI6MTc0NjQ0Mzk4MX0.YTpG0liBHs_-kEC9nLXYlcb3Z-NeDtAYe8Wcs8eHsHZqSgWXDMXMo1SifHbbbm310zTqbNl4W6We9AySZrv-p_MnUrjZbwsiifQtQqdBzz_V0ScmQafXcvDPI24-TmAzNasR7ZsGT8Lha5h9TTF3s18oZZtxzpwEBnLKiMKXmS7C4pmuoBhinQAle6n237gdl9VqTSkK46fYxl0Gd2_czjRzyj0Xh0bZl3n1926fkMiVPUV7XH3z_Qhypf0LPOauLyXH_vNzRlDypcfSOX9cWv9RKULvrg_dRvbWcKTVDa9qYP6gQF5YEb0sKWn5mzf6R3vi2qx8hKKgXFhmTAOt8w	2025-05-05 14:19:41	4
-12	eyJhbGciOiJSUzI1NiJ9.eyJlbWFpbCI6InBhcnRpY2lwYW50LWVtYWlsQG1haWwucnUiLCJpZCI6MTIsIm5pY2tuYW1lIjoicGFydGljaXBhbnQiLCJyb2xlIjoicGFydGljaXBhbnQiLCJpYXQiOjE3NDY0NDE0MzYsImV4cCI6MTc0NjQ0NTAzNn0.jY9TXOtD7WiHZZdvHxxoQS7u8abRCk4XjghO1mUHHnuLLYHglkNDCO8rLUV1TTrpugKZM7qRtnkXkwWR9cW3Tk0f8sEictrsSPAO9JThTwyBIzg9rSDaVFiduooV_OmH4ffRmxL9rqtgHiHP8yWUnnP8uqT3dn6fDwkAIXue5qfere2X6N-6zaBruYoT-kFisaHYN3-WpJWlzU3elixPQqD3qTccuXGWmvQyDccvXTqY3a7qvjeUIjIu7ueHJFij3LU1C18CNPAHlbjUOIBeLKRppgaSxvZWecY2nRxZ_RuyA9UDd03NUpwjjCtrgp_tEXW9Gx9q7qMULd3a74dkUw	2025-05-05 14:37:16	5
-16	eyJhbGciOiJSUzI1NiJ9.eyJlbWFpbCI6Im9yZ2FuaXplci1lbWFpbEBtYWlsLnJ1IiwiaWQiOjE2LCJuaWNrbmFtZSI6Im9yZ2FuaXplciIsInJvbGUiOiJvcmdhbml6ZXIiLCJpYXQiOjE3NDY0NDQ1MzksImV4cCI6MTc0NjQ0ODEzOX0.a-lv05s5JuEVai21R6TOWAuS4eFDwlMZfxmVJgLIUIQw-FDJ_jDZOsgg7yoYvqFKaG0KgbLvJz8oBbE-VpevSuUJnKvlBs9fzPRF1_Cpp6WO1IQxzn6iF26h9tlFGg2RjhEc-sxRp-TyCp73aAvKyZs_HX_KBwN60KDOTMK34bgHLxZqUyhAspSF_2dCwmUYdv2TXNodJDzF3ULNYCmKVqfMUy5_2SqxLzbt4uYA45ycnXV6CEmJENSqP7Ps6olDI1bsc4F1Vuw7GkAiJvVetVskH8_ApCFDgV7S29KRUc2mVPXCPmRGn8G8-e6H8r-WZlExz0rwjCHeHNEvdBtrcQ	2025-05-05 15:28:59	6
-16	eyJhbGciOiJSUzI1NiJ9.eyJlbWFpbCI6Im9yZ2FuaXplci1lbWFpbEBtYWlsLnJ1IiwiaWQiOjE2LCJuaWNrbmFtZSI6Im9yZ2FuaXplciIsInJvbGUiOiJvcmdhbml6ZXIiLCJpYXQiOjE3NDY0NDgxNjksImV4cCI6MTc0NjQ1MTc2OX0.AXf5qDS8K4lWHoChi_y7IYlzgyfqbyav4ZumV44yG-CCZX5mmt4Uqz86K-Wr3k-mN6EmPOegOJvoF_ALJYBO3pe7lv3Udt-2G4hVVvFB2MB4AOC4c_pvCWXVmsbaX0mHRs6Q5_rKfedx833EvYGVHFQMSX6QbVfBpUIODZ4tMMa074Oxqicwohnv5U9wkz5CQMqnphA1YRFlpJK9wCOkx38whspToAeSZ5Ys51OS4yNNnpxpWsojKYLQl5pCwZhIXDhpzY3oxBOSK6lvEYE1vtNWKfS4uvyXmqLDqB9INXqSTOllofpHPaB1hmJL7iyXQjjYgWf9WY08QOgk_S1Eww	2025-05-05 16:29:29	7
-16	eyJhbGciOiJSUzI1NiJ9.eyJlbWFpbCI6Im9yZ2FuaXplci1lbWFpbEBtYWlsLnJ1IiwiaWQiOjE2LCJuaWNrbmFtZSI6Im5ld05pY2tuYW1lIiwicm9sZSI6Im9yZ2FuaXplciIsImlhdCI6MTc0NjQ0ODQxNywiZXhwIjoxNzQ2NDUyMDE3fQ.qyN2m4n2xtPrK2g5z0fD301K9KPvtLpPFQ-ZexaPy5tvbWTPXnYoJAupfg0f3p4jT9EQ7NCiH1RvQhNdzI7tjIK5h4zy8zBM2QofJUvujo4QHwlSO1X2tqGSEC87v5ZqZ2tcuzc_OCQR-Myzopg5OVmJKHo3ZLc-x9XpUfib-FQlrrEsJe6AqMV8T9nANQDkK8EE1xXS3tSlu1Vs5IBmMZMyt1GDPn1nhWIrnIRuqmmfS51iI8-K20rxWmRabtn7sBeTHepJWxshlsHrTeqFWVrIynzRQHVUD9I9zDH7uZztHITGFsGIyquRSyAUsUOPcGQ72Ju2AK01oVbVnSrFRQ	2025-05-05 16:33:37	8
-16	eyJhbGciOiJSUzI1NiJ9.eyJlbWFpbCI6Im9yZ2FuaXplci1lbWFpbEBtYWlsLnJ1IiwiaWQiOjE2LCJuaWNrbmFtZSI6Im5ld05pY2tuYW1lIiwicm9sZSI6Im9yZ2FuaXplciIsImlhdCI6MTc0NjQ1MTI1MCwiZXhwIjoxNzQ2NDU0ODUwfQ.ytqrHIZqLQ8mAflnWW6pJUsjE2IlJKGJLRRN_bPDqjcdgDCyNWMvG25PbjgvWpUNapp0TG2KOOr8iEU4r9KN7vsIfLNQGNeKauekAN16OGIppta0EPl2-ke_UaCtTgK1ZE-UDFHnM96kgeQfG3CRtAuycDu3x6CH0T5-4gxxH2J61wpYqmZ76zGu_opNFrbX63MUAkDISjsdfPvoWuY5Z9O4VKg5UkLHEkBVB2GmG8SB8Ra8sda_gP-TkAC2hgHEfiBnqn3BsNPBJtzF-yYs8ZkRUB7FuKGhiXr3EptJ6l9WWrm5clmfB1V_GhGLttyxSNhHtIqJQph7JS0sBK_y4w	2025-05-05 17:20:50	9
-\.
-
-
---
--- TOC entry 3449 (class 0 OID 41932)
--- Dependencies: 215
--- Data for Name: user_; Type: TABLE DATA; Schema: users; Owner: postgres
---
-
-COPY users.user_ (id, nickname, email, password, contacts, github, experience, description, role_id, first_name, image, last_name, middle_name, tags) FROM stdin;
-15	mentor	mentor-email@mail.ru	$2a$10$UPxm6dvpZOunyjYIwhyCFu0fTRXm9pZuS/4Xz6PsE73BrTF9VXkdK	\N	\N	\N	\N	2	Иванова	\N	Елена	Михайловна	\N
-12	participant	participant@mail.ru	$2a$10$RWMvLclUn4ZXuTl4ad/3F.JrorgB1DKlAUFdoA1SHUJ0wP1LIzEsm	\N	\N	\N	\N	1	Иванов	\N	Иван	Иванович	\N
-16	newNickname	organizer-email@mail.ru	$2a$10$mXHC4ha/Vqg6FgMXdZFZtOrWttzc7eGitD6Rnuk92vq187VAQhxVy	example contacts	https://github.com/example	5 years	User description	3	John	photos/727869fd-0038-4f21-8956-5851acf20008.png	Doe	M.	{1,2}
-\.
-
-
---
--- TOC entry 3477 (class 0 OID 42782)
--- Dependencies: 243
--- Data for Name: users_tags_; Type: TABLE DATA; Schema: users; Owner: postgres
---
-
-COPY users.users_tags_ (user_id, tag_id) FROM stdin;
-16	1
-16	2
-\.
-
-
---
--- TOC entry 3496 (class 0 OID 0)
--- Dependencies: 226
--- Name: event_participants__id_seq; Type: SEQUENCE SET; Schema: core; Owner: postgres
---
-
-SELECT pg_catalog.setval('core.event_participants__id_seq', 1, false);
-
-
---
--- TOC entry 3497 (class 0 OID 0)
--- Dependencies: 232
--- Name: event_step_winner_teams__id_seq; Type: SEQUENCE SET; Schema: core; Owner: postgres
---
-
-SELECT pg_catalog.setval('core.event_step_winner_teams__id_seq', 1, false);
-
-
---
--- TOC entry 3498 (class 0 OID 0)
--- Dependencies: 230
--- Name: event_steps__id_seq; Type: SEQUENCE SET; Schema: core; Owner: postgres
---
-
-SELECT pg_catalog.setval('core.event_steps__id_seq', 1, false);
-
-
---
--- TOC entry 3499 (class 0 OID 0)
--- Dependencies: 228
--- Name: event_winners__id_seq; Type: SEQUENCE SET; Schema: core; Owner: postgres
---
-
-SELECT pg_catalog.setval('core.event_winners__id_seq', 1, false);
-
-
---
--- TOC entry 3500 (class 0 OID 0)
--- Dependencies: 223
--- Name: events__id_seq; Type: SEQUENCE SET; Schema: core; Owner: postgres
---
-
-SELECT pg_catalog.setval('core.events__id_seq', 1, true);
-
-
---
--- TOC entry 3501 (class 0 OID 0)
--- Dependencies: 239
--- Name: meetings__id_seq; Type: SEQUENCE SET; Schema: core; Owner: postgres
---
-
-SELECT pg_catalog.setval('core.meetings__id_seq', 1, false);
-
-
---
--- TOC entry 3502 (class 0 OID 0)
--- Dependencies: 241
--- Name: queries__id_seq; Type: SEQUENCE SET; Schema: core; Owner: postgres
---
-
-SELECT pg_catalog.setval('core.queries__id_seq', 1, false);
-
-
---
--- TOC entry 3503 (class 0 OID 0)
--- Dependencies: 221
--- Name: tags__id_seq; Type: SEQUENCE SET; Schema: core; Owner: postgres
---
-
-SELECT pg_catalog.setval('core.tags__id_seq', 2, true);
-
-
---
--- TOC entry 3504 (class 0 OID 0)
--- Dependencies: 237
--- Name: team_participants__id_seq; Type: SEQUENCE SET; Schema: core; Owner: postgres
---
-
-SELECT pg_catalog.setval('core.team_participants__id_seq', 1, false);
-
-
---
--- TOC entry 3505 (class 0 OID 0)
--- Dependencies: 234
--- Name: teams__id_seq; Type: SEQUENCE SET; Schema: core; Owner: postgres
---
-
-SELECT pg_catalog.setval('core.teams__id_seq', 1, false);
-
-
---
--- TOC entry 3506 (class 0 OID 0)
--- Dependencies: 244
--- Name: reviews__id_seq; Type: SEQUENCE SET; Schema: users; Owner: postgres
---
-
-SELECT pg_catalog.setval('users.reviews__id_seq', 3, true);
-
-
---
--- TOC entry 3507 (class 0 OID 0)
--- Dependencies: 219
--- Name: role__id_seq; Type: SEQUENCE SET; Schema: users; Owner: postgres
---
-
-SELECT pg_catalog.setval('users.role__id_seq', 3, true);
-
-
---
--- TOC entry 3508 (class 0 OID 0)
--- Dependencies: 245
--- Name: session__id_seq; Type: SEQUENCE SET; Schema: users; Owner: postgres
---
-
-SELECT pg_catalog.setval('users.session__id_seq', 9, true);
-
-
---
--- TOC entry 3509 (class 0 OID 0)
--- Dependencies: 216
--- Name: user__id_seq; Type: SEQUENCE SET; Schema: users; Owner: postgres
---
-
-SELECT pg_catalog.setval('users.user__id_seq', 16, true);
 
 
 --
@@ -1316,7 +998,7 @@ ALTER TABLE ONLY users.users_tags_
     ADD CONSTRAINT user_id FOREIGN KEY (user_id) REFERENCES users.user_(id);
 
 
--- Completed on 2025-05-05 18:17:57
+-- Completed on 2025-05-11 18:53:45
 
 --
 -- PostgreSQL database dump complete

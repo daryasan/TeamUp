@@ -11,6 +11,7 @@ import org.example.repositories.EventStepRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -53,8 +54,9 @@ public class EventStepService {
         EventStep eventStep = findEventStepById(id);
         Event event = eventService.findEventById(eventId);
         for (EventStep e : event.getEventSteps()) {
-            if (e.getId() == eventId) {
+            if (Objects.equals(e.getId(), eventId)) {
                 eventStepRepository.delete(eventStep);
+                return;
             }
         }
         throw new EventException("Event doesn't contains such step!");

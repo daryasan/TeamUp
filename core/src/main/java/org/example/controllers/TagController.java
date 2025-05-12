@@ -36,17 +36,17 @@ public class TagController {
     }
 
 
-    @GetMapping("/id={id}")
+    @GetMapping("/id")
     public ResponseEntity<Tag> findTagById(
-            @PathVariable Long id
+            @RequestParam Long id
     ) throws TagException {
         return ResponseEntity.ok(tagService.findTagById(id));
     }
 
 
-    @PatchMapping("assign/teams/id={teamId}")
+    @PatchMapping("assign/teams/id")
     public ResponseEntity<HttpStatus> assignTagsToTeam(
-            @PathVariable Long teamId,
+            @RequestParam Long teamId,
             @RequestBody List<Tag> tags
     ) throws TeamException {
         tagService.assignTagsToTeam(teamId, tags);
@@ -54,9 +54,9 @@ public class TagController {
     }
 
 
-    @PatchMapping("assign/events/id={eventId}")
+    @PatchMapping("assign/events/id")
     public ResponseEntity<HttpStatus> assignTagsToEvent(
-            @PathVariable Long eventId,
+            @RequestParam Long eventId,
             @RequestBody List<Tag> tags
     ) throws EventException {
         tagService.assignTagsToEvent(eventId, tags);

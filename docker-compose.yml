@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  db:
+  core_db:
     image: postgres:15-alpine
-    container_name: postgres-db
+    container_name: postgres-core-db
     environment:
       - POSTGRES_DB=teamup_users_core
       - POSTGRES_USER=postgres
@@ -13,6 +13,29 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./initdb:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+
+  chats_db:
+    image: postgres:15-alpine
+    container_name: postgres-chats-db
+    environment:
+      - POSTGRES_DB=teamup_chats
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+    ports:
+      - "5433:5432"
+    volumes:
+      - chats_postgres_data:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+
+  redis:
+    image: redis:alpine
+    container_name: redis-server
+    ports:
+      - "6379:6379"
     networks:
       - app-network
 
@@ -30,7 +53,7 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=1234
     depends_on:
-      - db
+      - core_db
     networks:
       - app-network
 
@@ -48,7 +71,29 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=1234
     depends_on:
-      - db
+      - core_db
+      - users
+    networks:
+      - app-network
+
+  chats:
+    build:
+      context: .
+      dockerfile: chats/Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=chats_db
+      - DB_PORT=5432
+      - DB_NAME=teamup_chats
+      - DB_USER=postgres
+      - DB_PASSWORD=1234
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - chats_db
+      - redis
       - users
     networks:
       - app-network
@@ -59,3 +104,4 @@ networks:
 
 volumes:
   postgres_data:
+  chats_postgres_data:

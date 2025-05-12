@@ -77,7 +77,7 @@ public class TeamService {
         List<UserDto> participants = new ArrayList<>();
 
         for (Long id : team.getParticipants()) {
-            participants.add(utils.getUserById(id).getBody());
+            participants.add(userService.getUserById(id));
         }
 
         return participants;
@@ -87,7 +87,7 @@ public class TeamService {
     public UserDto getTeamMentor(Long teamId) throws TeamException {
         Team team = findTeamById(teamId);
 
-        if (team.getMentorId() != null) return utils.getUserById(team.getMentorId()).getBody();
+        if (team.getMentorId() != null) return userService.getUserById(team.getMentorId());
         else throw new TeamException("Team does not have a mentor");
     }
 

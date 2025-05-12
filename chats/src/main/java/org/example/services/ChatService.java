@@ -3,12 +3,10 @@ package org.example.services;
 import lombok.RequiredArgsConstructor;
 import org.example.exceptions.AuthException;
 import org.example.exceptions.ChatException;
-import org.example.models.Attachment;
 import org.example.models.Chat;
 import org.example.models.ChatParticipant;
 import org.example.repositories.ChatParticipantRepository;
 import org.example.repositories.ChatRepository;
-import org.example.security.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +22,7 @@ public class ChatService {
 
     private final ChatRepository chatRepository;
     private final ChatParticipantRepository chatParticipantRepository;
-    private UserService userService;
+    private final UserService userService;
 
 
     @Transactional
@@ -62,7 +59,9 @@ public class ChatService {
             throw new AuthException("User can only see their chats");
         List<Chat> chats = new ArrayList<>();
         for (ChatParticipant c : chatParticipantRepository.findAll()) {
-            if (Objects.equals(c.getUserId(), userId)) chats.add(c.getChat());
+            if (Objects.equals(c.getUserId(), userId)) {
+                chats.add(c.getChat());
+            }
         }
         return chats;
     }
