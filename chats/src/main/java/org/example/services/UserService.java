@@ -1,6 +1,8 @@
-package org.example.security;
+package org.example.services;
 
 import org.example.dto.UserDetailsFromTokenDto;
+import org.example.clients.AuthClient;
+import org.example.security.JwtTokenValidator;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 

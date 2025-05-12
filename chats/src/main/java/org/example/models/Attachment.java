@@ -14,12 +14,10 @@ public class Attachment {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "message_id", nullable = false)
+    @JoinColumn(name = "message_id", nullable = true)
     private Message message;
 
     @Column(nullable = false)
     private String fileUrl;
 
-    @Column(nullable = false)
-    private String fileType;
 }

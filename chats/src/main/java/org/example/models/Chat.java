@@ -3,6 +3,7 @@ package org.example.models;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +18,7 @@ public class Chat {
     private Long id;
 
     @Column(nullable = false)
-    private boolean type;
+    private boolean isGroup;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

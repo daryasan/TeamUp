@@ -12,5 +12,4 @@ public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
     // get message attachments
     List<Attachment> findByMessageId(Long messageId);
 
-    List<Attachment> findByChatId(Long chatId);
 }

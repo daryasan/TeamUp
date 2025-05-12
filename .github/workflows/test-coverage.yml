@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dasha
-      - master
   pull_request:
     branches:
       - master

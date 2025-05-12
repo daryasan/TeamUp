@@ -12,6 +12,13 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+buildscript {
+    configurations.configureEach {
+        resolutionStrategy {
+            force "org.apache.commons:commons-compress:1.26.2"
+        }
+    }
+}
 
 
 rootProject.name = "TeamUp"

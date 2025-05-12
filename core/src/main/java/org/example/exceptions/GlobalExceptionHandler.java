@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,7 +21,7 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         if (ex instanceof AuthException) {
             status = HttpStatus.UNAUTHORIZED;
-        } else if (ex instanceof AccessException) {
+        } else if (ex instanceof AccessException || ex instanceof AuthorizationDeniedException) {
             status = HttpStatus.FORBIDDEN;
         }
 

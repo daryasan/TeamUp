@@ -4,8 +4,6 @@ import lombok.Data;
 
 @Data
 public class AttachmentDto {
-    Long chatId;
-    Long senderId;
-    String path;
-    String fileType;
+    Long messageId;
+    String url;
 }

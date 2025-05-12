@@ -39,11 +39,11 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();
-
+        String roleWithPrefix = user.getRole().startsWith("ROLE_") ? user.getRole().toUpperCase() : "ROLE_" + user.getRole().toUpperCase();
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                 user.getEmail(),
                 null,
-                AuthorityUtils.commaSeparatedStringToAuthorityList(user.getRole())
+                AuthorityUtils.createAuthorityList(roleWithPrefix)
         );
 
         SecurityContextHolder.getContext().setAuthentication(auth);

@@ -1,28 +1,85 @@
 plugins {
     id 'java'
+    id 'jacoco'
+    id 'org.springframework.boot' version '3.3.3'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+configurations.configureEach {
+    resolutionStrategy {
+        force 'org.apache.commons:commons-compress:1.26.2'
+    }
+}
+
+
+jacoco {
+    toolVersion = "0.8.8"
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << "-parameters"
+}
+
+bootJar {
+    mainClass.set("org.example.ChatsApp")
 }
 
 group = 'org.example'
 version = 'unspecified'
 
-dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.30'
-    annotationProcessor 'org.projectlombok:lombok:1.18.30'
-    implementation 'ch.qos.logback:logback-classic:1.5.16'
+configurations.configureEach {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'org.apache.commons' && details.requested.name == 'commons-compress') {
+            details.useVersion '1.26.2'
+            details.because "Хотим использовать 1.26.2 вместо транзитивной 1.21"
+        }
+    }
+}
+configurations.configureEach {
+    resolutionStrategy.capabilitiesResolution.withCapability("org.apache.commons:commons-compress") {
+        selectHighestVersion()
+    }
+}
 
-    implementation 'org.postgresql:postgresql:42.7.2'
+dependencies {
+    constraints {
+        implementation 'org.apache.commons:commons-compress:1.26.2'
+    }
+    implementation platform('org.springframework.boot:spring-boot-dependencies:3.3.3')
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    implementation 'org.springframework:spring-core:6.2.1'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    implementation 'org.postgresql:postgresql:42.7.3'
     implementation 'com.auth0:java-jwt:4.4.0'
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
 
-    implementation 'org.springframework.boot:spring-boot-starter-websocket:3.3.3'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.3.3'
-    implementation 'org.springframework.boot:spring-boot-starter-security:3.3.3'
-    implementation 'org.springframework.boot:spring-boot-starter-test:3.3.3'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:3.3.3'
-    implementation "org.springframework.boot:spring-boot-starter-web:3.3.3"
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.3.3'
-    implementation 'org.springframework.cloud:spring-cloud-dependencies:Hoxton.RELEASE'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:2.2.5.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-test'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    testImplementation 'org.springframework.security:spring-security-test:6.3.3'
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.1'
 
 
     implementation "io.jsonwebtoken:jjwt-api:0.12.3"
@@ -31,10 +88,14 @@ dependencies {
     implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.3'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.12.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.12.2'
     testImplementation 'org.mockito:mockito-core:5.11.0'
     testImplementation 'org.assertj:assertj-core:3.25.3'
+
+
+    implementation("software.amazon.awssdk:aws-sdk-java:2.29.33")
+    implementation("software.amazon.awssdk:apache-client:2.29.33")
 }
 
 test {
