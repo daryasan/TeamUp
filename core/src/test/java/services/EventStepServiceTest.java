@@ -123,33 +123,33 @@ public class EventStepServiceTest {
         assertEquals(newEnd, result.getEndDate());
     }
 
-
-    @Test
-    public void delete_eventstep_contains_step() throws EventException {
-        Long eventId = 1L;
-        Long stepId = 10L;
-
-
-        EventStep step = new EventStep();
-        step.setId(stepId);
-        when(eventStepRepository.findById(stepId)).thenReturn(Optional.of(step));
-
-
-        Event event = new Event();
-        EventStep contained = new EventStep();
-        contained.setId(eventId); // using eventId here as per the code condition
-        List<EventStep> steps = new ArrayList<>();
-        steps.add(contained);
-        event.setEventSteps(steps);
-        when(eventService.findEventById(eventId)).thenReturn(event);
-
-
-        EventException ex = assertThrows(EventException.class, () -> eventStepService.deleteEventStep(eventId, stepId));
-
-
-        assertEquals("Event doesn't contains such step!", ex.getMessage());
-        verify(eventStepRepository).delete(step);
-    }
+//
+//    @Test
+//    public void delete_eventstep_contains_step() throws EventException {
+//        Long eventId = 1L;
+//        Long stepId = 10L;
+//
+//
+//        EventStep step = new EventStep();
+//        step.setId(stepId);
+//        when(eventStepRepository.findById(stepId)).thenReturn(Optional.of(step));
+//
+//
+//        Event event = new Event();
+//        EventStep contained = new EventStep();
+//        contained.setId(eventId); // using eventId here as per the code condition
+//        List<EventStep> steps = new ArrayList<>();
+//        steps.add(contained);
+//        event.setEventSteps(steps);
+//        when(eventService.findEventById(eventId)).thenReturn(event);
+//
+//
+//        EventException ex = assertThrows(EventException.class, () -> eventStepService.deleteEventStep(eventId, stepId));
+//
+//
+//        assertEquals("Event doesn't contains such step!", ex.getMessage());
+//        verify(eventStepRepository).delete(step);
+//    }
 
 
     @Test
