@@ -35,10 +35,10 @@ public class TeamController {
 
 
     @GetMapping("/id")
-    public ResponseEntity<Team> findTeamById(
+    public ResponseEntity<TeamDto> findTeamById(
             @RequestParam Long id
     ) throws TeamException {
-        return ResponseEntity.ok(teamService.findTeamById(id));
+        return ResponseEntity.ok(teamService.findTeamDtoById(id));
     }
 
     @GetMapping("/all")
@@ -49,7 +49,7 @@ public class TeamController {
 
     @PostMapping("/participate")
     @PreAuthorize("hasAnyRole('PARTICIPANT', 'MENTOR')")
-    public ResponseEntity<Query> participateInTeam(
+    public ResponseEntity<QueryDto> participateInTeam(
             @RequestParam Long teamId
     ) throws TeamException, AccessException {
         return new ResponseEntity<>(queryService.participateInTeam(teamId), HttpStatus.CREATED);
@@ -58,7 +58,7 @@ public class TeamController {
 
     @PostMapping("/suggest-participation")
     @PreAuthorize("hasAnyRole('PARTICIPANT', 'MENTOR')")
-    public ResponseEntity<Query> suggestParticipation(
+    public ResponseEntity<QueryDto> suggestParticipation(
             @RequestParam Long teamId,
             @RequestParam Long userId
     ) throws TeamException, AccessException {
@@ -68,7 +68,7 @@ public class TeamController {
 
     @GetMapping("query/id")
     @PreAuthorize("hasAnyRole('PARTICIPANT', 'MENTOR')")
-    public ResponseEntity<Query> findQueryById(
+    public ResponseEntity<QueryDto> findQueryById(
             @RequestParam Long queryId
     ) throws QueryException {
         return ResponseEntity.ok(queryService.findQueryById(queryId));
@@ -77,7 +77,7 @@ public class TeamController {
 
     @PatchMapping("query/set-status")
     @PreAuthorize("hasAnyRole('PARTICIPANT', 'MENTOR')")
-    public ResponseEntity<Query> acceptDeclineByReceiver(
+    public ResponseEntity<QueryDto> acceptDeclineByReceiver(
             @RequestParam Long queryId,
             @RequestParam boolean status
     ) throws QueryException, TeamException, AccessException {
@@ -87,7 +87,7 @@ public class TeamController {
 
     @PatchMapping("query/cancel")
     @PreAuthorize("hasAnyRole('PARTICIPANT', 'MENTOR')")
-    public ResponseEntity<Query> cancelBySender(
+    public ResponseEntity<QueryDto> cancelBySender(
             @RequestParam Long queryId
     ) throws QueryException, AccessException {
         return ResponseEntity.ok(queryService.cancelBySender(queryId));
@@ -111,16 +111,17 @@ public class TeamController {
 
     @PatchMapping("/leave")
     @PreAuthorize("hasAnyRole('PARTICIPANT', 'MENTOR')")
-    public ResponseEntity<Team> leaveTeam(
+    public ResponseEntity<HttpStatus> leaveTeam(
             @RequestParam Long teamId
     ) throws TeamException, AccessException {
-        return ResponseEntity.ok(teamService.leaveTeam(teamId));
+        teamService.leaveTeam(teamId);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 
     @PatchMapping("/edit")
     @PreAuthorize("hasAnyRole('PARTICIPANT', 'MENTOR')")
-    public ResponseEntity<Team> editTeam(
+    public ResponseEntity<TeamDto> editTeam(
             @RequestParam Long teamId,
             @RequestBody EditTeamDto editTeamDto
     ) throws TeamException, AccessException {
@@ -130,40 +131,42 @@ public class TeamController {
 
     @PatchMapping("delete-user")
     @PreAuthorize("hasAnyRole('PARTICIPANT')")
-    public ResponseEntity<Team> deleteParticipantOrMentor(
+    public ResponseEntity<HttpStatus> deleteParticipantOrMentor(
             @RequestParam Long teamId,
             @RequestParam Long userId
     ) throws TeamException, AccessException {
-        return ResponseEntity.ok(teamService.deleteParticipantOrMentor(teamId, userId));
+        teamService.deleteParticipantOrMentor(teamId, userId);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/change-formed")
     @PreAuthorize("hasAnyRole('PARTICIPANT')")
-    public ResponseEntity<Team> reverseStatusFormed(
+    public ResponseEntity<HttpStatus> reverseStatusFormed(
             @RequestParam Long teamId
     ) throws TeamException, AccessException {
-        return ResponseEntity.ok(teamService.reverseStatusFormed(teamId));
+        teamService.reverseStatusFormed(teamId);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 
     @PatchMapping("/change-leader")
     @PreAuthorize("hasAnyRole('PARTICIPANT')")
-    public ResponseEntity<Team> setNewLeader(
+    public ResponseEntity<HttpStatus> setNewLeader(
             @RequestParam Long teamId,
             @RequestParam Long newLeaderId
     ) throws TeamException, AccessException {
-        return ResponseEntity.ok(teamService.changeLeader(teamId, newLeaderId));
+        teamService.changeLeader(teamId, newLeaderId);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 
     @GetMapping("/is-leader")
-    public ResponseEntity<HttpStatus> isLeader(
+    public ResponseEntity<Boolean> isLeader(
             @RequestParam Long teamId,
             @RequestParam Long userId
     ) throws TeamException {
-        if (teamService.isLeader(teamId, userId)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(teamService.isLeader(teamId, userId));
+
     }
 
 

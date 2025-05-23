@@ -1,13 +1,10 @@
 logging:
   level:
-    root: INFO
     org.example.exceptions: ERROR
     org.springframework.security: DEBUG
     org.springframework.web.filter: DEBUG
 
 server:
-#  servlet:
-#    context-path: /core-service
   port: 8081
 spring:
   application:
@@ -20,10 +17,11 @@ spring:
   security.enable_csrf: false
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/teamup_users_core
+    url: jdbc:postgresql://core_db:5432/teamup_users_core
     username: postgres
     password: 1234
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
         default_schema: core

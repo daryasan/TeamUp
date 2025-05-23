@@ -998,6 +998,18 @@ ALTER TABLE ONLY users.users_tags_
     ADD CONSTRAINT user_id FOREIGN KEY (user_id) REFERENCES users.user_(id);
 
 
+--
+-- TOC entry 3452 (class 0 OID 41944)
+-- Dependencies: 218
+-- Data for Name: role_; Type: TABLE DATA; Schema: users; Owner: postgres
+--
+
+COPY users.role_ (id, name) FROM stdin;
+1	participant
+2	mentor
+3	organizer
+\.
+
 -- Completed on 2025-05-11 18:53:45
 
 --

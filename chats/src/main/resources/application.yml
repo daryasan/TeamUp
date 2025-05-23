@@ -1,20 +1,28 @@
+logging:
+  level:
+    org.example.exceptions: ERROR
+    org.springframework.security: DEBUG
+    org.springframework.web.filter: DEBUG
+
 server:
   port: 8082
 
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/teamup_chats
+    url: jdbc:postgresql://chats_db:5432/teamup_chats
     username: postgres
     password: 1234
 
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     show-sql: true
+    generate-ddl: true
 
   redis:
-    host: localhost
+    host: redis
     port: 6379
 
   servlet:
@@ -22,8 +30,4 @@ spring:
       enabled: true
       max-file-size: 10MB
       max-request-size: 20MB
-
-logging:
-  level:
-    org.springframework: DEBUG
 

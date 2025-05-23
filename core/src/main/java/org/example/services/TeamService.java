@@ -3,10 +3,7 @@ package org.example.services;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.example.dto.CreateTeamDto;
-import org.example.dto.EditTeamDto;
-import org.example.dto.UserDetailsFromTokenDto;
-import org.example.dto.UserDto;
+import org.example.dto.*;
 import org.example.exceptions.AccessException;
 import org.example.exceptions.EventException;
 import org.example.exceptions.TeamException;
@@ -45,6 +42,7 @@ public class TeamService {
         team.setProjectName(createTeamDto.getProjectName());
         team.setHasMentor(false);
         team.setFormed(false);
+        if (team.getParticipants() == null) team.setParticipants(new ArrayList<>());
 
         // user is PARTICIPANT
         if (utils.isParticipant(user)) {
@@ -60,6 +58,14 @@ public class TeamService {
         return team;
     }
 
+    @Transactional
+    public TeamDto findTeamDtoById(Long id) throws TeamException {
+        Optional<Team> team = teamRepository.findById(id);
+        if (team.isEmpty()) throw new TeamException("No such team!");
+        else return teamToTeamDto(team.get());
+    }
+
+    @Transactional
     public Team findTeamById(Long id) throws TeamException {
         Optional<Team> team = teamRepository.findById(id);
         if (team.isEmpty()) throw new TeamException("No such team!");
@@ -92,7 +98,7 @@ public class TeamService {
     }
 
 
-    public Team leaveTeam(Long teamId) throws TeamException, AccessException {
+    public void leaveTeam(Long teamId) throws TeamException, AccessException {
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();
         Team team = findTeamById(teamId);
 
@@ -110,11 +116,10 @@ public class TeamService {
             }
 
         }
-        return team;
     }
 
 
-    public Team editTeam(Long teamId, EditTeamDto editTeamDto) throws TeamException, AccessException {
+    public TeamDto editTeam(Long teamId, EditTeamDto editTeamDto) throws TeamException, AccessException {
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();
         if (!isInTeam(user.getId(), teamId)) {
             throw new AccessException("User cannot edit this team");
@@ -128,12 +133,12 @@ public class TeamService {
         team.setProjectName(editTeamDto.getProjectName());
 
         teamRepository.save(team);
-        return team;
+        return teamToTeamDto(team);
     }
 
 
     @Transactional
-    public Team deleteParticipantOrMentor(Long teamId, Long userId) throws TeamException, AccessException {
+    public void deleteParticipantOrMentor(Long teamId, Long userId) throws TeamException, AccessException {
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();
         Team team = findTeamById(teamId);
 
@@ -145,13 +150,12 @@ public class TeamService {
                 deleteParticipant(team, userId);
             }
         } else throw new AccessException("Current user is not the leader of a team");
-        return team;
 
     }
 
 
     @Transactional
-    public Team reverseStatusFormed(Long teamId) throws TeamException, AccessException {
+    public TeamDto reverseStatusFormed(Long teamId) throws TeamException, AccessException {
 
         Team team = findTeamById(teamId);
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();
@@ -159,12 +163,12 @@ public class TeamService {
         if (isInTeam(user.getId(), teamId) || isMentor(user.getId(), teamId)) {
             team.setFormed(!team.isFormed());
             teamRepository.save(team);
-            return team;
+            return teamToTeamDto(team);
         } else throw new AccessException("User not in team cannot modify team status");
     }
 
 
-    public Team changeLeader(Long teamId, Long newLeaderId) throws TeamException, AccessException {
+    public void changeLeader(Long teamId, Long newLeaderId) throws TeamException, AccessException {
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();
         Team team = findTeamById(teamId);
 
@@ -173,7 +177,6 @@ public class TeamService {
             team.setLeaderId(newLeaderId);
         } else throw new AccessException("Only leader can set team participant as a new leader");
 
-        return team;
     }
 
     public boolean isLeader(Long teamId, Long userId) throws TeamException {
@@ -195,7 +198,7 @@ public class TeamService {
 
     public boolean hasTeam(long userId) {
         for (Team team : teamRepository.findAll()) {
-            if (team.getParticipants().contains(userId)) {
+            if ((team.getParticipants() != null && team.getParticipants().contains(userId))) {
                 return true;
             }
         }
@@ -203,7 +206,8 @@ public class TeamService {
     }
 
     public boolean isInTeam(long userId, Long teamId) throws TeamException {
-        return findTeamById(teamId).getParticipants().contains(userId);
+        return findTeamDtoById(teamId).getParticipants() != null &&
+                findTeamDtoById(teamId).getParticipants().contains(userId);
     }
 
     public boolean isMentor(long userId, Long teamId) throws TeamException {
@@ -250,5 +254,21 @@ public class TeamService {
 
         team.setParticipants(participants);
         teamRepository.save(team);
+    }
+
+    private TeamDto teamToTeamDto(Team team){
+        TeamDto teamDto = new TeamDto();
+        teamDto.setParticipants(team.getParticipants());
+        teamDto.setDescription(team.getDescription());
+        teamDto.setId(team.getId());
+        teamDto.setFormed(team.isFormed());
+        teamDto.setName(team.getName());
+        teamDto.setHasMentor(team.isHasMentor());
+        teamDto.setEventId(team.getEvent().getId());
+        teamDto.setTags(team.getTags());
+        teamDto.setLeaderId(team.getLeaderId());
+        teamDto.setProjectName(team.getProjectName());
+        teamDto.setMentorId(team.getMentorId());
+        return teamDto;
     }
 }
