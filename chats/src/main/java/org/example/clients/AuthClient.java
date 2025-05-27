@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-@FeignClient(name = "users-service-auth", url = "http://localhost:8080")
+@FeignClient(name = "users-service-auth", url = "http://users:8080")
 public interface AuthClient {
 
     @GetMapping("/public-key")

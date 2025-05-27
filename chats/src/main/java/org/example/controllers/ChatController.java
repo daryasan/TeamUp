@@ -6,9 +6,6 @@ import org.example.exceptions.ChatException;
 import org.example.models.Chat;
 import org.example.models.ChatParticipant;
 import org.example.services.ChatService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,12 +47,10 @@ public class ChatController {
     }
 
 
-
-
-    // TODO debug
     @GetMapping("/user")
     public List<Chat> getChatsForUser(@RequestParam Long userId) throws AuthException {
         return chatService.getChatsForUser(userId);
     }
+
 }
 

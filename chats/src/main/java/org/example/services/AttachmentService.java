@@ -45,4 +45,10 @@ public class AttachmentService {
     }
 
 
+    public Attachment tieAttachmentToMessage(Long messageId, Long attachmentId) throws MessageException {
+        Attachment att = getAttachmentById(attachmentId);
+        att.setMessage(messageRepository.findById(messageId).orElseThrow());
+        attachmentRepository.save(att);
+        return att;
+    }
 }

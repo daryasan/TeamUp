@@ -31,8 +31,8 @@ public class AttachmentController {
     public Attachment tieAttachmentToMessage(
             @RequestParam Long messageId,
             @RequestParam Long attachmentId
-    ){
-        return null; // TODO
+    ) throws MessageException {
+        return attachmentService.tieAttachmentToMessage(messageId, attachmentId);
     }
 
     @GetMapping

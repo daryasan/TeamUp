@@ -10,20 +10,17 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://chats_db:5432/teamup_chats
+    url: jdbc:postgresql://chats_db:5432/chats_db
     username: postgres
     password: 1234
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    generate-ddl: true
-
-  redis:
-    host: redis
-    port: 6379
+    ddl-auto: update
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:redis}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
 
   servlet:
     multipart:
