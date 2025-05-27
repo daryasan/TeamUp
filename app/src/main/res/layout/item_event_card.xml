@@ -9,7 +9,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Media -->
         <ImageView
             android:id="@+id/eventImage"
             android:layout_width="match_parent"
@@ -22,9 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="8dp">
 
-            <!-- Title, secondary and supporting text -->
             <TextView
                 android:id="@+id/eventTitle"
                 android:layout_width="wrap_content"
@@ -45,7 +43,7 @@
                 android:id="@+id/eventDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Description"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?android:attr/textColorSecondary"
@@ -53,7 +51,6 @@
 
         </LinearLayout>
 
-        <!-- Buttons -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,8 +60,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="Join"
-                style="?attr/borderlessButtonStyle"
+                android:text="принять участие"
+                android:backgroundTint="@color/color5"
                 />
         </LinearLayout>
 

@@ -3,13 +3,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/eventsListFragment">
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.teamup.LoginFragment"
+        tools:layout="@layout/fragment_login"
+        android:label="Вход">
+        <action
+            android:id="@+id/action_loginFragment_to_myTeamsFragment"
+            app:destination="@id/myTeamsFragment"/>
+        <action
+            android:id="@+id/action_loginFragment_to_signupFragment"
+            app:destination="@id/signupFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="com.example.teamup.SignupFragment"
+        tools:layout="@layout/fragment_signup"
+        android:label="Регистрация">
+        <action
+            android:id="@+id/action_signupFragment_to_myTeamsFragment"
+            app:destination="@id/myTeamsFragment"/>
+        <action
+            android:id="@+id/action_signupFragment_to_loginFragment"
+            app:destination="@id/loginFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/eventsListFragment"
         android:name="com.example.teamup.EventsListFragment"
         tools:layout="@layout/fragment_events_list"
-        android:label="Events List Fragment">
+        android:label="Мероприятия">
         <action
             android:id="@+id/action_eventsListFragment_to_eventFragment"
             app:destination="@id/eventFragment" />
@@ -19,6 +45,127 @@
         android:id="@+id/eventFragment"
         android:name="com.example.teamup.EventFragment"
         tools:layout="@layout/fragment_event"
-        android:label="Event Fragment" />
+        android:label="Мероприятие" />
+
+    <fragment
+        android:id="@+id/findingPeopleFragment"
+        android:name="com.example.teamup.FindingPeopleFragment"
+        tools:layout="@layout/fragment_finding_people"
+        android:label="Поиск">
+        <action
+            android:id="@+id/action_findingPeopleFragment_to_profileFragment"
+            app:destination="@id/profileFragment"/>
+        <action
+            android:id="@+id/action_findingPeopleFragment_to_teamFragment"
+            app:destination="@id/teamFragment"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/myTeamsFragment"
+        android:name="com.example.teamup.MyTeamsFragment"
+        tools:layout="@layout/fragment_my_teams"
+        android:label="Мои команды">
+        <action
+            android:id="@+id/action_myTeamsFragment_to_teamFragment"
+            app:destination="@id/teamFragment"/>
+        <action
+            android:id="@+id/action_myTeamsFragment_to_createTeamFragment"
+            app:destination="@id/createTeamFragment"/>
+        <action
+            android:id="@+id/action_myTeamsFragment_to_manageTeamFragment"
+            app:destination="@id/manageTeamFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/teamFragment"
+        android:name="com.example.teamup.TeamFragment"
+        tools:layout="@layout/fragment_team"
+        android:label="Команда">
+        <action
+            android:id="@+id/action_teamFragment_to_profileFragment"
+            app:destination="@id/profileFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/createTeamFragment"
+        android:name="com.example.teamup.CreateTeamFragment"
+        tools:layout="@layout/fragment_create_team"
+        android:label="Новая команда">
+    </fragment>
+
+    <fragment
+        android:id="@+id/manageTeamFragment"
+        android:name="com.example.teamup.ManageTeamFragment"
+        tools:layout="@layout/fragment_manage_team"
+        android:label="Управление командой">
+        <action
+            android:id="@+id/action_manageTeamFragment_to_profileFragment"
+            app:destination="@id/profileFragment"/>
+        <action
+            android:id="@+id/action_manageTeamFragment_to_createMeetingFragment"
+            app:destination="@id/createMeetingFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/createMeetingFragment"
+        android:name="com.example.teamup.CreateMeetingFragment"
+        tools:layout="@layout/fragment_create_meeting"
+        android:label="Новая встреча">
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.teamup.ProfileFragment"
+        tools:layout="@layout/fragment_profile"
+        android:label="Профиль">
+        <action
+            android:id="@+id/action_profileFragment_to_createTeamFragment"
+            app:destination="@id/createTeamFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.teamup.EditProfileFragment"
+        tools:layout="@layout/fragment_edit_profile"
+        android:label="Редактирование профиля">
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.teamup.SettingsFragment"
+        tools:layout="@layout/fragment_settings"
+        android:label="Настройки">
+        <action
+            android:id="@+id/action_settingsFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/myEventsFragment"
+        android:name="com.example.teamup.MyEventsFragment"
+        tools:layout="@layout/fragment_my_events"
+        android:label="Мои мероприятия">
+        <action
+            android:id="@+id/action_myEventsFragment_to_manageEventFragment"
+            app:destination="@id/manageEventFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/manageEventFragment"
+        android:name="com.example.teamup.ManageEventFragment"
+        tools:layout="@layout/fragment_manage_event"
+        android:label="Управление мероприятием">
+        <action
+            android:id="@+id/action_manageEventFragment_to_createStepFragment"
+            app:destination="@id/createStepFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/createStepFragment"
+        android:name="com.example.teamup.CreateStepFragment"
+        tools:layout="@layout/fragment_create_step"
+        android:label="Новый этап">
+    </fragment>
 
 </navigation>

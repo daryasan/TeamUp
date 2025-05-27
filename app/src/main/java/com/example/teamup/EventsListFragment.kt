@@ -1,7 +1,6 @@
 package com.example.teamup
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -11,10 +10,10 @@ import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.annotation.MenuRes
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teamup.Adapters.EventCardsAdapter
 
 class EventsListFragment : Fragment(), EventCardsAdapter.OnItemClickListener {
     override fun onCreateView(
@@ -36,11 +35,12 @@ class EventsListFragment : Fragment(), EventCardsAdapter.OnItemClickListener {
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        val cards = listOf(
-            CardEvent("Event 1", "bla bla bla", "2023-10-01", 0),
-            CardEvent("Card 2", "bebebe", "2023-10-02", 1),
-            CardEvent("Card 3", "aaaaa", "2023-10-03", 2),
+        var cards = listOf(
+            CardEvent("Python Workshop", "Learn the basics of Python programming in this hands-on workshop.", "2023-10-01", 0),
+            CardEvent("JavaScript Meetup", "Join us for a meetup to discuss the latest trends in JavaScript development.", "2023-10-05", 1),
+            CardEvent("Data Science Conference", "A conference for data science enthusiasts to share knowledge and network.", "2023-10-10", 2),
         )
+        //cards =
 
         /*val adapter = EventCardsAdapter(cards) { card ->
             Toast.makeText(context, "Clicked: ${card.title}", Toast.LENGTH_SHORT).show()

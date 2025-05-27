@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/eventsListFragment"
+        android:icon="@drawable/calendar_today_24px"
+        android:title="Events" />
+    <item
+        android:id="@+id/findingPeopleFragment"
+        android:icon="@drawable/search_24px"
+        android:title="Searce" />
+    <item
+        android:id="@+id/myTeamsFragment"
+        android:icon="@drawable/event_available_24px"
+        android:title="My Teams" />
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/person_24px"
+        android:title="Profile" />
+</menu>

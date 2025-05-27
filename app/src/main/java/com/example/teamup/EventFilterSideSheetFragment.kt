@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teamup.Adapters.CheckboxListAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class FilterSideSheetFragment : BottomSheetDialogFragment() {
