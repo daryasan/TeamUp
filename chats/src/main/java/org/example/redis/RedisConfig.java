@@ -28,7 +28,6 @@ public class RedisConfig {
         return container;
     }
 
-    // Определяем адаптер для нашего подписчика
     @Bean
     public MessageListenerAdapter listenerAdapter(ChatMessageSubscriber subscriber) {
         return new MessageListenerAdapter(subscriber);

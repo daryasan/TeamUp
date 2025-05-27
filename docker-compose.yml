@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  core_db:
+  users_core_db:
     image: postgres:15-alpine
-    container_name: postgres-core-db
+    container_name: users_core_db
     environment:
-      - POSTGRES_DB=teamup_users_core
+      - POSTGRES_DB=users_core_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234
     ports:
@@ -15,12 +15,17 @@ services:
       - ./initdb:/docker-entrypoint-initdb.d
     networks:
       - app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d users_core_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   chats_db:
     image: postgres:15-alpine
-    container_name: postgres-chats-db
+    container_name: chats_db
     environment:
-      - POSTGRES_DB=teamup_chats
+      - POSTGRES_DB=chats_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234
     ports:
@@ -30,14 +35,24 @@ services:
       - ./initdb:/docker-entrypoint-initdb.d
     networks:
       - app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d chats_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:alpine
-    container_name: redis-server
+    container_name: redis
     ports:
       - "6379:6379"
     networks:
       - app-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   users:
     build:
@@ -47,13 +62,13 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - DB_HOST=db
+      - DB_HOST=users_core_db
       - DB_PORT=5432
-      - DB_NAME=teamup_users_core
+      - DB_NAME=users_core_db
       - DB_USER=postgres
       - DB_PASSWORD=1234
     depends_on:
-      - core_db
+      - users_core_db
     networks:
       - app-network
 
@@ -62,16 +77,16 @@ services:
       context: .
       dockerfile: core/Dockerfile
     ports:
-      - "8081:8080"
+      - "8081:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - DB_HOST=db
+      - DB_HOST=users_core_db
       - DB_PORT=5432
-      - DB_NAME=teamup_users_core
+      - DB_NAME=users_core_db
       - DB_USER=postgres
       - DB_PASSWORD=1234
     depends_on:
-      - core_db
+      - users_core_db
       - users
     networks:
       - app-network
@@ -81,12 +96,12 @@ services:
       context: .
       dockerfile: chats/Dockerfile
     ports:
-      - "8082:8080"
+      - "8082:8082"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - DB_HOST=chats_db
       - DB_PORT=5432
-      - DB_NAME=teamup_chats
+      - DB_NAME=chats_db
       - DB_USER=postgres
       - DB_PASSWORD=1234
       - REDIS_HOST=redis

@@ -1,6 +1,5 @@
 logging:
   level:
-    root: INFO
     org.example.exceptions: ERROR
     org.springframework.security: DEBUG
     org.springframework.web.filter: DEBUG
@@ -20,7 +19,7 @@ spring:
   security.enable_csrf: false
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/teamup_users_core
+    url: jdbc:postgresql://users_core_db:5432/users_core_db
     username: postgres
     password: 1234
   jpa:
@@ -32,6 +31,7 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 jwt:
   private-key: |
     MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDPipO1ecR/JkRx

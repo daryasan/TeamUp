@@ -5,11 +5,11 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.0'
 }
 
-configurations.configureEach {
-    resolutionStrategy {
-        force 'org.apache.commons:commons-compress:1.26.2'
-    }
-}
+//configurations.configureEach {
+//    resolutionStrategy {
+//        force 'org.apache.commons:commons-compress:1.26.2'
+//    }
+//}
 
 
 jacoco {
@@ -39,25 +39,25 @@ bootJar {
 
 group = 'org.example'
 version = 'unspecified'
-
-configurations.configureEach {
-    resolutionStrategy.eachDependency { details ->
-        if (details.requested.group == 'org.apache.commons' && details.requested.name == 'commons-compress') {
-            details.useVersion '1.26.2'
-            details.because "Хотим использовать 1.26.2 вместо транзитивной 1.21"
-        }
-    }
-}
-configurations.configureEach {
-    resolutionStrategy.capabilitiesResolution.withCapability("org.apache.commons:commons-compress") {
-        selectHighestVersion()
-    }
-}
+//
+//configurations.configureEach {
+//    resolutionStrategy.eachDependency { details ->
+//        if (details.requested.group == 'org.apache.commons' &&
+//                details.requested.name == 'commons-compress') {
+//            details.useVersion '1.21'
+//            details.because "Must use 1.26.2, not transitive 1.21"
+//        }
+//    }
+//}
+//configurations.configureEach {
+//    resolutionStrategy.capabilitiesResolution.withCapability("org.apache.commons:commons-compress") {
+//        selectHighestVersion()
+//    }
+//}
 
 dependencies {
-    constraints {
-        implementation 'org.apache.commons:commons-compress:1.26.2'
-    }
+  //  implementation 'org.apache.commons:commons-compress:1.21'
+
     implementation platform('org.springframework.boot:spring-boot-dependencies:3.3.3')
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'

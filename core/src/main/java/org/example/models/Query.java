@@ -3,6 +3,7 @@ package org.example.models;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 
 
 @Data
@@ -16,6 +17,7 @@ public class Query {
 
     @ManyToOne
     @JoinColumn(name = "team_id")
+    @JsonIgnore
     private Team team;
 
     private Long senderId;

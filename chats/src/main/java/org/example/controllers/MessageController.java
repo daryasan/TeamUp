@@ -28,7 +28,6 @@ public class MessageController {
     }
 
 
-    // TODO weird exception
     @GetMapping("/chat")
     public Chat getChatByMessageId(
             @RequestParam Long id
@@ -37,7 +36,6 @@ public class MessageController {
     }
 
 
-    // TODO pageable
     @GetMapping("/get/pageable")
     public List<Message> getMessagesByChat(
             @RequestParam Long chatId,

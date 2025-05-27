@@ -2,6 +2,7 @@ package org.example.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.dto.QueryDto;
 import org.example.dto.UserDetailsFromTokenDto;
 import org.example.exceptions.AccessException;
 import org.example.exceptions.QueryException;
@@ -25,12 +26,12 @@ public class QueryService {
     private final Utils utils;
 
     @Transactional
-    public Query participateInTeam(Long teamId) throws TeamException, AccessException {
+    public QueryDto participateInTeam(Long teamId) throws TeamException, AccessException {
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();
 
         if (utils.isOrganizer(user)) throw new AccessException("Organizer cannot participate in a team!");
 
-        // PARTICIPANT hase other team
+        // PARTICIPANT has other team
         if (utils.isParticipant(user) && teamService.hasTeam(user.getId()))
             throw new TeamException("User cannot join new team while being in other team");
 
@@ -41,11 +42,11 @@ public class QueryService {
         query.setReceiverId(teamService.findLeaderOrMentorId(teamId));
 
         queryRepository.save(query);
-        return query;
+        return queryToQueryDto(query);
     }
 
     @Transactional
-    public Query suggestParticipation(Long teamId, Long userId) throws TeamException, AccessException {
+    public QueryDto suggestParticipation(Long teamId, Long userId) throws TeamException, AccessException {
         // current user
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();
 
@@ -60,18 +61,21 @@ public class QueryService {
 
 
         queryRepository.save(query);
-        return query;
+        return queryToQueryDto(query);
 
     }
 
     @Transactional
-    public Query acceptDeclineByReceiver(Long queryId, boolean isAccepted) throws QueryException, TeamException, AccessException {
+    public QueryDto acceptDeclineByReceiver(Long queryId, boolean isAccepted) throws QueryException, TeamException, AccessException {
         // current user
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();
-        Query query = findQueryById(queryId);
+        Optional<Query> queryGet = queryRepository.findById(queryId);
+        if (queryGet.isEmpty()) throw new QueryException("No such query found");
+        Query query = queryGet.get();
         Team team = query.getTeam();
 
-        if (query.getQueryStatus() != QueryStatus.pinging) throw new QueryException("Action only available for pinging queries");
+        if (query.getQueryStatus() != QueryStatus.pinging)
+            throw new QueryException("Action only available for pinging queries");
         if (!(query.getReceiverId() == user.getId())) throw new AccessException("Current user is not receiver");
         if (utils.isOrganizer(user)) throw new AccessException("Organizer can't access team queries");
 
@@ -79,7 +83,7 @@ public class QueryService {
         if (!isAccepted) {
             query.setQueryStatus(QueryStatus.declined);
             queryRepository.save(query);
-            return query;
+            return queryToQueryDto(query);
         } else {
             // query was from TEAM to PARTICIPANT
             // user becomes PARTICIPANT of the team associated with query
@@ -102,23 +106,25 @@ public class QueryService {
             // query was from TEAM to MENTOR
             // user becomes MENTOR
             else if (utils.isMentor(user)) {
-                team.setMentorId(user.getId());
-                team.setHasMentor(true);
+                teamService.addMentor(user.getId(), team.getId());
             } else {
                 throw new QueryException("Bad query");
             }
 
             query.setQueryStatus(QueryStatus.accepted);
             queryRepository.save(query);
-            return query;
+            return queryToQueryDto(query);
         }
 
     }
 
 
-    public Query cancelBySender(Long queryId) throws QueryException, AccessException {
+    public QueryDto cancelBySender(Long queryId) throws QueryException, AccessException {
         UserDetailsFromTokenDto user = userService.getDetailsFromToken();
-        Query query = findQueryById(queryId);
+        Optional<Query> queryGet = queryRepository.findById(queryId);
+        if (queryGet.isEmpty()) throw new QueryException("No such query found");
+        Query query = queryGet.get();
+
 
         if (user.getId() == query.getSenderId()) {
             query.setQueryStatus(QueryStatus.cancelled);
@@ -127,10 +133,20 @@ public class QueryService {
         throw new AccessException("User is not sender!");
     }
 
-    public Query findQueryById(Long queryId) throws QueryException {
+    public QueryDto findQueryById(Long queryId) throws QueryException {
         Optional<Query> query = queryRepository.findById(queryId);
         if (query.isEmpty()) throw new QueryException("No such query found");
-        else return query.get();
+        else return queryToQueryDto(query.get());
+    }
+
+    private QueryDto queryToQueryDto(Query query) {
+        QueryDto queryDto = new QueryDto();
+        queryDto.setTeamId(query.getTeam().getId());
+        queryDto.setId(query.getId());
+        queryDto.setQueryStatus(query.getQueryStatus());
+        queryDto.setReceiverId(query.getReceiverId());
+        queryDto.setSenderId(query.getSenderId());
+        return queryDto;
     }
 
 

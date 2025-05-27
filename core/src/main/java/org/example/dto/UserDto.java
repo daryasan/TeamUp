@@ -19,6 +19,6 @@ public class UserDto {
     private String github;
     private String experience;
     private String description;
-    private String role;
+    private String roleId;
     private String image;
 }

@@ -11,22 +11,22 @@ version = 'unspecified'
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-parameters'
 }
-
-configurations.configureEach {
-    resolutionStrategy {
-        force 'org.apache.commons:commons-compress:1.26.2'
-    }
-}
-
-configurations.configureEach {
-    resolutionStrategy.eachDependency { details ->
-        if (details.requested.group == 'org.apache.commons' &&
-                details.requested.name == 'commons-compress') {
-            details.useVersion '1.26.2'
-            details.because "Необходимо использовать версию 1.26.2, а не транзитивную 1.21"
-        }
-    }
-}
+//
+//configurations.configureEach {
+//    resolutionStrategy {
+//        force 'org.apache.commons:commons-compress:1.21'
+//    }
+//}
+//
+//configurations.configureEach {
+//    resolutionStrategy.eachDependency { details ->
+//        if (details.requested.group == 'org.apache.commons' &&
+//                details.requested.name == 'commons-compress') {
+//            details.useVersion '1.21'
+//            details.because "Must use 1.26.2, not transitive 1.21"
+//        }
+//    }
+//}
 
 
 bootJar {
@@ -34,11 +34,14 @@ bootJar {
 }
 
 dependencies {
+  //  implementation 'org.apache.commons:commons-compress:1.21'
+
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
     implementation platform('org.springframework.boot:spring-boot-dependencies:3.3.3')
     implementation 'ch.qos.logback:logback-classic:1.5.16'
     implementation 'ch.qos.logback:logback-core:1.5.16'
 
-    implementation 'org.apache.commons:commons-compress:1.26.2'
 
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
